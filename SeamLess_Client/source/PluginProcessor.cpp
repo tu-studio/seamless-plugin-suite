@@ -11,10 +11,11 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
                        .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
                      #endif
                        ),
-        parameters (*this, nullptr, juce::Identifier ("Seamless_Client"), PluginParameters::createParameterLayout())
+        apvts (*this, nullptr, juce::Identifier ("Seamless_Client"), PluginParameters::createParameterLayout()),
+        oscSender(apvts, PluginParameters::getPluginParameterList())
 {
     for (auto & parameterID : PluginParameters::getPluginParameterList()) {
-        parameters.addParameterListener(parameterID, this);
+        apvts.addParameterListener(parameterID, this);
     }
     pluginConnection.connectToSocket("localhost", PORT_NUMBER, 5000);
 }
@@ -166,7 +167,7 @@ bool AudioPluginAudioProcessor::hasEditor() const
 
 juce::AudioProcessorEditor* AudioPluginAudioProcessor::createEditor()
 {
-    return new AudioPluginAudioProcessorEditor (*this, parameters);
+    return new AudioPluginAudioProcessorEditor (*this, apvts);
 }
 
 //==============================================================================
@@ -193,5 +194,6 @@ juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 }
 
 void AudioPluginAudioProcessor::parameterChanged(const juce::String &parameterID, float newValue) {
-    if (parameterID == PluginParameters::SEND_1_ID.getParamID()) std::cout << "New Value = " << newValue << std::endl;
+    oscSender.parameterChanged(parameterID, newValue);
+    pluginConnection.sendMessageToMain("send1", juce::String(newValue));
 }

@@ -43,7 +43,7 @@ target_sources(${TARGET_NAME} PRIVATE ${SOURCES} ${COMMON_SOURCES})
 
 # Add include directories for all folders in the source
 file(GLOB_RECURSE SOURCE_DIRS LIST_DIRECTORIES true ${CMAKE_CURRENT_LIST_DIR}/source/*)
-list(APPEND SOURCE_DIRS ${COMMON_DIR})
+list(APPEND SOURCE_DIRS ${COMMON_DIR} ${CMAKE_CURRENT_LIST_DIR}/source)
 
 foreach (DIR ${SOURCE_DIRS})
     if (IS_DIRECTORY ${DIR})

@@ -11,4 +11,6 @@ set(COMMON_SOURCES  ${CMAKE_CURRENT_SOURCE_DIR}/SeamLess.h
                     ${CMAKE_CURRENT_SOURCE_DIR}/ui/lookAndFeel/SliderLookAndFeel.h
                     ${CMAKE_CURRENT_SOURCE_DIR}/ui/lookAndFeel/SliderLookAndFeel.cpp
                     ${CMAKE_CURRENT_SOURCE_DIR}/ui/lookAndFeel/LabelLookAndFeel.h
-                    ${CMAKE_CURRENT_SOURCE_DIR}/ui/lookAndFeel/LabelLookAndFeel.cpp PARENT_SCOPE)
+                    ${CMAKE_CURRENT_SOURCE_DIR}/ui/lookAndFeel/LabelLookAndFeel.cpp
+                    ${CMAKE_CURRENT_SOURCE_DIR}/osc/OscSender.h
+                    ${CMAKE_CURRENT_SOURCE_DIR}/osc/OscSender.cpp PARENT_SCOPE)

@@ -35,5 +35,5 @@ void AudioPluginAudioProcessorEditor::resized()
 }
 
 void AudioPluginAudioProcessorEditor::buttonClicked(juce::Button* button) {
-    if (button == &testButton) processorRef.pluginConnection.sendMessageToMain("test", "cool");
+//    if (button == &testButton) processorRef.pluginConnection.sendMessageToMain("test", "cool");
 }

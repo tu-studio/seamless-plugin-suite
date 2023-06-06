@@ -9,12 +9,14 @@
 #define PluginConnection_h
 
 #include <JuceHeader.h>
+#include "../SeamLess.h"
 
 class PluginConnection : public juce::InterprocessConnection
 {
 public:
     PluginConnection();
     ~PluginConnection() override;
+    void sendMessageToMain(juce::String messageType, juce::String message);
     
 private:
     void connectionMade() override;

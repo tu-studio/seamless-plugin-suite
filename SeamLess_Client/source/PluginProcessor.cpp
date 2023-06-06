@@ -10,8 +10,12 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
                       #endif
                        .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
                      #endif
-                       )
+                       ),
+        parameters (*this, nullptr, juce::Identifier ("Seamless_Client"), PluginParameters::createParameterLayout())
 {
+    for (auto & parameterID : PluginParameters::getPluginParameterList()) {
+        parameters.addParameterListener(parameterID, this);
+    }
     pluginConnection.connectToSocket("localhost", PORT_NUMBER, 5000);
 }
 
@@ -162,7 +166,7 @@ bool AudioPluginAudioProcessor::hasEditor() const
 
 juce::AudioProcessorEditor* AudioPluginAudioProcessor::createEditor()
 {
-    return new AudioPluginAudioProcessorEditor (*this);
+    return new AudioPluginAudioProcessorEditor (*this, parameters);
 }
 
 //==============================================================================
@@ -186,4 +190,8 @@ void AudioPluginAudioProcessor::setStateInformation (const void* data, int sizeI
 juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
     return new AudioPluginAudioProcessor();
+}
+
+void AudioPluginAudioProcessor::parameterChanged(const juce::String &parameterID, float newValue) {
+    if (parameterID == PluginParameters::SEND_1_ID.getParamID()) std::cout << "New Value = " << newValue << std::endl;
 }

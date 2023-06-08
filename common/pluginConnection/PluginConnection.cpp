@@ -61,7 +61,6 @@ void PluginConnection::connectionMade() {
 void PluginConnection::connectionLost() {
     listenerList.call([this] (Listener& l) {l.disconnected(this);});
     std::cout << "Conection lost!" << std::endl;
-    disconnect(10);
 }
 
 void PluginConnection::messageReceived(const juce::MemoryBlock& memoryBlock) {

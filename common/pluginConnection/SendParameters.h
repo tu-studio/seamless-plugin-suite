@@ -43,6 +43,8 @@ private:
     inline static juce::ValueTree notAutomatableParameterValueTree;
     
     inline static juce::NormalisableRange<float> GAIN_RANGE {0.f, 1.f, 0.01f};
+    
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(SendParameters)
 };
 
 #endif /* SendParameters_h */

@@ -15,6 +15,14 @@ SourceTree::~SourceTree() {
     mainServer.removeListener(this);
 }
 
+void SourceTree::addListener(Listener* listener) {
+    listenerList.add(listener);
+}
+
+void SourceTree::removeListener(Listener* listener) {
+    listenerList.remove(listener);
+}
+
 void SourceTree::newPluginConnection(PluginConnection *pluginConnection) {
     for (auto & source : sources) {
         if (pluginConnection == source.pluginConnection) return;
@@ -57,9 +65,14 @@ void SourceTree::parameterChanged(PluginConnection *pluginConnection, Parameter 
             std::cout << "Position: (" << source.xPosition << ", " << source.yPosition << ", " << source.zPosition << ")" << std::endl;
             std::cout << "Gain 1: " << source.gain1 << std::endl;
             std::cout << "Gain 2: " << source.gain2 << std::endl;
+            
+            listenerList.call([source, parameter] (Listener& l) {l.sourceParameterChanged(source, parameter);});
             return;
         }
     }
     std::cout << "Error: Source not in SourceTree!" << std::endl;
 }
 
+void SourceTree::deletedMainServer() {
+    sources.clear();
+}

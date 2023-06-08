@@ -15,6 +15,8 @@ MainServer::~MainServer() {
         mainConnections[i]->removeListener(this);
         delete mainConnections[i];
     }
+    mainConnections.clear();
+    listenerList.call([] (Listener& l) {l.deletedMainServer();});
 }
 
 void MainServer::addListener(Listener* listener) {
@@ -51,9 +53,14 @@ void MainServer::forwardMessage(PluginConnection* pluginConnection, const juce::
 }
 
 void MainServer::disconnected(PluginConnection *pluginConnection) {
-    for (unsigned long i = 0; i < mainConnections.size(); i++) {
-        if (mainConnections[i] == pluginConnection) mainConnections.erase(mainConnections.begin()+(long) i);
-    }
     listenerList.call([pluginConnection] (Listener& l) {l.deletedPluginConnection(pluginConnection);});
+    
+    for (unsigned long i = 0; i < mainConnections.size(); i++) {
+        if (mainConnections[i] == pluginConnection) {
+            mainConnections[i]->removeListener(this);
+            mainConnections.erase(mainConnections.begin()+(long) i);
+            delete pluginConnection;
+        }
+    }
     std::cout << "Main plugin deleted connection! N = " << mainConnections.size() << std::endl;
 }

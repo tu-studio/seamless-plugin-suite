@@ -15,6 +15,7 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
 {
 //    oscSender(apvts, PluginParameters::getPluginParameterList());
     mainServer.beginWaitingForSocket(PORT_NUMBER);
+    sourceTree.addListener(this);
 }
 
 AudioPluginAudioProcessor::~AudioPluginAudioProcessor()
@@ -188,4 +189,8 @@ void AudioPluginAudioProcessor::setStateInformation (const void* data, int sizeI
 juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
     return new AudioPluginAudioProcessor();
+}
+
+void AudioPluginAudioProcessor::sourceParameterChanged(Source source, Parameter parameter) {
+    oscSender.sendMessage(source, parameter);
 }

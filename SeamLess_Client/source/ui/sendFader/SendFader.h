@@ -24,6 +24,8 @@ private:
     CostumSliderComponent gain2Slider {"WFS"};
     
     juce::AudioProcessorValueTreeState& apvts;
+    
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(SendFader)
 };
 
 #endif /* SendFader_h */

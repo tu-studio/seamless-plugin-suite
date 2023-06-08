@@ -8,7 +8,7 @@
 #include <osc/OscSender.h>
 
 //==============================================================================
-class AudioPluginAudioProcessor  : public juce::AudioProcessor
+class AudioPluginAudioProcessor  : public juce::AudioProcessor, private SourceTree::Listener
 {
 public:
     //==============================================================================
@@ -50,7 +50,9 @@ public:
 private:
     MainServer mainServer;
     SourceTree sourceTree;
-//    OscSender oscSender;
+    OscSender oscSender;
+    
+    void sourceParameterChanged(Source source, Parameter parameter) override;
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioPluginAudioProcessor)
 };

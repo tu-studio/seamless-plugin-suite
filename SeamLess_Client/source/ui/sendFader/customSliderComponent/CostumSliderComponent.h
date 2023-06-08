@@ -34,6 +34,8 @@ private:
     
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> attachment;
     std::unique_ptr<juce::RangedAudioParameter*> parameter;
+    
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(CostumSliderComponent)
 };
 
 #endif /* CostumSliderComponent_h */

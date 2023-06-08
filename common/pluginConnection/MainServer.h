@@ -22,6 +22,7 @@ public:
         virtual void newPluginConnection(PluginConnection* pluginConnection) = 0; // pure virtual function
         virtual void deletedPluginConnection(PluginConnection* pluginConnection) = 0; // pure virtual function
         virtual void parameterChanged(PluginConnection* pluginConnection, Parameter parameter, float value1, float value2, float value3) = 0; // pure virtual funtion
+        virtual void deletedMainServer() = 0;
     };
     void addListener(Listener *);
     void removeListener(Listener *);

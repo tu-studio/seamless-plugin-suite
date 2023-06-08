@@ -11,17 +11,25 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
                        .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
                      #endif
                        ),
-        apvts (*this, nullptr, juce::Identifier ("Seamless_Client"), PluginParameters::createParameterLayout()),
-        oscSender(apvts, PluginParameters::getPluginParameterList())
+        apvts (*this, nullptr, juce::Identifier ("Seamless_Client"), PluginParameters::createParameterLayout())
 {
     for (auto & parameterID : PluginParameters::getPluginParameterList()) {
         apvts.addParameterListener(parameterID, this);
     }
-    pluginConnection.connectToSocket("localhost", PORT_NUMBER, 5000);
+    apvts.state.addChild(PluginParameters::createNotAutomatableValueTree(), 0 , nullptr);
+    notAutomatableValueTree = apvts.state.getChild(0); // Listener is not working if the ValueTree instance is not defined in the AudioPluginAudioProcessor
+    notAutomatableValueTree.addListener(this);
+    pluginConnection.connect(apvts, PluginParameters::getPluginParameterList(), PluginParameters::getSettingsList());
 }
 
 AudioPluginAudioProcessor::~AudioPluginAudioProcessor()
 {
+    for (auto & parameterID : PluginParameters::getPluginParameterList()) {
+        apvts.removeParameterListener(parameterID, this);
+    }
+    notAutomatableValueTree.removeListener(this);
+    PluginParameters::clearNotAutomatableValueTree(apvts.state.getChild(0));
+    apvts.state.removeChild(0 , nullptr);
 }
 
 //==============================================================================
@@ -194,6 +202,9 @@ juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 }
 
 void AudioPluginAudioProcessor::parameterChanged(const juce::String &parameterID, float newValue) {
-    oscSender.parameterChanged(parameterID, newValue);
-    pluginConnection.sendMessageToMain("send1", juce::String(newValue));
+    pluginConnection.parameterChanged(parameterID, newValue);
+}
+
+void AudioPluginAudioProcessor::valueTreePropertyChanged(juce::ValueTree &treeWhosePropertyHasChanged, const juce::Identifier &property) {
+    pluginConnection.parameterChanged(property.toString(), treeWhosePropertyHasChanged.getProperty(property));
 }

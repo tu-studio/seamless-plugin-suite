@@ -24,4 +24,3 @@ private:
 };
 
 #endif /* OscSender_h */
-

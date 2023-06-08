@@ -15,15 +15,15 @@
 
 class SendFader : public juce::Component {
 public:
-    SendFader(juce::AudioProcessorValueTreeState& parameters);
+    SendFader(juce::AudioProcessorValueTreeState& apvts);
     void resized() override;
     void parameterChanged(const juce::String &parameterID, float newValue);
     
 private:
-    CostumSliderComponent send1Slider {"HOA"};
-    CostumSliderComponent send2Slider {"WFS"};
+    CostumSliderComponent gain1Slider {"HOA"};
+    CostumSliderComponent gain2Slider {"WFS"};
     
-    juce::AudioProcessorValueTreeState& parameters;
+    juce::AudioProcessorValueTreeState& apvts;
 };
 
 #endif /* SendFader_h */

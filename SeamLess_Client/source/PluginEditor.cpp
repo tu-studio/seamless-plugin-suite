@@ -2,8 +2,8 @@
 #include "PluginEditor.h"
 
 //==============================================================================
-AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAudioProcessor& p, juce::AudioProcessorValueTreeState& parameters)
-    : AudioProcessorEditor (&p), processorRef (p), sendFader(parameters)
+AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAudioProcessor& p, juce::AudioProcessorValueTreeState& apvts)
+    : AudioProcessorEditor (&p), processorRef (p), sendFader(apvts), sourceIndexSelector(apvts)
 {
 //    juce::ignoreUnused (processorRef);
     // Make sure that before the constructor has finished, you've set the
@@ -12,6 +12,7 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAud
     testButton.addListener(this);
     addAndMakeVisible(testButton);
     addAndMakeVisible(sendFader);
+    addAndMakeVisible(sourceIndexSelector);
 }
 
 AudioPluginAudioProcessorEditor::~AudioPluginAudioProcessorEditor()
@@ -30,6 +31,7 @@ void AudioPluginAudioProcessorEditor::resized()
     area.removeFromTop(20);
     sendFader.setBounds(area.getWidth()/2, area.getY(), area.getWidth()/2, area.getHeight()/2);
     testButton.setBounds(getWidth()/2, getHeight()/2+10, getWidth()/4, getHeight()/4);
+    sourceIndexSelector.setBounds(0, 0, getWidth()/2, getHeight()/2);
     // This is generally where you'll want to lay out the positions of any
     // subcomponents in your editor..
 }

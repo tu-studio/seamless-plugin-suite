@@ -3,6 +3,7 @@
 #include "PluginProcessor.h"
 #include <SeamLess.h>
 #include <SendFader.h>
+#include <SourceIndexSelector.h>
 
 //==============================================================================
 class AudioPluginAudioProcessorEditor  : public juce::AudioProcessorEditor, private juce::Button::Listener
@@ -23,6 +24,7 @@ private:
     AudioPluginAudioProcessor& processorRef;
     juce::TextButton testButton;
     SendFader sendFader;
+    SourceIndexSelector sourceIndexSelector;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioPluginAudioProcessorEditor)
 };

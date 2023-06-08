@@ -10,8 +10,10 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
                       #endif
                        .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
                      #endif
-                       )
+                       ),
+    sourceTree(mainServer)
 {
+//    oscSender(apvts, PluginParameters::getPluginParameterList());
     mainServer.beginWaitingForSocket(PORT_NUMBER);
 }
 

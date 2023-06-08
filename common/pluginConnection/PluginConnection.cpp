@@ -7,19 +7,50 @@
 
 #include "PluginConnection.h"
 
-PluginConnection::PluginConnection() : InterprocessConnection(true, 15) {}
+PluginConnection::PluginConnection() : InterprocessConnection(true, 15) {
+}
 
 PluginConnection::~PluginConnection() {
     disconnect(10);
 }
 
-void PluginConnection::sendMessageToMain(juce::String messageType, juce::String message)
+void PluginConnection::addListener(Listener* listener) {
+    listenerList.add(listener);
+}
+
+void PluginConnection::removeListener(Listener* listener) {
+    listenerList.remove(listener);
+}
+
+void PluginConnection::connect(juce::AudioProcessorValueTreeState &apvts, juce::StringArray parameterList, juce::StringArray settingsList) {
+    connectToSocket("localhost", PORT_NUMBER, 5000);
+    if (isConnected()) {
+        for (auto & setting : settingsList) {
+            parameterChanged(setting, apvts.state.getChild(0).getProperty(setting));
+        }
+        for (auto & parameter : parameterList) {
+            parameterChanged(parameter, apvts.getRawParameterValue(parameter)->load());
+        }
+    }
+}
+
+void PluginConnection::parameterChanged(const juce::String &parameterID, float newValue)
 {
     if (isConnected())
     {
-        message = messageType+"/"+message;
-        juce::MemoryBlock mb (message.toRawUTF8(), message.getNumBytesAsUTF8()+1);
-        sendMessage(mb);
+        Message message;
+        if (parameterID == SendParameters::SOURCE_IDX_NAME) {
+            message.parameter = Parameter::PARAM_SOURCE_IDX;
+        }
+        if (parameterID == SendParameters::GAIN_1_ID.getParamID()) {
+            message.parameter = Parameter::PARAM_GAIN_1;
+        }
+        else if (parameterID ==  SendParameters::GAIN_2_ID.getParamID()) {
+            message.parameter = Parameter::PARAM_GAIN_2;
+        }
+        message.value1 = (float) newValue;
+        juce::MemoryBlock memoryBlock (&message, sizeof(Message));
+        juce::InterprocessConnection::sendMessage(memoryBlock);
     }
 }
     
@@ -28,12 +59,11 @@ void PluginConnection::connectionMade() {
 }
 
 void PluginConnection::connectionLost() {
+    listenerList.call([this] (Listener& l) {l.disconnected(this);});
     std::cout << "Conection lost!" << std::endl;
     disconnect(10);
 }
 
-void PluginConnection::messageReceived(const juce::MemoryBlock& message) {
-    std::cout << "Got message!" << std::endl;
-    juce::String string = message.toString();
-    std::cout << string << std::endl;
+void PluginConnection::messageReceived(const juce::MemoryBlock& memoryBlock) {
+    listenerList.call([this, memoryBlock](Listener& l) {l.forwardMessage(this, memoryBlock);});
 }

@@ -16,10 +16,13 @@ OscSender::OscSender(juce::AudioProcessorValueTreeState &apvts, juce::StringArra
 }
 
 void OscSender::parameterChanged(const juce::String &parameterID, float newValue) {
-    if (parameterID == PluginParameters::SEND_1_ID.getParamID()) {
-        if (! send("/send1", newValue))
-            showConnectionErrorMessage("Error: could not send OSC message.");
-    }
+//    if (parameterID == PluginParameters::SEND_1_ID.getParamID()) {
+//        if (! send("/send1", newValue))
+//            showConnectionErrorMessage("Error: could not send OSC message.");
+//    } else if (parameterID == PluginParameters::SEND_2_ID.getParamID()) {
+//        if (! send("/send2", newValue))
+//            showConnectionErrorMessage("Error: could not send OSC message.");
+//    }
 }
 
 void OscSender::showConnectionErrorMessage (const juce::String& messageText)

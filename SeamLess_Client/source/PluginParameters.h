@@ -9,28 +9,31 @@
 #define PluginParameters_h
 
 #include <JuceHeader.h>
+#include <SendParameters.h>
 
 class PluginParameters {
 public:
     
-    inline static const juce::ParameterID
+//    inline static const juce::ParameterID
         
-        SEND_1_ID = {"param_send_1", 1},
-        SEND_2_ID = {"param_send_2", 1};
+//        add parameter here
     
-    inline static const juce::String
+//    inline static const juce::String
         
-        SEND_1_NAME = "Send HOA",
-        SEND_2_NAME = "Send WFS";
+//        add parameter here
     
     static juce::StringArray getPluginParameterList();
     static juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
+    static juce::StringArray getSettingsList();
+    static juce::ValueTree createNotAutomatableValueTree();
+    static void clearNotAutomatableValueTree(juce::ValueTree notAutomatableParameterValueTree);
     
 private:
     
     inline static juce::StringArray parameterList;
+    inline static juce::StringArray settingsList;
     
-    inline static juce::NormalisableRange<float> sendRange {0.f, 1.f, 0.01f};
+//    inline static juce::NormalisableRange<float> sendRange {0.f, 1.f, 0.01f};
 };
 
 #endif /* PluginParameters_h */

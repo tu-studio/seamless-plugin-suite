@@ -3,6 +3,9 @@
 #include <juce_audio_processors/juce_audio_processors.h>
 #include <SeamLess.h>
 #include <MainServer.h>
+#include <PluginParameters.h>
+#include <SourceTree.h>
+#include <osc/OscSender.h>
 
 //==============================================================================
 class AudioPluginAudioProcessor  : public juce::AudioProcessor
@@ -46,6 +49,8 @@ public:
 
 private:
     MainServer mainServer;
+    SourceTree sourceTree;
+//    OscSender oscSender;
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioPluginAudioProcessor)
 };

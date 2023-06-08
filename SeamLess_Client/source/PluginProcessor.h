@@ -4,10 +4,9 @@
 #include <SeamLess.h>
 #include <PluginConnection.h>
 #include <PluginParameters.h>
-#include <osc/OscSender.h>
 
 //==============================================================================
-class AudioPluginAudioProcessor  : public juce::AudioProcessor, private juce::AudioProcessorValueTreeState::Listener
+class AudioPluginAudioProcessor  : public juce::AudioProcessor, private juce::AudioProcessorValueTreeState::Listener, private juce::ValueTree::Listener
 {
 public:
     //==============================================================================
@@ -48,12 +47,13 @@ public:
     
 private:
     void parameterChanged (const juce::String& parameterID, float newValue) override;
+    void valueTreePropertyChanged(juce::ValueTree& treeWhosePropertyHasChanged, const juce::Identifier& property) override;
 
 private:
     juce::AudioProcessorValueTreeState apvts;
+    juce::ValueTree notAutomatableValueTree;
     
     PluginConnection pluginConnection;
-    OscSender oscSender;
     
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioPluginAudioProcessor)

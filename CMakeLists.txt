@@ -16,15 +16,6 @@ else()
 	set (FORMATS_TO_BUILD VST3 Standalone)
 endif()
 
-
-# To get started on a new plugin, copy this entire folder (containing this file and C++ sources) to
-# a convenient location, and then start making modifications.
-
-# The first line of any CMake project should be a call to `cmake_minimum_required`, which checks
-# that the installed CMake will be able to understand the following CMakeLists, and ensures that
-# CMake's behaviour is compatible with the named version. This is a standard CMake command, so more
-# information can be found in the CMake docs.
-
 cmake_minimum_required(VERSION 3.15)
 
 set (PROJECT_NAME SeamlessPluginSuite)
@@ -63,8 +54,8 @@ set (PLUGIN_LIST
         SeamLess_Main
     )
 
-foreach (subproject IN LISTS PLUGIN_LIST)
-    add_subdirectory (${subproject})
+foreach (PLUGIN IN LISTS PLUGIN_LIST)
+    add_subdirectory (${PLUGIN})
 endforeach()
 
 # enable ctest
@@ -130,10 +121,10 @@ target_link_libraries(Test PRIVATE gtest_main benchmark::benchmark)
 # We can't link again to the shared juce target without ODL violations (https://github.com/sudara/pamplejuce/issues/31, https://forum.juce.com/t/windows-linker-issue-on-develop/55524/2)
 # Therefore we steal the compile definitions and include directories from the main target and pass them to our test target
 # Since we linked the shared juce targets in PRIVATE mode, they are not linked to the test target again
-foreach(target IN LISTS PLUGIN_LIST)
-	target_link_libraries(Test PRIVATE ${target})
-	target_compile_definitions(Test PRIVATE $<TARGET_PROPERTY:${target},COMPILE_DEFINITIONS>)
-	target_include_directories(Test PRIVATE $<TARGET_PROPERTY:${target},INCLUDE_DIRECTORIES>)
+foreach(PLUGIN IN LISTS PLUGIN_LIST)
+	target_link_libraries(Test PRIVATE ${PLUGIN})
+	target_compile_definitions(Test PRIVATE $<TARGET_PROPERTY:${PLUGIN},COMPILE_DEFINITIONS>)
+	target_include_directories(Test PRIVATE $<TARGET_PROPERTY:${PLUGIN},INCLUDE_DIRECTORIES>)
 endforeach()
 
 # include Loads and runs CMake code from the file given. Loads and runs CMake code from the file given.

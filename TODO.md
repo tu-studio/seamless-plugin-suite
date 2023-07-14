@@ -1,0 +1,1 @@
+- [ ] Limitation, that every source index can only exist once.

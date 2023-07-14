@@ -43,7 +43,7 @@ target_sources(${TARGET_NAME} PRIVATE ${SOURCES} ${COMMON_SOURCES})
 
 # Add include directories for all folders in the source
 file(GLOB_RECURSE SOURCE_DIRS LIST_DIRECTORIES true ${CMAKE_CURRENT_LIST_DIR}/source/*)
-list(APPEND SOURCE_DIRS ${COMMON_DIR} ${CMAKE_CURRENT_LIST_DIR}/source)
+list(APPEND SOURCE_DIRS ${COMMON_DIRS} ${CMAKE_CURRENT_LIST_DIR}/source)
 
 foreach (DIR ${SOURCE_DIRS})
     if (IS_DIRECTORY ${DIR})
@@ -52,7 +52,7 @@ foreach (DIR ${SOURCE_DIRS})
 endforeach ()
 
 # Get first index from common list for structure tree
-list(GET COMMON_DIR 0 COMMON)
+list(GET COMMON_DIRS 0 COMMON)
 
 # Make the folder structure visible in the IDE
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}/source PREFIX "source" FILES ${SOURCES})
@@ -66,7 +66,7 @@ source_group(TREE ${COMMON} PREFIX "common" FILES ${COMMON_SOURCES})
 # definitions, pick unique names that are unlikely to collide! This is a standard CMake command.
 
 target_compile_definitions(${TARGET_NAME}
-		PUBLIC
+		PRIVATE
 		# JUCE_WEB_BROWSER and JUCE_USE_CURL would be on by default, but you might not need them.
 		JUCE_WEB_BROWSER=0  # If you remove this, add `NEEDS_WEB_BROWSER TRUE` to the `juce_add_plugin` call
 		JUCE_USE_CURL=0     # If you remove this, add `NEEDS_CURL TRUE` to the `juce_add_plugin` call

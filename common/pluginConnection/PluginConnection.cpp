@@ -50,7 +50,7 @@ void PluginConnection::parameterChanged(const juce::String &parameterID, float n
         }
         message.value1 = (float) newValue;
         juce::MemoryBlock memoryBlock (&message, sizeof(Message));
-        juce::InterprocessConnection::sendMessage(memoryBlock);
+        sendMessage(memoryBlock);
     }
 }
     

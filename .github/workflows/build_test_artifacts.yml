@@ -10,12 +10,12 @@ jobs:
 
   setup:
     runs-on: ubuntu-latest
-    outputs:
-      matrix: ${{ steps.matrix.outputs.value }}
     steps:
       - id: matrix
         run: |
-          echo "{value}={["a", "b", "c"]}" >> $GITHUB_OUTPUT
+          echo "{value}={"a"}" >> $GITHUB_OUTPUT
+    outputs:
+      matrix: ${{ steps.matrix.outputs.value }}
   build:
     needs: [ setup ]
     runs-on: ubuntu-latest

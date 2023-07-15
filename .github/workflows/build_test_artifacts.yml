@@ -25,9 +25,9 @@ jobs:
       - name: printout
         env:
           plugins: client main
+        shell: bash
         run: |
           for plugin in $plugins; do echo "plugin=$plugin"; done;
             echo "matrix.name=${{ matrix.name }}"
             echo "matrix.os=${{ matrix.os }}"
             echo "matrix.ccache=${{ matrix.ccache }}"
-            echo "matrix.plugin=${{ matrix.plugin }}"

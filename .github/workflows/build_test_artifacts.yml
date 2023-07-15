@@ -56,6 +56,6 @@ jobs:
           for PLUGIN in $PLUGINS; do
             echo "$PLUGIN_ARTEFACTS_PATH=${{ env.BUILD_DIR }}/$PLUGIN/$PLUGIN_artefacts/${{ env.BUILD_TYPE }}" >> $GITHUB_ENV
             echo "$PLUGIN_VST3_PATH=${{ env.BUILD_DIR }}/$PLUGIN/$PLUGIN_artefacts/${{ env.BUILD_TYPE }}/VST3/$PLUGIN.vst3" >> $GITHUB_ENV
-          if [ ${{ matrix.name }} -eq 'macOS' }} ]; then
+          if [ "${{ matrix.name }}" -eq "macOS" ]; then
             echo "macOS test"; else
             echo "Windows test"; fi

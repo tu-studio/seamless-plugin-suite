@@ -4,7 +4,7 @@ on:
   workflow_dispatch: # lets you run a build from github.com
   # Runs the workflow on push events but only for the develop branch
   push:
-    branches: [ develop ]
+    branches: [ main ]
 
 jobs:
 

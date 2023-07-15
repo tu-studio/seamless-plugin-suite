@@ -69,5 +69,4 @@ jobs:
       - name: printout
         shell: bash
         run: |
-          for PLUGIN in $PLUGINS; do 
-          done;
+          echo "test"

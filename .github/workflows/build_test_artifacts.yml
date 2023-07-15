@@ -70,7 +70,4 @@ jobs:
         shell: bash
         run: |
           for PLUGIN in $PLUGINS; do 
-            # echo "${{ env.${PLUGIN}_ARTEFACTS_PATH }}"
-            # echo "${{ env.${PLUGIN}_VST3_PATH }}"
-            # echo "${{ enb${PLUGIN}_Standalone_PATH }}"
           done;

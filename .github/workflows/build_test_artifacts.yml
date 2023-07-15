@@ -63,11 +63,4 @@ jobs:
             echo "Windows test"
           else
             echo "Unknown OS"
-          fi;
-          # if [ ${{ github.ref }} == 'refs/heads/main' ]; then
-          #   echo "is MAIN branch"
-          # elif [ ${{ github.ref }} == 'refs/heads/dev' ]; then
-          # echo "is DEV branch"
-          # else
-          #   echo "is neither MAIN nor DEV branch"
-          # fi
+          fi

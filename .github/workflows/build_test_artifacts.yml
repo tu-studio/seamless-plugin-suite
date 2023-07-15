@@ -58,11 +58,11 @@ jobs:
             echo "$PLUGIN_VST3_PATH=${{ env.BUILD_DIR }}/$PLUGIN/$PLUGIN_artefacts/${{ env.BUILD_TYPE }}/VST3/$PLUGIN.vst3" >> $GITHUB_ENV
           done;
           if [ "${{ matrix.name }}" == "macOS" ]; then
-            echo "macOS test";
+            echo "macOS test"
           elif [ "${{ matrix.name }}" == "Windows" ]; then
-            echo "Windows test";
+            echo "Windows test"
           else;
-            echo "Unknown OS";
+            echo "Unknown OS"
           fi;
           # if [ ${{ github.ref }} == 'refs/heads/main' ]; then
           #   echo "is MAIN branch"

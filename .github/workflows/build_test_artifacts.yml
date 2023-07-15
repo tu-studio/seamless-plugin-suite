@@ -15,7 +15,7 @@ jobs:
     steps:
       - id: matrix
         run: |
-          echo "{name}={value::["a", "b", "c"]}" >> $GITHUB_OUTPUT
+          echo "{value}={["a", "b", "c"]}" >> $GITHUB_OUTPUT
   build:
     needs: [ setup ]
     runs-on: ubuntu-latest

@@ -59,7 +59,7 @@ jobs:
           # done
           if [ "${{ matrix.name }}" == "macOS" ]; then
             echo "macOS test"
-          elif
+          elif [ "${{ matrix.name }}" == "Windows" ]; then
             echo "Windows test"
           else
             echo "Unknown OS"

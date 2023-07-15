@@ -15,14 +15,13 @@ jobs:
     steps:
       - id: matrix
         run: |
-          echo "{name}={value::[\"a\", \"b\", \"c\"]}" >> $GITHUB_OUTPUT
-          
+          echo "{name}={value::["a", "b", "c"]}" >> $GITHUB_OUTPUT
   build:
     needs: [ setup ]
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        value: ${{fromJson(needs.setup.outputs.matrix)}}
+        value: ${{ fromJson(needs.setup.outputs.matrix) }}
     steps:
       - run: |
           echo "${{ matrix.value }}"

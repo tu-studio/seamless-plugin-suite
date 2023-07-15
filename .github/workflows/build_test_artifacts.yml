@@ -54,7 +54,7 @@ jobs:
         shell: bash
         run: |
           for PLUGIN in $PLUGINS; do
-            echo "$PLUGIN_ARTEFACTS_PATH";#=${{ env.BUILD_DIR }}/$PLUGIN/$PLUGIN_artefacts/${{ env.BUILD_TYPE }}
+            echo "$PLUGIN";#=${{ env.BUILD_DIR }}/$PLUGIN/$PLUGIN_artefacts/${{ env.BUILD_TYPE }}
             echo "$PLUGIN_VST3_PATH=${{ env.BUILD_DIR }}/$PLUGIN/$PLUGIN_artefacts/${{ env.BUILD_TYPE }}/VST3/$PLUGIN.vst3";
           done;
           if [ "${{ matrix.name }}" == "macOS" ]; then

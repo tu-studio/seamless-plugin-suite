@@ -58,4 +58,5 @@ jobs:
             echo "$PLUGIN_VST3_PATH=${{ env.BUILD_DIR }}/$PLUGIN/$PLUGIN_artefacts/${{ env.BUILD_TYPE }}/VST3/$PLUGIN.vst3" >> $GITHUB_ENV
           if [ "${{ matrix.name }}" -eq "macOS" ]; then
             echo "macOS test"; else
-            echo "Windows test"; fi
+            echo "Windows test";
+          fi;

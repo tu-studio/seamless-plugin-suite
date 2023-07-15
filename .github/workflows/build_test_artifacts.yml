@@ -61,7 +61,7 @@ jobs:
             echo "macOS test"
           elif [ "${{ matrix.name }}" == "Windows" ]; then
             echo "Windows test"
-          else;
+          else
             echo "Unknown OS"
           fi;
           # if [ ${{ github.ref }} == 'refs/heads/main' ]; then

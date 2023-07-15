@@ -41,8 +41,8 @@ jobs:
         shell: bash
         run: |
           for PLUGIN in $PLUGINS;
-          do echo "PLUGIN=$PLUGIN";
-          do echo "matrix.name=${{ matrix.name }}";
-          do echo "matrix.os=${{ matrix.os }}";
-          do echo "matrix.ccache=${{ matrix.ccache }}";
-          done;
+            do echo "PLUGIN=$PLUGIN";
+            do echo "matrix.name=${{ matrix.name }}";
+            do echo "matrix.os=${{ matrix.os }}";
+            do echo "matrix.ccache=${{ matrix.ccache }}";
+            done;

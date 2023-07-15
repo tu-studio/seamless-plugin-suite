@@ -37,6 +37,8 @@ jobs:
             ccache: sccache
     runs-on: ${{ matrix.os }}
     steps:
+
+      #A simple printout of the matrix
       - name: printout
         shell: bash
         run: |
@@ -46,3 +48,14 @@ jobs:
             echo "matrix.os=${{ matrix.os }}";
             echo "matrix.ccache=${{ matrix.ccache }}";
           done;
+      
+      # Setting up the environment variables for the paths so we can use them later
+      - name: setup environment variables
+        shell: bash
+        run: |
+          for PLUGIN in $PLUGINS; do
+            echo "$PLUGIN_ARTEFACTS_PATH=${{ env.BUILD_DIR }}/$PLUGIN/$PLUGIN_artefacts/${{ env.BUILD_TYPE }}" >> $GITHUB_ENV
+            echo "$PLUGIN_VST3_PATH=${{ env.BUILD_DIR }}/$PLUGIN/$PLUGIN_artefacts/${{ env.BUILD_TYPE }}/VST3/$PLUGIN.vst3" >> $GITHUB_ENV
+          if [ ${{ matrix.name }} -eq 'macOS' }} ]; then
+            echo "macOS test"; else
+            echo "Windows test"; fi

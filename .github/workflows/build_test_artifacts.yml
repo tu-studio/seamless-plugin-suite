@@ -65,3 +65,12 @@ jobs:
           else
             echo "Unknown OS";
           fi;
+
+      - name: printout
+        shell: bash
+        run: |
+          for PLUGIN in $PLUGINS; do 
+            echo "${{ ${PLUGIN}_ARTEFACTS_PATH }}"
+            echo "${{ ${PLUGIN}_VST3_PATH }}"
+            echo "${{ ${PLUGIN}_Standalone_PATH }}"
+          done;

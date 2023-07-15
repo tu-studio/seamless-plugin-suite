@@ -64,9 +64,12 @@ jobs:
             else
               echo "Unknown OS";
             fi;
-            done;
+          done;
 
       - name: printout
         shell: bash
         run: |
-          echo "test"
+          for PLUGIN in $PLUGINS; do 
+            ARTEFACTS_PATH="${PLUGIN}_ARTEFACTS_PATHS";
+            echo "ARTEFACTS_PATH=${{ env.ARTEFACTS_PATH }}";
+          done;

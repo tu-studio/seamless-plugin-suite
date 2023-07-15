@@ -9,11 +9,10 @@ on:
 jobs:
 
   setup:
-    name: ${{ matrix.name }}
+    name: ${{ matrix.name }}-${{ matrix.pl}}
     strategy:
       matrix:
         os: [macos-latest, windows-latest]
-        plugin: [client, main]
         include:
           - os: macOS-latest
             name: macOS
@@ -24,8 +23,11 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: printout
+        env:
+          plugins: client main
         run: |
-          echo "matrix.name=${{ matrix.name }}"
-          echo "matrix.os=${{ matrix.os }}"
-          echo "matrix.ccache=${{ matrix.ccache }}"
-          echo "matrix.plugin=${{ matrix.plugin }}"
+          for plugin in $plugins; do echo "plugin=$plugin"; done;
+            echo "matrix.name=${{ matrix.name }}"
+            echo "matrix.os=${{ matrix.os }}"
+            echo "matrix.ccache=${{ matrix.ccache }}"
+            echo "matrix.plugin=${{ matrix.plugin }}"

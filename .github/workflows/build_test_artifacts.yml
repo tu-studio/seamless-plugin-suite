@@ -53,12 +53,14 @@ jobs:
       - name: setup environment variables
         shell: bash
         run: |
-          for PLUGIN in $PLUGINS; do
-            echo "$PLUGIN_ARTEFACTS_PATH=${{ env.BUILD_DIR }}/$PLUGIN/$PLUGIN_artefacts/${{ env.BUILD_TYPE }}" >> $GITHUB_ENV
-            echo "$PLUGIN_VST3_PATH=${{ env.BUILD_DIR }}/$PLUGIN/$PLUGIN_artefacts/${{ env.BUILD_TYPE }}/VST3/$PLUGIN.vst3" >> $GITHUB_ENV
-          done
+          # for PLUGIN in $PLUGINS; do
+          #   echo "$PLUGIN_ARTEFACTS_PATH=${{ env.BUILD_DIR }}/$PLUGIN/$PLUGIN_artefacts/${{ env.BUILD_TYPE }}" >> $GITHUB_ENV
+          #   echo "$PLUGIN_VST3_PATH=${{ env.BUILD_DIR }}/$PLUGIN/$PLUGIN_artefacts/${{ env.BUILD_TYPE }}/VST3/$PLUGIN.vst3" >> $GITHUB_ENV
+          # done
           if [ "${{ matrix.name }}" == "macOS" ]; then
             echo "macOS test"
-          else
+          elif
             echo "Windows test"
+          else
+            echo "Unknown OS"
           fi

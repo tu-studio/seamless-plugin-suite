@@ -60,4 +60,6 @@ jobs:
             echo "macOS test";
           elif [[ "${{ matrix.name }}" = "Windows" ]]; then
             echo "Windows test";
+          else 
+            echo "Unknown OS";
           fi;

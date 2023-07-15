@@ -53,10 +53,11 @@ jobs:
       - name: setup environment variables
         shell: bash
         run: |
-          for PLUGIN in $PLUGINS; do
-            echo "${PLUGIN}_ARTEFACTS_PATHS=${{ env.BUILD_DIR }}/${PLUGIN}/${PLUGIN}_artefacts/${{ env.BUILD_TYPE }}" >> $GIHUB_ENV;
-            echo "${PLUGIN}_VST3_PATH=${{ env.BUILD_DIR }}/${PLUGIN}/${PLUGIN}_artefacts/${{ env.BUILD_TYPE }}/VST3/${PLUGIN}.vst3" >> $GITHUB_ENV;
-          done;
+          echo "${PLUGIN}_ARTEFACTS_PATHS=${{ env.BUILD_DIR }}/${PLUGIN}/${PLUGIN}_artefacts/${{ env.BUILD_TYPE }}" >> $GIHUB_ENV;
+          # for PLUGIN in $PLUGINS; do
+          #   echo "${PLUGIN}_ARTEFACTS_PATHS=${{ env.BUILD_DIR }}/${PLUGIN}/${PLUGIN}_artefacts/${{ env.BUILD_TYPE }}" >> $GIHUB_ENV;
+          #   echo "${PLUGIN}_VST3_PATH=${{ env.BUILD_DIR }}/${PLUGIN}/${PLUGIN}_artefacts/${{ env.BUILD_TYPE }}/VST3/${PLUGIN}.vst3" >> $GITHUB_ENV;
+          # done;
           # if [ "${{ matrix.name }}" == "macOS" ]; then
           #   echo "${PLUGIN}_AU_PATH=${{ env.BUILD_DIR }}/${PLUGIN}/${PLUGIN}_artefacts/${{ env.BUILD_TYPE }}/Standalone/${PLUGIN}.component" >> $GITHUB_ENV;
           #   echo "${PLUGIN}_STANDALONE_PATH=${{ env.BUILD_DIR }}/${PLUGIN}/${PLUGIN}_artefacts/${{ env.BUILD_TYPE }}/Standalone/${PLUGIN}.app" >> $GITHUB_ENV;

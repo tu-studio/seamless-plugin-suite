@@ -53,13 +53,20 @@ jobs:
       - name: setup environment variables
         shell: bash
         run: |
-          for PLUGIN in $PLUGINS; do
-            echo "$PLUGIN_ARTEFACTS_PATH=${{ env.BUILD_DIR }}/$PLUGIN/$PLUGIN_artefacts/${{ env.BUILD_TYPE }}" >> $GITHUB_ENV
-            echo "$PLUGIN_VST3_PATH=${{ env.BUILD_DIR }}/$PLUGIN/$PLUGIN_artefacts/${{ env.BUILD_TYPE }}/VST3/$PLUGIN.vst3" >> $GITHUB_ENV
-          if [[ "${{ matrix.name }}" = "macOS" ]]; then
-            echo "macOS test";
-          elif [[ "${{ matrix.name }}" = "Windows" ]]; then
-            echo "Windows test";
-          else 
-            echo "Unknown OS";
-          fi;
+          # for PLUGIN in $PLUGINS; do
+          #   echo "$PLUGIN_ARTEFACTS_PATH=${{ env.BUILD_DIR }}/$PLUGIN/$PLUGIN_artefacts/${{ env.BUILD_TYPE }}" >> $GITHUB_ENV
+          #   echo "$PLUGIN_VST3_PATH=${{ env.BUILD_DIR }}/$PLUGIN/$PLUGIN_artefacts/${{ env.BUILD_TYPE }}/VST3/$PLUGIN.vst3" >> $GITHUB_ENV
+          # if [[ "${{ matrix.name }}" = "macOS" ]]; then
+          #   echo "macOS test";
+          # elif [[ "${{ matrix.name }}" = "Windows" ]]; then
+          #   echo "Windows test";
+          # else 
+          #   echo "Unknown OS";
+          # fi;
+          if [ ${{ github.ref }} == 'refs/heads/main' ]; then
+            echo "is MAIN branch"
+          elif [ ${{ github.ref }} == 'refs/heads/dev' ]; then
+          echo "is DEV branch"
+          else
+            echo "is neither MAIN nor DEV branch"
+          fi

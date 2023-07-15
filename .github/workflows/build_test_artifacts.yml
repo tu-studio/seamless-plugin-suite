@@ -70,6 +70,6 @@ jobs:
         shell: bash
         run: |
           for PLUGIN in $PLUGINS; do 
-            ARTEFACTS_PATH="${PLUGIN}_ARTEFACTS_PATHS";
+            declare ARTEFACTS_PATH="${PLUGIN}_ARTEFACTS_PATHS";
             echo "ARTEFACTS_PATH=${{ env.ARTEFACTS_PATH }}";
           done;

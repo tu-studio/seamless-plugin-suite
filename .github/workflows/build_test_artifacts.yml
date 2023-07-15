@@ -53,8 +53,8 @@ jobs:
       - name: setup environment variables
         shell: bash
         run: |
-          echo "ARTEFACTS_PATHS=${{ env.BUILD_DIR }}/${PLUGIN}/${PLUGIN}_artefacts/${{ env.BUILD_TYPE }}" >> $GITHUB_ENV;
           for PLUGIN in $PLUGINS; do
+            echo "${PLUGIN}_ARTEFACTS_PATHS=${{ env.BUILD_DIR }}/${PLUGIN}/${PLUGIN}_artefacts/${{ env.BUILD_TYPE }}" >> $GITHUB_ENV;
             echo "${PLUGIN}_VST3_PATH=${{ env.BUILD_DIR }}/${PLUGIN}/${PLUGIN}_artefacts/${{ env.BUILD_TYPE }}/VST3/${PLUGIN}.vst3" >> $GITHUB_ENV;
           done;
           if [ "${{ matrix.name }}" == "macOS" ]; then
@@ -70,5 +70,7 @@ jobs:
         shell: bash
         run: |
           for PLUGIN in $PLUGINS; do 
-            echo "env.ARTEFACTS_PATHS=${{ env.ARTEFACTS_PATHS }}";
+            # echo "${{ env.${PLUGIN}_ARTEFACTS_PATH }}"
+            # echo "${{ env.${PLUGIN}_VST3_PATH }}"
+            # echo "${{ enb${PLUGIN}_Standalone_PATH }}"
           done;

@@ -51,15 +51,17 @@ jobs:
           done;
 
       # We need the osxutils to get the codesign and notorization tools
-      - name: install macOS deps
-        if: ${{ matrix.name == 'macOS' }}
-        run: brew install osxutils
-
-      # This lets us use sscache on Windows
       # We need to install ccache here for Windows to grab the right version
-      - name: install Windows deps
-        if: runner.os == 'Windows'
-        run: choco install ccache
+      - name: install macOS deps
+        shell: bash
+        run: |
+          if [ "${{ matrix.name }}" == "macOS" ]; then
+            brew install osxutils
+          elif [ "${{ matrix.name }}" == "Windows" ]; then
+            choco install ccache
+          else
+            echo "Unknown OS";
+          fi;
 
       # With this we checkout to our repo
       - name: get repo and submodules
@@ -78,10 +80,12 @@ jobs:
       # Typical cmake configuration with default generator
       # With DCMAKE_OSX_ARCHITECTURES="arm64;x86_64" we can build universal binaries for apple computers
       - name: cmake configure
+        shell: bash
         run: cmake -B build -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -DCMAKE_C_COMPILER_LAUNCHER=${{ matrix.ccache }} -DCMAKE_CXX_COMPILER_LAUNCHER=${{ matrix.ccache }} -DCMAKE_OSX_ARCHITECTURES="arm64;x86_64"
 
       # Build the project
       - name: cmake build
+        shell: bash
         run: cmake --build build --config ${{ env.BUILD_TYPE }} --parallel ${{ env.CMAKE_BUILD_PARALLEL_LEVEL }}
       
       # # Test the project
@@ -94,6 +98,7 @@ jobs:
         shell: bash
         run: |
           echo "PACKAGE_DIR=artefacts/${{ env.PROJECT_NAME }}-${{ matrix.name}}/" >> $GITHUB_ENV
+          echo "PRODUCT_NAME=${{ env.PROJECT_NAME }}-${{ matrix.name }}" >> $GITHUB_ENV
       
       # Moving the artefacts to a packaging directory
       - name: move artefacts

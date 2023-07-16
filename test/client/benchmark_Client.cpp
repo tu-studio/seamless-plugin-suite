@@ -1,7 +1,6 @@
 #include <benchmark/benchmark.h>
 #include "../SeamLess_Client/source/PluginEditor.h"
 
-
 static void BM_processor_client(benchmark::State& state) {
   // Perform setup here
     auto gui = juce::ScopedJuceInitialiser_GUI {};

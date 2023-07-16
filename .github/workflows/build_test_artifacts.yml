@@ -88,10 +88,10 @@ jobs:
         shell: bash
         run: cmake --build build --config ${{ env.BUILD_TYPE }} --parallel ${{ env.CMAKE_BUILD_PARALLEL_LEVEL }}
       
-      # # Test the project
-      # - name: ctest
-      #   working-directory: ${{github.workspace}}/build
-      #   run: ctest --verbose
+      # Test the project
+      - name: ctest
+        working-directory: ${{github.workspace}}/build
+        run: ctest --verbose
 
       # Declaring the product name and the packaging directory
       - name: declare artefact variables
@@ -135,7 +135,7 @@ jobs:
             codesign --force -s "${{ secrets.DEV_ID_APP}}" -v ${PLUGIN}.vst3 --deep --strict --options=runtime --timestamp;
             codesign --force -s "${{ secrets.DEV_ID_APP}}" -v ${PLUGIN}.component --deep --strict --options=runtime --timestamp;
             # The standalone needs to have specific entitlements, which we need to add when we codesign the files. Since we have set the entitlements in the CMakeLists.txt we can use the generated file in the location below
-            codesign --entitlements ${{ env.BUILD_DIR }}/${PLUGIN}/${PLUGIN}_artefacts/JuceLibraryCode/${PLUGIN}_Standalone.entitlements  --force -s "${{ secrets.DEV_ID_APP}}" -v ${{ env.STANDALONE_PATH }} --deep --strict --options=runtime --timestamp;
+            codesign --entitlements ${{ env.BUILD_DIR }}/${PLUGIN}/${PLUGIN}_artefacts/JuceLibraryCode/${PLUGIN}_Standalone.entitlements  --force -s "${{ secrets.DEV_ID_APP}}" -v {PLUGIN}.app --deep --strict --options=runtime --timestamp;
             # Here we check the code signitures
             codesign -dv --verbose=4 ${PLUGIN}.vst3;
             codesign -dv --verbose=4 ${PLUGIN}.component;

@@ -89,26 +89,43 @@ jobs:
         working-directory: ${{github.workspace}}/build
         run: ctest --verbose
 
-      # Setting up the environment variables for the paths so we can use them later
-      - name: setup environment variables
+      # Declaring the product name
+      - name: declare product name
         shell: bash
         run: |
-          for PLUGIN in $PLUGINS; do
-            echo "${PLUGIN}_ARTEFACTS_PATHS=${{ env.BUILD_DIR }}/${PLUGIN}/${PLUGIN}_artefacts/${{ env.BUILD_TYPE }}" >> $GITHUB_ENV;
-            echo "${PLUGIN}_VST3_PATH=${{ env.BUILD_DIR }}/${PLUGIN}/${PLUGIN}_artefacts/${{ env.BUILD_TYPE }}/VST3/${PLUGIN}.vst3" >> $GITHUB_ENV;
+          echo "PACKAGE_DIR=artefacts/${{ env.PROJECT_NAME }}-${{ matrix.name}}/" >> $GITHUB_ENV
+      
+      # Moving the artefacts to a packaging directory
+      - name: move artefacts
+        shell: bash
+        run: |
+          mkdir -p ${{ env.PACKAGE_DIR }}
+          for PLUGIN in $PLUGINS; do;
+            mv "${{ env.BUILD_DIR }}/${PLUGIN}/${PLUGIN}_artefacts/${{ env.BUILD_TYPE }}/VST3/${PLUGIN}.vst3" ${{ env.PACKAGE_DIR }};
             if [ "${{ matrix.name }}" == "macOS" ]; then
-              echo "${PLUGIN}_AU_PATH=${{ env.BUILD_DIR }}/${PLUGIN}/${PLUGIN}_artefacts/${{ env.BUILD_TYPE }}/Standalone/${PLUGIN}.component" >> $GITHUB_ENV;
-              echo "${PLUGIN}_STANDALONE_PATH=${{ env.BUILD_DIR }}/${PLUGIN}/${PLUGIN}_artefacts/${{ env.BUILD_TYPE }}/Standalone/${PLUGIN}.app" >> $GITHUB_ENV;
+              mv "${{ env.BUILD_DIR }}/${PLUGIN}/${PLUGIN}_artefacts/${{ env.BUILD_TYPE }}/Standalone/${PLUGIN}.component" ${{ env.PACKAGE_DIR }};
+              mv "${{ env.BUILD_DIR }}/${PLUGIN}/${PLUGIN}_artefacts/${{ env.BUILD_TYPE }}/Standalone/${PLUGIN}.app" ${{ env.PACKAGE_DIR }};
             elif [ "${{ matrix.name }}" == "Windows" ]; then
-              echo "${PLUGIN}_STANDALONE_PATH=${{ env.BUILD_DIR }}/${PLUGIN}/${PLUGIN}_artefacts/${{ env.BUILD_TYPE }}/Standalone/${PLUGIN}.exe" >> $GITHUB_ENV;
+              mv "${{ env.BUILD_DIR }}/${PLUGIN}/${PLUGIN}_artefacts/${{ env.BUILD_TYPE }}/Standalone/${PLUGIN}.exe" ${{ env.PACKAGE_DIR }};
             else
               echo "Unknown OS";
             fi;
           done;
 
-      - name: printout
+      # Zip the artefact
+      - name: zip artefacts
         shell: bash
         run: |
-          for PLUGIN in $PLUGINS; do 
-            echo "test"
-          done;
+          if [ "${{ matrix.name }}" == "macOS" ]; then
+            zip -vr ${{ env.PRODUCT_NAME }}.zip ${{ env.PACKAGE_DIR }} -x "*.DS_Store"
+          elif [ "${{ matrix.name }}" == "Windows" ]; then
+            tar -a -c -f ${{ env.PRODUCT_NAME }}.zip ${{ env.PACKAGE_DIR }}
+          else
+            echo "Unknown OS";
+          fi;
+          
+      - name: upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ env.PRODUCT_NAME }}.zip
+          path: artefacts/${{ env.PRODUCT_NAME }}.zip

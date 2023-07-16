@@ -100,7 +100,7 @@ jobs:
         shell: bash
         run: |
           mkdir -p ${{ env.PACKAGE_DIR }}
-          for PLUGIN in $PLUGINS; do;
+          for PLUGIN in $PLUGINS; do
             mv "${{ env.BUILD_DIR }}/${PLUGIN}/${PLUGIN}_artefacts/${{ env.BUILD_TYPE }}/VST3/${PLUGIN}.vst3" ${{ env.PACKAGE_DIR }};
             if [ "${{ matrix.name }}" == "macOS" ]; then
               mv "${{ env.BUILD_DIR }}/${PLUGIN}/${PLUGIN}_artefacts/${{ env.BUILD_TYPE }}/Standalone/${PLUGIN}.component" ${{ env.PACKAGE_DIR }};

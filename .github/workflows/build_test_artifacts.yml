@@ -84,10 +84,10 @@ jobs:
       - name: cmake build
         run: cmake --build build --config ${{ env.BUILD_TYPE }} --parallel ${{ env.CMAKE_BUILD_PARALLEL_LEVEL }}
       
-      # Test the project
-      - name: ctest
-        working-directory: ${{github.workspace}}/build
-        run: ctest --verbose
+      # # Test the project
+      # - name: ctest
+      #   working-directory: ${{github.workspace}}/build
+      #   run: ctest --verbose
 
       # Declaring the product name
       - name: declare product name

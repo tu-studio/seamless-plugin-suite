@@ -68,10 +68,6 @@ enable_testing()
 #   PROPERTIES FAIL_REGULAR_EXPRESSION "Custom Slider Component"
 #   )
 
-# get all test cpp and header files
-file(GLOB_RECURSE TEST_SOURCES CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/test/*.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/*.h)
-source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}/test PREFIX "test" FILES ${TEST_SOURCES})
-
 # This module enables populating content at configure time via any method supported by the ExternalProject module. Whereas ExternalProject_Add() downloads at build time, the FetchContent module makes content available immediately, allowing the configure step to use the content in commands like add_subdirectory(), include() or file() operations.
 include(FetchContent)
 
@@ -101,33 +97,39 @@ if(NOT benchmark_POPULATED)
   add_subdirectory(${benchmark_SOURCE_DIR} ${benchmark_BINARY_DIR})
 endif()
 
-# Setup the test executable
-add_executable(Test ${TEST_SOURCES})
-set_property(TARGET Test PROPERTY CXX_STANDARD 20)
-
-# Add include directories for all folders in test
-file(GLOB_RECURSE TEST_DIRS LIST_DIRECTORIES true ${CMAKE_CURRENT_LIST_DIR}/test/*)
-list(APPEND TEST_DIRS ${COMMON_DIRS} ${CMAKE_CURRENT_LIST_DIR}/test)
-
-foreach (DIR ${TEST_DIRS})
-    if (IS_DIRECTORY ${DIR})
-        target_include_directories(Test PRIVATE ${DIR})
-    endif ()
-endforeach ()
-
-# Link the test executable against gtest_main and google benchmark
-target_link_libraries(Test PRIVATE gtest_main benchmark::benchmark)
-
-# We can't link again to the shared juce target without ODL violations (https://github.com/sudara/pamplejuce/issues/31, https://forum.juce.com/t/windows-linker-issue-on-develop/55524/2)
-# Therefore we steal the compile definitions and include directories from the main target and pass them to our test target
-# Since we linked the shared juce targets in PRIVATE mode, they are not linked to the test target again
 foreach(PLUGIN IN LISTS PLUGIN_LIST)
-	target_link_libraries(Test PRIVATE ${PLUGIN})
-	target_compile_definitions(Test PRIVATE $<TARGET_PROPERTY:${PLUGIN},COMPILE_DEFINITIONS>)
-	target_include_directories(Test PRIVATE $<TARGET_PROPERTY:${PLUGIN},INCLUDE_DIRECTORIES>)
-endforeach()
 
-# include Loads and runs CMake code from the file given. Loads and runs CMake code from the file given.
-include(GoogleTest)
-# gtest_discover_tests will register a CTest test for each gtest and run them all in parallel with the rest of the Test.
-gtest_discover_tests(Test)
+    # get all test cpp and header files
+    file(GLOB_RECURSE TEST_SOURCES_${PLUGIN} CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/test/${PLUGIN}/*.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/${PLUGIN}/*.h)
+    source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}/test/${PLUGIN} PREFIX "test_${PLUGIN}" FILES ${TEST_SOURCES_${PLUGIN}})
+
+    # Setup the test executable
+    add_executable(Test_${PLUGIN} ${TEST_SOURCES_${PLUGIN}})
+    set_property(TARGET Test_${PLUGIN} PROPERTY CXX_STANDARD 20)
+
+    # Add include directories for all folders in test
+    file(GLOB_RECURSE TEST_DIRS_${PLUGIN} LIST_DIRECTORIES true ${CMAKE_CURRENT_LIST_DIR}/test/${PLUGIN})
+
+    foreach (DIR ${TEST_DIRS}_${PLUGIN})
+        if (IS_DIRECTORY ${DIR})
+            target_include_directories(Test_${PLUGIN} PRIVATE ${DIR})
+        endif ()
+    endforeach ()
+
+    # Link the test executable against gtest_main and google benchmark
+    target_link_libraries(Test_${PLUGIN} PRIVATE gtest_main benchmark::benchmark)
+
+    # We can't link again to the shared juce target without ODL violations (https://github.com/sudara/pamplejuce/issues/31, https://forum.juce.com/t/windows-linker-issue-on-develop/55524/2)
+    # Therefore we steal the compile definitions and include directories from the main target and pass them to our test target
+    # Since we linked the shared juce targets in PRIVATE mode, they are not linked to the test target again
+
+	target_link_libraries(Test_${PLUGIN} PRIVATE ${PLUGIN})
+	target_compile_definitions(Test_${PLUGIN} PRIVATE $<TARGET_PROPERTY:${PLUGIN},COMPILE_DEFINITIONS>)
+	target_include_directories(Test_${PLUGIN} PRIVATE $<TARGET_PROPERTY:${PLUGIN},INCLUDE_DIRECTORIES>)
+
+    # include Loads and runs CMake code from the file given. Loads and runs CMake code from the file given.
+    include(GoogleTest)
+    # gtest_discover_tests will register a CTest test for each gtest and run them all in parallel with the rest of the Test.
+    gtest_discover_tests(Test_${PLUGIN})
+    
+endforeach()

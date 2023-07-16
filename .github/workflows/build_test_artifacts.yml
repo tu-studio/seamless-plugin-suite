@@ -119,7 +119,7 @@ jobs:
 
       # Zip the artefact
       - name: zip artefacts
-        working-directory: ${{github.workspace}}/packaging
+        working-directory: ${{github.workspace}}/artefacts
         shell: bash
         run: |
           if [ "${{ matrix.name }}" == "macOS" ]; then

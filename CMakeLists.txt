@@ -50,8 +50,8 @@ add_subdirectory(common)
 # The following list will hold all the plug-ins which will be built.
 # Simply comment them out if you want to build only a subset of the plug-ins.
 set (PLUGIN_LIST
-        SeamLess_Client
         SeamLess_Main
+        SeamLess_Client
     )
 
 foreach (PLUGIN IN LISTS PLUGIN_LIST)

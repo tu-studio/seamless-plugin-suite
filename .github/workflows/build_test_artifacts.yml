@@ -52,7 +52,7 @@ jobs:
 
       # We need the osxutils to get the codesign and notorization tools
       # We need to install ccache here for Windows to grab the right version
-      - name: install macOS deps
+      - name: install deps
         shell: bash
         run: |
           if [ "${{ matrix.name }}" == "macOS" ]; then

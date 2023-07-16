@@ -88,10 +88,11 @@ jobs:
         shell: bash
         run: cmake --build build --config ${{ env.BUILD_TYPE }} --parallel ${{ env.CMAKE_BUILD_PARALLEL_LEVEL }}
       
-      # # Test the project
-      # - name: ctest
-      #   working-directory: ${{github.workspace}}/build
-      #   run: ctest --verbose
+      # Test the project
+      - name: ctest
+        if: ${{ matrix.name == 'macOS' }}
+        working-directory: ${{github.workspace}}/build
+        run: ctest --verbose
 
       # Declaring the product name and the packaging directory
       - name: declare artefact variables
@@ -117,6 +118,31 @@ jobs:
             fi;
           done;
 
+      # We need to import the apple developer certificate so that we can codesign our binaries
+      - name: import certificates (macOS)
+        uses: apple-actions/import-codesign-certs@v1
+        if: ${{ matrix.name == 'macOS' }}
+        with:
+          # GitHub encrypted secrets
+          p12-file-base64: ${{ secrets.DEV_ID_APP_CERT }}
+          p12-password: ${{ secrets.DEV_ID_APP_PWD }}
+
+      # Codesigning all the binaries
+      - name: codesign (macOS)
+        if: ${{ matrix.name == 'macOS' }}
+        working-directory: ${{github.workspace}}/artefacts
+        run: |
+          for PLUGIN in $PLUGINS; do
+            codesign --force -s "${{ secrets.DEV_ID_APP}}" -v ${PLUGIN}.vst3 --deep --strict --options=runtime --timestamp;
+            codesign --force -s "${{ secrets.DEV_ID_APP}}" -v ${PLUGIN}.component --deep --strict --options=runtime --timestamp;
+            # The standalone needs to have specific entitlements, which we need to add when we codesign the files. Since we have set the entitlements in the CMakeLists.txt we can use the generated file in the location below
+            codesign --entitlements ${{ env.BUILD_DIR }}/${PLUGIN}/${PLUGIN}_artefacts/JuceLibraryCode/Scyclone_Standalone.entitlements  --force -s "${{ secrets.DEV_ID_APP}}" -v ${{ env.STANDALONE_PATH }} --deep --strict --options=runtime --timestamp;
+            # Here we check the code signitures
+            codesign -dv --verbose=4 ${PLUGIN}.vst3;
+            codesign -dv --verbose=4 ${PLUGIN}.component;
+            codesign -dv --verbose=4 ${PLUGIN}.app;
+          done;
+      
       # Zip the artefact
       - name: zip artefacts
         working-directory: ${{github.workspace}}/artefacts
@@ -129,6 +155,25 @@ jobs:
           else
             echo "Unknown OS";
           fi;
+
+      # Let's now notarize the zip file and with it all its contents / binaries
+      - name: notarize (macOS)
+        working-directory: ${{github.workspace}}/artefacts
+        if: ${{ matrix.name == 'macOS' }}
+        run: |
+          # In contrast to dmg files zip files do not need to be codesigned before notarization
+          xcrun notarytool submit ${{ env.PRODUCT_NAME }}.zip --apple-id ${{ secrets.APPLE_DEV_ID }} --password ${{ secrets.APPLE_DEV_PWD }} --team-id ${{ secrets.TEAM_ID }} --wait
+          # Then we need to unzip it and staple the ticket for the gatekeeper to all binaries
+          unzip ${{ env.PRODUCT_NAME }}.zip && rm ${{ env.PRODUCT_NAME }}.zip
+          cd ${{ env.PRODUCT_NAME }}
+          for PLUGIN in $PLUGINS; do
+            xcrun stapler staple ${PLUGIN}.vst3;
+            xcrun stapler staple ${PLUGIN}.component;
+            xcrun stapler staple ${PLUGIN}.app;
+          done;
+          cd ..
+          # And finally zip it again
+          zip -vr ${{ env.PRODUCT_NAME }}.zip ${{ env.PRODUCT_NAME }}/ -x "*.DS_Store"
           
       - name: upload artifact
         uses: actions/upload-artifact@v3

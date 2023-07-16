@@ -97,18 +97,19 @@ if(NOT benchmark_POPULATED)
   add_subdirectory(${benchmark_SOURCE_DIR} ${benchmark_BINARY_DIR})
 endif()
 
+# Make a test executable for every plugin
 foreach(PLUGIN IN LISTS PLUGIN_LIST)
 
     # get all test cpp and header files
-    file(GLOB_RECURSE TEST_SOURCES_${PLUGIN} CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/test/${PLUGIN}/*.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/${PLUGIN}/*.h)
-    source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}/test/${PLUGIN} PREFIX "test_${PLUGIN}" FILES ${TEST_SOURCES_${PLUGIN}})
+    file(GLOB_RECURSE TEST_SOURCES_${PLUGIN} CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/${PLUGIN}/test/*.cpp ${CMAKE_CURRENT_SOURCE_DIR}/${PLUGIN}/test/*.h)
+    source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}/${PLUGIN}/test PREFIX "test_${PLUGIN}" FILES ${TEST_SOURCES_${PLUGIN}})
 
     # Setup the test executable
     add_executable(Test_${PLUGIN} ${TEST_SOURCES_${PLUGIN}})
     set_property(TARGET Test_${PLUGIN} PROPERTY CXX_STANDARD 20)
 
     # Add include directories for all folders in test
-    file(GLOB_RECURSE TEST_DIRS_${PLUGIN} LIST_DIRECTORIES true ${CMAKE_CURRENT_LIST_DIR}/test/${PLUGIN})
+    file(GLOB_RECURSE TEST_DIRS_${PLUGIN} LIST_DIRECTORIES true ${CMAKE_CURRENT_LIST_DIR}/${PLUGIN}/test)
 
     foreach (DIR ${TEST_DIRS}_${PLUGIN})
         if (IS_DIRECTORY ${DIR})
@@ -122,7 +123,6 @@ foreach(PLUGIN IN LISTS PLUGIN_LIST)
     # We can't link again to the shared juce target without ODL violations (https://github.com/sudara/pamplejuce/issues/31, https://forum.juce.com/t/windows-linker-issue-on-develop/55524/2)
     # Therefore we steal the compile definitions and include directories from the main target and pass them to our test target
     # Since we linked the shared juce targets in PRIVATE mode, they are not linked to the test target again
-
 	target_link_libraries(Test_${PLUGIN} PRIVATE ${PLUGIN})
 	target_compile_definitions(Test_${PLUGIN} PRIVATE $<TARGET_PROPERTY:${PLUGIN},COMPILE_DEFINITIONS>)
 	target_include_directories(Test_${PLUGIN} PRIVATE $<TARGET_PROPERTY:${PLUGIN},INCLUDE_DIRECTORIES>)

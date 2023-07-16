@@ -118,7 +118,7 @@ jobs:
             elif [ "${{ matrix.name }}" == "Windows" ]; then
               mv "${{ env.BUILD_DIR }}/${PLUGIN}/${PLUGIN}_artefacts/${{ env.BUILD_TYPE }}/Standalone/${PLUGIN}.exe" ${{ env.PACKAGE_DIR }};
             elif [ "${{ matrix.name }}" == "Linux" ]; then
-              mv "${{ env.BUILD_DIR }}/${PLUGIN}/${PLUGIN}_artefacts/${{ env.BUILD_TYPE }}/Standalone/${PLUGIN}.bin" ${{ env.PACKAGE_DIR }};
+              mv "${{ env.BUILD_DIR }}/${PLUGIN}/${PLUGIN}_artefacts/${{ env.BUILD_TYPE }}/Standalone/${PLUGIN}" ${{ env.PACKAGE_DIR }};
             else
               echo "Unknown OS";
             fi;

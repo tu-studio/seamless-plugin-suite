@@ -129,7 +129,7 @@ jobs:
       # Codesigning all the binaries
       - name: codesign (macOS)
         if: ${{ matrix.name == 'macOS' }}
-        working-directory: ${{github.workspace}}/artefacts
+        working-directory: ${{github.workspace}}/${{ env.PACKAGE_DIR }}
         run: |
           for PLUGIN in $PLUGINS; do
             codesign --force -s "${{ secrets.DEV_ID_APP}}" -v ${PLUGIN}.vst3 --deep --strict --options=runtime --timestamp;

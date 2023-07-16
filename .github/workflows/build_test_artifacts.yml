@@ -35,9 +35,10 @@ jobs:
           - os: windows-latest
             name: Windows
             ccache: sccache
+    
     runs-on: ${{ matrix.os }}
     steps:
-
+      
       #A simple printout of the matrix
       - name: printout
         shell: bash
@@ -48,7 +49,46 @@ jobs:
             echo "matrix.os=${{ matrix.os }}";
             echo "matrix.ccache=${{ matrix.ccache }}";
           done;
+
+      # We need the osxutils to get the codesign and notorization tools
+      - name: install macOS deps
+        if: ${{ matrix.name == 'macOS' }}
+        run: brew install osxutils
+
+      # This lets us use sscache on Windows
+      # We need to install ccache here for Windows to grab the right version
+      - name: install Windows deps
+        if: runner.os == 'Windows'
+        run: choco install ccache
+
+      # With this we checkout to our repo
+      - name: get repo and submodules
+        uses: actions/checkout@v3
+      # Here we get the submodules like juce
+        with:
+          submodules: true      
       
+      # Using the ccache action to store the build cache and speed up the next builds
+      - name: ccache
+        uses: hendrikmuhs/ccache-action@main
+        with:
+          key: v3-${{ matrix.os }}-${{ env.BUILD_TYPE }}
+          variant: ${{ matrix.ccache }}
+      
+      # Typical cmake configuration with default generator
+      # With DCMAKE_OSX_ARCHITECTURES="arm64;x86_64" we can build universal binaries for apple computers
+      - name: cmake configure
+        run: cmake -B build -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -DCMAKE_C_COMPILER_LAUNCHER=${{ matrix.ccache }} -DCMAKE_CXX_COMPILER_LAUNCHER=${{ matrix.ccache }} -DCMAKE_OSX_ARCHITECTURES="arm64;x86_64"
+
+      # Build the project
+      - name: cmake build
+        run: cmake --build build --config ${{ env.BUILD_TYPE }} --parallel ${{ env.CMAKE_BUILD_PARALLEL_LEVEL }}
+      
+      # Test the project
+      - name: ctest
+        working-directory: ${{github.workspace}}/build
+        run: ctest --verbose
+
       # Setting up the environment variables for the paths so we can use them later
       - name: setup environment variables
         shell: bash
@@ -70,6 +110,5 @@ jobs:
         shell: bash
         run: |
           for PLUGIN in $PLUGINS; do 
-            declare ARTEFACTS_PATH="${PLUGIN}_ARTEFACTS_PATHS";
-            echo "ARTEFACTS_PATH=${{ env.ARTEFACTS_PATH }}";
+            echo "test"
           done;

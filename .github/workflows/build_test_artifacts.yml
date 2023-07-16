@@ -93,8 +93,8 @@ jobs:
       #   working-directory: ${{github.workspace}}/build
       #   run: ctest --verbose
 
-      # Declaring the product name
-      - name: declare product name
+      # Declaring the product name and the packaging directory
+      - name: declare artefact variables
         shell: bash
         run: |
           echo "PACKAGE_DIR=artefacts/${{ env.PROJECT_NAME }}-${{ matrix.name}}/" >> $GITHUB_ENV
@@ -119,12 +119,13 @@ jobs:
 
       # Zip the artefact
       - name: zip artefacts
+        working-directory: ${{github.workspace}}/packaging
         shell: bash
         run: |
           if [ "${{ matrix.name }}" == "macOS" ]; then
-            zip -vr ${{ env.PRODUCT_NAME }}.zip ${{ env.PACKAGE_DIR }} -x "*.DS_Store"
+            zip -vr ${{ env.PRODUCT_NAME }}.zip ${{ env.PRODUCT_NAME }}/ -x "*.DS_Store"
           elif [ "${{ matrix.name }}" == "Windows" ]; then
-            tar -a -c -f ${{ env.PRODUCT_NAME }}.zip ${{ env.PACKAGE_DIR }}
+            tar -a -c -f ${{ env.PRODUCT_NAME }}.zip ${{ env.PRODUCT_NAME }}/
           else
             echo "Unknown OS";
           fi;

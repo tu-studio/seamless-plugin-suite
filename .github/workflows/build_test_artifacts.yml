@@ -136,9 +136,9 @@ jobs:
             # The standalone needs to have specific entitlements, which we need to add when we codesign the files. Since we have set the entitlements in the CMakeLists.txt we can use the generated file in the location below
             codesign --entitlements ${{ env.BUILD_DIR }}/${PLUGIN}/${PLUGIN}_artefacts/JuceLibraryCode/${PLUGIN}_Standalone.entitlements --force -s "${{ secrets.DEV_ID_APP}}" -v ${{ env.PACKAGE_DIR }}/${PLUGIN}.app --deep --strict --options=runtime --timestamp;
             # Here we check the code signitures
-            codesign -dv --verbose=4 ${PLUGIN}.vst3;
-            codesign -dv --verbose=4 ${PLUGIN}.component;
-            codesign -dv --verbose=4 ${PLUGIN}.app;
+            codesign -dv --verbose=4 ${{ env.PACKAGE_DIR }}/${PLUGIN}.vst3;
+            codesign -dv --verbose=4 ${{ env.PACKAGE_DIR }}/${PLUGIN}.component;
+            codesign -dv --verbose=4 ${{ env.PACKAGE_DIR }}/${PLUGIN}.app;
           done;
       
       # Zip the artefact

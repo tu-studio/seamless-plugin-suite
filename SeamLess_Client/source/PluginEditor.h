@@ -4,6 +4,7 @@
 #include <SeamLess.h>
 #include <SendFader.h>
 #include <SourceIndexSelector.h>
+#include <XYPad.h>
 
 //==============================================================================
 class AudioPluginAudioProcessorEditor  : public juce::AudioProcessorEditor, private juce::Button::Listener
@@ -25,6 +26,7 @@ private:
     juce::TextButton testButton;
     SendFader sendFader;
     SourceIndexSelector sourceIndexSelector;
+    XYPad xyPad;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioPluginAudioProcessorEditor)
 };

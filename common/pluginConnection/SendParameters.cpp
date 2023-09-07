@@ -20,6 +20,16 @@ juce::AudioProcessorValueTreeState::ParameterLayout SendParameters::createParame
                                                                   GAIN_RANGE,
                                                                   0.f));
     
+    params.push_back(std::make_unique<juce::AudioParameterFloat> (POS_X_ID,
+                                                                  POS_X_NAME,
+                                                                  POS_RANGE,
+                                                                  0.f));
+
+    params.push_back(std::make_unique<juce::AudioParameterFloat> (POS_Y_ID,
+                                                                  POS_Y_NAME,
+                                                                  POS_RANGE,
+                                                                  0.f));
+    
     if (parameterList.isEmpty()) {
         for (const auto & param : params) {
             parameterList.add(param->getParameterID());

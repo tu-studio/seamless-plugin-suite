@@ -46,11 +46,10 @@ void SourceTree::parameterChanged(PluginConnection *pluginConnection, Parameter 
         if (pluginConnection == source.pluginConnection) {
             if (parameter == PARAM_SOURCE_IDX) {
                 source.sourceIdx = (int) value1;
-            }
-            else if (parameter == PARAM_POS) {
-                source.xPosition = value1;
-                source.yPosition = value2;
-                source.zPosition = value3;
+            } else if (parameter == PARAM_POS) {
+                if (value1 != 99.f) source.xPosition = value1;
+                if (value2 != 99.f) source.yPosition = value2;
+                if (value3 != 99.f) source.zPosition = value3;
             } else if (parameter == PARAM_GAIN_1) {
                 source.gain1 = value1;
                 juce::ignoreUnused(value2);

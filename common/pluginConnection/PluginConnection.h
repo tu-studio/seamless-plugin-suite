@@ -41,13 +41,15 @@ public:
     
     PluginConnection();
     ~PluginConnection() override;
-    void connect(juce::AudioProcessorValueTreeState &apvts, juce::StringArray parameterList, juce::StringArray settingsList);
+    void connect(juce::AudioProcessorValueTreeState &pluginApvts, juce::StringArray parameterList, juce::StringArray settingsList);
     void parameterChanged(const juce::String &parameterID, float newValue);
     
 private:
     void connectionMade() override;
     void connectionLost() override;
     void messageReceived(const juce::MemoryBlock& message) override;
+
+private:
     juce::ListenerList<Listener> listenerList;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PluginConnection)

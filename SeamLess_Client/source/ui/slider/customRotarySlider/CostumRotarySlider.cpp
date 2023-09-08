@@ -1,13 +1,13 @@
 //
-//  CostumSliderComponent.cpp
+//  CostumRotarySlider.cpp
 //  SeamlessPluginSuite
 //
 //  Created by Fares Schulz on 06.06.23.
 //
 
-#include "CostumSliderComponent.h"
+#include "CostumRotarySlider.h"
 
-CostumSliderComponent::CostumSliderComponent(juce::String sliderName) {
+CostumRotarySlider::CostumRotarySlider(juce::String sliderName) {
     slider.setLookAndFeel(&customSliderLookAndFeel);
     slider.setSliderStyle(juce::Slider::Rotary);
     slider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 90, 30);
@@ -20,19 +20,19 @@ CostumSliderComponent::CostumSliderComponent(juce::String sliderName) {
     addAndMakeVisible(sliderLabel);
 }
 
-CostumSliderComponent::~CostumSliderComponent() {
+CostumRotarySlider::~CostumRotarySlider() {
     slider.setLookAndFeel(nullptr);
 }
 
-void CostumSliderComponent::addSliderAttachment(juce::AudioProcessorValueTreeState &state, const juce::String &parameterID) {
+void CostumRotarySlider::addSliderAttachment(juce::AudioProcessorValueTreeState &state, const juce::String &parameterID) {
     attachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(state, parameterID, slider);
 }
 
-void CostumSliderComponent::setDoubleClickReturnValue(double valueToSetOnDoubleClick) {
+void CostumRotarySlider::setDoubleClickReturnValue(double valueToSetOnDoubleClick) {
     slider.setDoubleClickReturnValue(true, valueToSetOnDoubleClick);
 }
 
-void CostumSliderComponent::resized() {
+void CostumRotarySlider::resized() {
     auto area = getLocalBounds();
     slider.setBounds(area);
 }

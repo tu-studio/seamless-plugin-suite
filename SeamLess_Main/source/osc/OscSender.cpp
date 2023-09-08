@@ -8,7 +8,7 @@
 #include "OscSender.h"
 
 OscSender::OscSender() {
-    if (! connect ("130.149.23.24", 4455))
+    if (! connect ("127.0.0.1", 9001))
         showConnectionErrorMessage ("Error: could not connect to UDP port 9001.");
 }
 

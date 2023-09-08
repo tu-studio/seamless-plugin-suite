@@ -1,12 +1,12 @@
 //
-//  CostumSliderComponent.h
+//  CostumRotarySlider.h
 //  SeamlessPluginSuite
 //
 //  Created by Fares Schulz on 06.06.23.
 //
 
-#ifndef CostumSliderComponent_h
-#define CostumSliderComponent_h
+#ifndef CostumRotarySlider_h
+#define CostumRotarySlider_h
 
 #include <JuceHeader.h>
 #include <SeamLess.h>
@@ -16,10 +16,10 @@
 //            Rotary Slider
 //==============================================================================
 
-class CostumSliderComponent : public juce::Component {
+class CostumRotarySlider : public juce::Component {
 public:
-    CostumSliderComponent(juce::String sliderName);
-    ~CostumSliderComponent() override;
+    CostumRotarySlider(juce::String sliderName);
+    ~CostumRotarySlider() override;
     
     void addSliderAttachment(juce::AudioProcessorValueTreeState& state, const juce::String& parameterID);
     void setDoubleClickReturnValue(double valueToSetOnDoubleClick);
@@ -35,8 +35,8 @@ private:
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> attachment;
     std::unique_ptr<juce::RangedAudioParameter*> parameter;
     
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(CostumSliderComponent)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(CostumRotarySlider)
 };
 
-#endif /* CostumSliderComponent_h */
+#endif /* CostumRotarySlider_h */
 

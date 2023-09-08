@@ -3,19 +3,30 @@
 
 //==============================================================================
 AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAudioProcessor& p, juce::AudioProcessorValueTreeState& apvts)
-    : AudioProcessorEditor (&p), processorRef (p), sendFader(apvts), sourceIndexSelector(apvts), xyPad(apvts)
+    : AudioProcessorEditor (&p), processorRef (p), gainSliderBox(apvts), sourceIndexSelector(apvts), xyPad(apvts), zPositionSlider(apvts), gridChoiceArray({"Grid OFF", "Grid \nON \nxyz", juce::CharPointer_UTF8("Grid \nON \n r \xcf\x86 \xce\xb8\t")}), gridChoiceButton(apvts, PluginParameters::GRID_TYPE_ID, 3, gridChoiceArray, "None"),venueChoiceArray({"TU Studio", "HuFo"}), venueChoiceButton(apvts, PluginParameters::VENUE_TYPE_ID, 3, venueChoiceArray, "None")
 {
-//    juce::ignoreUnused (processorRef);
-    // Make sure that before the constructor has finished, you've set the
-    // editor's size to whatever you need it to be.
-    setSize (400, 300);
-    addAndMakeVisible(sendFader);
+    juce::ignoreUnused (processorRef);
+
+    // window size settings
+    setSize (1000, 600);    
+    setResizable(true, true);
+    setResizeLimits(675, 600, 7000, 8000);
+
+    addAndMakeVisible(gainSliderBox);
     addAndMakeVisible(sourceIndexSelector);
     addAndMakeVisible(xyPad);
+    addAndMakeVisible(zPositionSlider);
+
+    addAndMakeVisible(gridChoiceButton);
+    gridChoiceButton.addListener(& xyPad.grid);
+    addAndMakeVisible(venueChoiceButton);
+    venueChoiceButton.addListener(& xyPad.grid);
 }
 
 AudioPluginAudioProcessorEditor::~AudioPluginAudioProcessorEditor()
 {
+    gridChoiceButton.removeListener(& xyPad.grid);
+    venueChoiceButton.removeListener(& xyPad.grid);
 }
 
 //==============================================================================
@@ -28,13 +39,11 @@ void AudioPluginAudioProcessorEditor::resized()
 {
     auto area = getLocalBounds();
     area.removeFromTop(20);
-    sendFader.setBounds(area.getWidth()/2, area.getY(), area.getWidth()/2, area.getHeight()/2);
-    sourceIndexSelector.setBounds(area.getWidth()/2, area.getHeight()/2, area.getWidth()/2, area.getHeight()/2);
+    auto leftSide = area.removeFromLeft(area.getWidth()/8);
+    zPositionSlider.setBounds(leftSide.removeFromTop(2 * leftSide.getHeight()/3));
+    gridChoiceButton.setBounds(leftSide.removeFromTop(leftSide.getHeight()/2));
+    venueChoiceButton.setBounds(leftSide);
     xyPad.setBounds(area.getX(), area.getY(), area.getWidth()/2, area.getHeight());
-    // This is generally where you'll want to lay out the positions of any
-    // subcomponents in your editor..
-}
-
-void AudioPluginAudioProcessorEditor::buttonClicked(juce::Button* button) {
-//    if (button == &testButton) processorRef.pluginConnection.sendMessageToMain("test", "cool");
+    gainSliderBox.setBounds(area.getX() + area.getWidth()/2, area.getY(), area.getWidth()/2, area.getHeight()/2);
+    sourceIndexSelector.setBounds(area.getX() + area.getWidth()/2, area.getHeight()/2, area.getWidth()/2, area.getHeight()/2);
 }

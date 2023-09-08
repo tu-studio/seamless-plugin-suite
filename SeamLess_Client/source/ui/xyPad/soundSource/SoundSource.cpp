@@ -24,5 +24,5 @@ void SoundSource::paint(juce::Graphics& g) {
 
 void SoundSource::resized() {
     auto area = getLocalBounds();
-    gradient = juce::ColourGradient(juce::Colours::white, area.getWidth()/2, area.getHeight()/2, juce::Colours::black, area.getX(), area.getY(), true);
+    gradient = juce::ColourGradient(juce::Colours::whitesmoke, area.getWidth()/2, area.getHeight()/2, seamlessBlue, area.getX(), area.getY(), true);
 }

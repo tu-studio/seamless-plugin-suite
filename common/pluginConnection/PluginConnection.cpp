@@ -58,6 +58,11 @@ void PluginConnection::parameterChanged(const juce::String &parameterID, float n
             message.value1 = 99.f;
             message.value2 = newValue;
             message.value3 = 99.f;
+        } else if (parameterID == SendParameters::POS_Z_ID.getParamID()) {
+            message.parameter = Parameter::PARAM_POS;
+            message.value1 = 99.f;
+            message.value2 = 99.f;
+            message.value3 = newValue;
         }
         juce::MemoryBlock memoryBlock (&message, sizeof(Message));
         sendMessage(memoryBlock);

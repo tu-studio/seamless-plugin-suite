@@ -11,16 +11,27 @@
 #include <JuceHeader.h>
 #include <SendParameters.h>
 
+enum class GridType {
+    Off,
+    Cartesian,
+    Spherical
+};
+
+enum class VenueType {
+    TU_Studio,
+    HuFo
+};
+
 class PluginParameters {
 public:
+
+// Not automatable parameters
+
+    inline static const juce::String
     
-//    inline static const juce::ParameterID
-        
-//        add parameter here
-    
-//    inline static const juce::String
-        
-//        add parameter here
+        // not automatable Parameters
+        GRID_TYPE_ID = "param_grid_type",
+        VENUE_TYPE_ID = "param_venue_type";
     
     static juce::StringArray getPluginParameterList();
     static juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
@@ -29,11 +40,9 @@ public:
     static void clearNotAutomatableValueTree(juce::ValueTree notAutomatableParameterValueTree);
     
 private:
-    
+
     inline static juce::StringArray parameterList;
     inline static juce::StringArray settingsList;
-    
-//    inline static juce::NormalisableRange<float> sendRange {0.f, 1.f, 0.01f};
 };
 
 #endif /* PluginParameters_h */

@@ -21,7 +21,8 @@ public:
         GAIN_1_ID = {"param_gain_1", 1},
         GAIN_2_ID = {"param_gain_2", 1},
         POS_X_ID = {"param_pos_x", 1},
-        POS_Y_ID = {"param_pos_y", 1};
+        POS_Y_ID = {"param_pos_y", 1},
+        POS_Z_ID = {"param_pos_z", 1};
     
     inline static const juce::String
         
@@ -29,6 +30,7 @@ public:
         GAIN_2_NAME = "Send WFS",
         POS_X_NAME = "X Position",
         POS_Y_NAME = "Y Position",
+        POS_Z_NAME = "Z Position",
     
         // not automatable SendParameters
         SOURCE_IDX_NAME = "Source Index";

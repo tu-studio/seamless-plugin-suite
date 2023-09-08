@@ -45,7 +45,8 @@ juce::ValueTree PluginParameters::createNotAutomatableValueTree()
     SendParameters::createNotAutomatableValueTree();
     juce::ValueTree notAutomatableParameterValueTree = SendParameters::getNotAutomatableValueTree().createCopy();
     
-//    notAutomatableParameterValueTree.setProperty(The property you want.);
+    notAutomatableParameterValueTree.setProperty(PluginParameters::GRID_TYPE_ID, 0, nullptr);
+    notAutomatableParameterValueTree.setProperty(PluginParameters::VENUE_TYPE_ID, 0, nullptr);
     
     settingsList = SendParameters::getSettingsList();
     

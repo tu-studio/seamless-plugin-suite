@@ -13,15 +13,15 @@
 class PluginParameters {
 public:
     
-    inline static const juce::ParameterID
+    // inline static const juce::ParameterID
         
-        SEND_1_ID = {"param_send_1", 1},
-        SEND_2_ID = {"param_send_2", 1};
+    //     SEND_1_ID = {"param_send_1", 1},
+    //     SEND_2_ID = {"param_send_2", 1};
     
-    inline static const juce::String
+    // inline static const juce::String
         
-        SEND_1_NAME = "Send HOA",
-        SEND_2_NAME = "Send WFS";
+    //     SEND_1_NAME = "Send HOA",
+    //     SEND_2_NAME = "Send WFS";
     
     static juce::StringArray getPluginParameterList();
     static juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();

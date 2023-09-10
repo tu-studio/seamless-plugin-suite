@@ -95,11 +95,11 @@ void SphericalSliderBox::sliderDragEnded(juce::Slider* slider) {
 }
 
 void SphericalSliderBox::updateCartesianCoordinates(float radius, float azimuth, float elevation) {
-    float x = juce::jlimit(-10.f, 10.f, radius * cos(azimuth * (float) M_PI / 180) * cos(elevation * (float) M_PI / 180));
+    float x = juce::jlimit(-10.f, 10.f, radius * cosf(azimuth * (float) M_PI / 180) * cosf(elevation * (float) M_PI / 180));
     x = (x + 10.f) / 20.f;
-    float y = juce::jlimit(-10.f, 10.f, radius * sin(azimuth * (float) M_PI / 180) * cos(elevation * (float) M_PI / 180));
+    float y = juce::jlimit(-10.f, 10.f, radius * sinf(azimuth * (float) M_PI / 180) * cosf(elevation * (float) M_PI / 180));
     y = (y + 10.f) / 20.f;
-    float z = juce::jlimit(-10.f, 10.f, radius * sin(elevation * (float) M_PI / 180));
+    float z = juce::jlimit(-10.f, 10.f, radius * sinf(elevation * (float) M_PI / 180));
     z = (z + 10.f) / 20.f;
     
     juce::AudioProcessorParameterWithID *xParam = apvts.getParameter(SendParameters::POS_X_ID.getParamID());

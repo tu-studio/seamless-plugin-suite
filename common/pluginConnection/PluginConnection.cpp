@@ -38,34 +38,49 @@ void PluginConnection::parameterChanged(const juce::String &parameterID, float n
 {
     if (isConnected())
     {
-        Message message;
         if (parameterID == SendParameters::SOURCE_IDX_NAME) {
+            Message message;
             message.parameter = Parameter::PARAM_SOURCE_IDX;
             message.value1 = (float) newValue;
+            juce::MemoryBlock memoryBlock (&message, sizeof(Message));
+            sendMessage(memoryBlock);
         } else if (parameterID == SendParameters::GAIN_1_ID.getParamID()) {
+            Message message;
             message.parameter = Parameter::PARAM_GAIN_1;
             message.value1 = (float) newValue;
+            juce::MemoryBlock memoryBlock (&message, sizeof(Message));
+            sendMessage(memoryBlock);
         } else if (parameterID ==  SendParameters::GAIN_2_ID.getParamID()) {
+            Message message;
             message.parameter = Parameter::PARAM_GAIN_2;
             message.value1 = (float) newValue;
+            juce::MemoryBlock memoryBlock (&message, sizeof(Message));
+            sendMessage(memoryBlock);
         } else if (parameterID == SendParameters::POS_X_ID.getParamID()) {
+            Message message;
             message.parameter = Parameter::PARAM_POS;
             message.value1 = newValue;
             message.value2 = 99.f;
             message.value3 = 99.f;
+            juce::MemoryBlock memoryBlock (&message, sizeof(Message));
+            sendMessage(memoryBlock);
         } else if (parameterID == SendParameters::POS_Y_ID.getParamID()) {
+            Message message;
             message.parameter = Parameter::PARAM_POS;
             message.value1 = 99.f;
             message.value2 = newValue;
             message.value3 = 99.f;
+            juce::MemoryBlock memoryBlock (&message, sizeof(Message));
+            sendMessage(memoryBlock);
         } else if (parameterID == SendParameters::POS_Z_ID.getParamID()) {
+            Message message;
             message.parameter = Parameter::PARAM_POS;
             message.value1 = 99.f;
             message.value2 = 99.f;
             message.value3 = newValue;
+            juce::MemoryBlock memoryBlock (&message, sizeof(Message));
+            sendMessage(memoryBlock);
         }
-        juce::MemoryBlock memoryBlock (&message, sizeof(Message));
-        sendMessage(memoryBlock);
     }
 }
     

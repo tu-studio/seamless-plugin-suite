@@ -17,10 +17,29 @@ enum class GridType {
     Spherical
 };
 
+inline juce::String toString(GridType gridType) {
+    switch(gridType)
+    {
+    case GridType::Off: return "Grid OFF";
+    case GridType::Cartesian: return "Grid \nON \nxyz";
+    case GridType::Spherical: return juce::CharPointer_UTF8("Grid \nON \n r \xcf\x86 \xce\xb8\t");
+    default: return "";
+    }
+}
+
 enum class VenueType {
     TU_Studio,
     HuFo
 };
+
+inline juce::String toString(VenueType venueType) {
+    switch(venueType)
+    {
+    case VenueType::TU_Studio: return "TU Studio";
+    case VenueType::HuFo: return "HuFo";
+    default: return "";
+    }
+}
 
 class PluginParameters {
 public:
@@ -30,8 +49,14 @@ public:
     inline static const juce::String
     
         // not automatable Parameters
-        GRID_TYPE_ID = "param_grid_type",
-        VENUE_TYPE_ID = "param_venue_type";
+        GRID_CHOICE_ID = "param_grid_type",
+        VENUE_CHOICE_ID = "param_venue_type";
+
+    inline static const juce::StringArray
+    
+        // not automatable Parameters
+        GRID_CHOICE_LABELS = {"Grid OFF", "Grid \nON \nxyz", (juce::String) juce::CharPointer_UTF8("Grid \nON \n r \xcf\x86 \xce\xb8\t")},
+        VENUE_CHOICE_LABELS = {"TU Studio", "HuFo"};
     
     static juce::StringArray getPluginParameterList();
     static juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();

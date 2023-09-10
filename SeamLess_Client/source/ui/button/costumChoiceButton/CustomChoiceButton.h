@@ -1,7 +1,7 @@
 /*
 =====================================================================
 
-CustomButton.h
+CustomChoiceButton.h
 Created: 8 Sep 2023 03:00:00 pm
 Author:  Fares Schulz
 
@@ -13,20 +13,21 @@ Author:  Fares Schulz
 
 #include <JuceHeader.h>
 #include <SeamLess.h>
+#include <PluginParameters.h>
 
-class CustomButton : public juce::TextButton {
+class CustomChoiceButton : public juce::TextButton, public juce::Button::Listener {
 public:
-    CustomButton(juce::AudioProcessorValueTreeState& state, juce::String buttonID, int numberOfChoices, juce::StringArray buttonLabels, juce::String buttonTooltip);
+    CustomChoiceButton(juce::AudioProcessorValueTreeState& state, juce::String buttonID, juce::StringArray buttonLabels, juce::String buttonTooltip);
+    ~CustomChoiceButton() override;
 
-    void buttonUpdate();
+    void buttonClicked(juce::Button* button) override;
 
 private:
     juce::AudioProcessorValueTreeState& apvts;
     juce::String id;
-    int numChoices;
     juce::StringArray labels;
     
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(CustomButton)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(CustomChoiceButton)
 };
 
 #endif /* COSTUM_BUTTON_H */

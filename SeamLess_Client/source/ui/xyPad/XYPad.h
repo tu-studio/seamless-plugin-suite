@@ -30,9 +30,6 @@ public:
 
     void setSourceWidthPx(int newSourceWidthPx);
 
-public:
-    Grid grid;
-
 private:
     juce::Point<int> convertMeterToPixel(float xMeter, float yMeter);
     juce::Point<float> convertPixelToMeter(int xPixel, int yPixel);
@@ -43,12 +40,15 @@ private:
 
 private:
     juce::AudioProcessorValueTreeState& apvts;
+    
     SoundSource soundSource;
     int sourceWidthPx;
 
     float xPosition;
     float yPosition;
     float zPosition;
+
+    Grid grid;
 
     juce::Path shadowOrigin;
     juce::DropShadow sourceShadow;

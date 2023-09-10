@@ -12,13 +12,18 @@ Author:  Fares Schulz
 
 Grid::Grid(juce::AudioProcessorValueTreeState& pluginApvts) : apvts(pluginApvts) {
     setInterceptsMouseClicks(false,false);
+    apvts.state.addListener(this);
+}
+
+Grid::~Grid() {
+    apvts.state.removeListener(this);
 }
 
 void Grid::paint(juce::Graphics& g) {
 
     // draw the Grid
     g.setColour(juce::Colours::silver);
-    switch (apvts.state.getChild(0).getPropertyAsValue(PluginParameters::GRID_TYPE_ID, nullptr).toString().getIntValue()) {
+    switch (apvts.state.getChild(0).getPropertyAsValue(PluginParameters::GRID_CHOICE_ID, nullptr).toString().getIntValue()) {
     case 0:
         break;
     case 1:
@@ -42,7 +47,7 @@ void Grid::paint(juce::Graphics& g) {
 
     // draw the Venue
     g.setColour(seamlessBlue);
-    switch (apvts.state.getChild(0).getPropertyAsValue(PluginParameters::VENUE_TYPE_ID, nullptr).toString().getIntValue()) {
+    switch (apvts.state.getChild(0).getPropertyAsValue(PluginParameters::VENUE_CHOICE_ID, nullptr).toString().getIntValue()) {
     case 0:
         g.strokePath(TUStudioPath, juce::PathStrokeType(5.0f));
         break;
@@ -79,36 +84,9 @@ void Grid::resized() {
     TUStudioPath.closeSubPath();
 }
 
-void Grid::buttonClicked(juce::Button* button) {
-    if (button->getComponentID() == PluginParameters::GRID_TYPE_ID) {
-        switch (apvts.state.getChild(0).getPropertyAsValue(PluginParameters::GRID_TYPE_ID, nullptr).toString().getIntValue()) {
-            case 0:
-                button->setButtonText("Grid \nON \nxyz");
-                apvts.state.getChild(0).setProperty(PluginParameters::GRID_TYPE_ID, 1, nullptr);
-                break;
-            case 1:
-                button->setButtonText(juce::CharPointer_UTF8("Grid \nON \n r \xcf\x86 \xce\xb8\t"));
-                apvts.state.getChild(0).setProperty(PluginParameters::GRID_TYPE_ID, 2, nullptr);
-                break;
-            case 2:
-                button->setButtonText("Grid OFF");
-                apvts.state.getChild(0).setProperty(PluginParameters::GRID_TYPE_ID, 0, nullptr);
-                break;
-        }
-    }
-    else if (button->getComponentID() == PluginParameters::VENUE_TYPE_ID) {
-        switch (apvts.state.getChild(0).getPropertyAsValue(PluginParameters::VENUE_TYPE_ID, nullptr).toString().getIntValue()) {
-            case 0:
-                button->setButtonText("HuFo");
-                apvts.state.getChild(0).setProperty(PluginParameters::VENUE_TYPE_ID, 1, nullptr);
-                break;
-            case 1:
-                button->setButtonText("TU Studio");
-                apvts.state.getChild(0).setProperty(PluginParameters::VENUE_TYPE_ID, 0, nullptr);
-                break;
-        }
-    }
-    repaint();
+void Grid::valueTreePropertyChanged(juce::ValueTree& treeWhosePropertyHasChanged, const juce::Identifier& property) {
+    juce::ignoreUnused(treeWhosePropertyHasChanged);
+    if (property.toString() == PluginParameters::GRID_CHOICE_ID || property.toString() == PluginParameters::VENUE_CHOICE_ID) repaint();
 }
 
 juce::Point<float> Grid::convertMeterToPixel(float xMeter, float yMeter)

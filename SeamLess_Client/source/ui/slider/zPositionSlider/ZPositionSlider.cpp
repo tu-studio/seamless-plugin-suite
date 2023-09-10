@@ -16,9 +16,9 @@ ZPositionSlider::ZPositionSlider(juce::AudioProcessorValueTreeState& a) : apvts(
     slider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 90, 30);
     addAndMakeVisible(slider);
     
-    sliderLabel.setColour (juce::Label::textColourId, juce::Colours::white);
-    sliderLabel.setJustificationType (juce::Justification::centred);
+    sliderLabel.setColour (juce::Label::textColourId, seamlessBlue);
     sliderLabel.setText ("z Position", juce::dontSendNotification);
+    sliderLabel.setJustificationType (juce::Justification::centred);
     sliderLabel.attachToComponent(&slider,false);
     addAndMakeVisible(sliderLabel);
 

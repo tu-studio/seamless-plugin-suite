@@ -7,7 +7,7 @@
 #include <SourceIndexSelector.h>
 #include <XYPad.h>
 #include <ZPositionSlider.h>
-#include <CustomButton.h>
+#include <CustomChoiceButton.h>
 
 //==============================================================================
 class AudioPluginAudioProcessorEditor  : public juce::AudioProcessorEditor
@@ -28,10 +28,8 @@ private:
     SourceIndexSelector sourceIndexSelector;
     XYPad xyPad;
     ZPositionSlider zPositionSlider;
-    juce::StringArray gridChoiceArray;
-    CustomButton gridChoiceButton;
-    juce::StringArray venueChoiceArray;
-    CustomButton venueChoiceButton;
+    CustomChoiceButton gridChoiceButton;
+    CustomChoiceButton venueChoiceButton;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioPluginAudioProcessorEditor)
 };

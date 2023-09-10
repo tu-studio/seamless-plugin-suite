@@ -15,17 +15,18 @@ Author:  Fares Schulz
 #include <SeamLess.h>
 #include <PluginParameters.h>
 
-class Grid : public juce::Component, public juce::Button::Listener {
+class Grid : public juce::Component, public juce::ValueTree::Listener {
     
 public:
     Grid(juce::AudioProcessorValueTreeState& pluginApvts);
+    ~Grid() override;
 
 private:
     juce::Point<float> convertMeterToPixel(float xMeter, float yMeter);
     juce::Point<float> convertPixelToMeter(int xPixel, int yPixel);
     void paint(juce::Graphics& g) override;
     void resized() override;
-    void buttonClicked(juce::Button* button) override;
+    void valueTreePropertyChanged(juce::ValueTree& treeWhosePropertyHasChanged, const juce::Identifier& property) override;
 
 private:
 

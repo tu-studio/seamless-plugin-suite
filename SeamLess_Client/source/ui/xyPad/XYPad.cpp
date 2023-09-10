@@ -10,7 +10,7 @@ Author:  Fares Schulz
 
 # include "XYPad.h"
 
-XYPad::XYPad(juce::AudioProcessorValueTreeState& pluginApvts) : grid(pluginApvts), apvts(pluginApvts){
+XYPad::XYPad(juce::AudioProcessorValueTreeState& pluginApvts) : apvts(pluginApvts), grid(pluginApvts) {
     addParameterAttachment(*(apvts.getParameter(SendParameters::POS_X_ID.getParamID())));
     addParameterAttachment(*(apvts.getParameter(SendParameters::POS_Y_ID.getParamID())));
     addParameterAttachment(*(apvts.getParameter(SendParameters::POS_Z_ID.getParamID())));

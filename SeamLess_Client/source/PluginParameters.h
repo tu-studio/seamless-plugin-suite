@@ -49,8 +49,25 @@ public:
     inline static const juce::String
     
         // not automatable Parameters
-        GRID_CHOICE_ID = "param_grid_type",
-        VENUE_CHOICE_ID = "param_venue_type";
+        RADIUS_ID = "param_radius",
+        AZIMUTH_ID = "param_azimuth",
+        ELEVATION_ID = "param_elevation",
+
+        GRID_CHOICE_ID = "param_grid_choice",
+        VENUE_CHOICE_ID = "param_venue_choice",
+
+        CARTESIAN_TOGGLE_ID = "param_cartesian_toggle",
+        SPHERICAL_TOGGLE_ID = "param_spherical_toggle";
+
+    inline static const juce::String
+
+        // not automatable Parameters
+        RADIUS_NAME = "Radius",
+        AZIMUTH_NAME = "Azimuth",
+        ELEVATION_NAME = "Elevation",
+
+        CARTESIAN_TOGGLE_LABEL = "Cartesian",
+        SPHERICAL_TOGGLE_LABEL = "Spherical";
 
     inline static const juce::StringArray
     

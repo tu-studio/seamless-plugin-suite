@@ -17,7 +17,6 @@ class GainSliderBox : public juce::Component {
 public:
     GainSliderBox(juce::AudioProcessorValueTreeState& apvts);
     void resized() override;
-    void parameterChanged(const juce::String &parameterID, float newValue);
     
 private:
     CostumRotarySlider gain1Slider {"HOA"};

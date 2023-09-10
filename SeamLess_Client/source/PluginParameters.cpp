@@ -8,17 +8,6 @@
 #include "PluginParameters.h"
 
 juce::AudioProcessorValueTreeState::ParameterLayout PluginParameters::createParameterLayout() {
-//    std::vector<std::unique_ptr<juce::RangedAudioParameter>> params;
-    
-//    params.push_back(std::make_unique<juce::AudioParameterFloat> (PluginParameters::AED_1_ID,
-//                                                                  PluginParameters::AED_1_NAME,
-//                                                                  PluginParameters::AED_RANGE,
-//                                                                  0.f));
-//
-//    params.push_back(std::make_unique<juce::AudioParameterFloat> (PluginParameters::AED_2_ID,
-//                                                                  PluginParameters::AED_2_NAME,
-//                                                                  PluginParameters::AED_RANGE,
-//                                                                  0.f));
     
     juce::AudioProcessorValueTreeState::ParameterLayout parameterLayout = SendParameters::createParameterLayout();
     
@@ -27,11 +16,6 @@ juce::AudioProcessorValueTreeState::ParameterLayout PluginParameters::createPara
             parameterList.add(param);
         }
     }
-    
-//    for (const auto & param : params) {
-//        parameterLayout.add(param);
-//        parameterList.add(parameterList.add(param->getParameterID());
-//    }
     
     return parameterLayout;
 }
@@ -45,8 +29,14 @@ juce::ValueTree PluginParameters::createNotAutomatableValueTree()
     SendParameters::createNotAutomatableValueTree();
     juce::ValueTree notAutomatableParameterValueTree = SendParameters::getNotAutomatableValueTree().createCopy();
     
+    notAutomatableParameterValueTree.setProperty(PluginParameters::RADIUS_ID, 0.f, nullptr);
+    notAutomatableParameterValueTree.setProperty(PluginParameters::AZIMUTH_ID, 0.f, nullptr);
+    notAutomatableParameterValueTree.setProperty(PluginParameters::ELEVATION_ID, 0.f, nullptr);
+    
     notAutomatableParameterValueTree.setProperty(PluginParameters::GRID_CHOICE_ID, (int) GridType::Off, nullptr);
     notAutomatableParameterValueTree.setProperty(PluginParameters::VENUE_CHOICE_ID, (int) VenueType::TU_Studio, nullptr);
+    notAutomatableParameterValueTree.setProperty(PluginParameters::CARTESIAN_TOGGLE_ID, 1, nullptr);
+    notAutomatableParameterValueTree.setProperty(PluginParameters::SPHERICAL_TOGGLE_ID, 0, nullptr);
     
     settingsList = SendParameters::getSettingsList();
     

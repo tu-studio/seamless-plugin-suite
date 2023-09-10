@@ -8,8 +8,8 @@ Author:  Fares Schulz
 =====================================================================
 */
 
-#ifndef COSTUM_BUTTON_H
-#define COSTUM_BUTTON_H
+#ifndef CUSTOM_CHOICE_BUTTON_H
+#define CUSTOM_CHOICE_BUTTON_H
 
 #include <JuceHeader.h>
 #include <SeamLess.h>
@@ -30,5 +30,5 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(CustomChoiceButton)
 };
 
-#endif /* COSTUM_BUTTON_H */
+#endif /* CUSTOM_CHOICE_BUTTON_H */
 

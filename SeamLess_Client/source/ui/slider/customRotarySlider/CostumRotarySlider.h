@@ -23,13 +23,14 @@ public:
     
     void addSliderAttachment(juce::AudioProcessorValueTreeState& state, const juce::String& parameterID);
     void setDoubleClickReturnValue(double valueToSetOnDoubleClick);
-    
+
+    juce::Slider slider;
+
 private:
     void resized() override;
     
 private:
     SliderLookAndFeel customSliderLookAndFeel;
-    juce::Slider slider;
     juce::Label sliderLabel;
     
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> attachment;

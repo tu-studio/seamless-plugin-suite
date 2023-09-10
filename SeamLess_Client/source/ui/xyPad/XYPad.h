@@ -16,6 +16,7 @@
 #include <Grid.h>
 
 class XYPad : public juce::Component {
+
 public:
     XYPad(juce::AudioProcessorValueTreeState& pluginApvts);
 
@@ -34,9 +35,7 @@ private:
     juce::Point<int> convertMeterToPixel(float xMeter, float yMeter);
     juce::Point<float> convertPixelToMeter(int xPixel, int yPixel);
     void updateSourceWidthPx();
-    void paintFraming(juce::Graphics& g);
     void paintSourceShadow(juce::Graphics& g);
-    void paintGrid(juce::Graphics& g);
 
 private:
     juce::AudioProcessorValueTreeState& apvts;

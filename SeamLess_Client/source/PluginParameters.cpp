@@ -45,7 +45,7 @@ juce::ValueTree PluginParameters::createNotAutomatableValueTree()
 
 void PluginParameters::clearNotAutomatableValueTree(juce::ValueTree notAutomatableParameterValueTree) {
     notAutomatableParameterValueTree.removeAllProperties(nullptr);
-    SendParameters::clearNotAutomatableValueTree();
+    // SendParameters::clearNotAutomatableValueTree();
 }
 
 juce::StringArray PluginParameters::getSettingsList() {

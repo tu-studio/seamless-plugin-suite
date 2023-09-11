@@ -21,7 +21,7 @@
             }
         },
         {
-            "name": "(lldb) Attach",
+            "name": "(lldb) Attach Ableton Live 11 Suite",
             "type": "cppdbg",
             "request": "launch",
             "program": "/Applications/Ableton Live 11 Suite.app",
@@ -38,6 +38,25 @@
             "logging": {
                 "moduleLoad": false
             }
-        }   
+        },
+        {
+            "name": "(lldb) Attach Ableton Live 10 Suite",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "/Applications/Ableton Live 10 Suite.app",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [
+                {
+                    "name": "PATH",
+                    "value": "$PATH:${command:cmake.launchTargetDirectory}"
+                }
+            ],
+            "MIMode": "lldb",
+            "logging": {
+                "moduleLoad": false
+            }
+        }
     ]
 }

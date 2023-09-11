@@ -27,7 +27,8 @@ juce::StringArray PluginParameters::getPluginParameterList() {
 juce::ValueTree PluginParameters::createNotAutomatableValueTree()
 {
     SendParameters::createNotAutomatableValueTree();
-    juce::ValueTree notAutomatableParameterValueTree = SendParameters::getNotAutomatableValueTree().createCopy();
+    juce::ValueTree notAutomatableParameterValueTree = juce::ValueTree("Settings");
+    notAutomatableParameterValueTree.copyPropertiesFrom(SendParameters::getNotAutomatableValueTree(), nullptr);
     
     notAutomatableParameterValueTree.setProperty(PluginParameters::RADIUS_ID, 0.f, nullptr);
     notAutomatableParameterValueTree.setProperty(PluginParameters::AZIMUTH_ID, 0.f, nullptr);
@@ -45,7 +46,7 @@ juce::ValueTree PluginParameters::createNotAutomatableValueTree()
 
 void PluginParameters::clearNotAutomatableValueTree(juce::ValueTree notAutomatableParameterValueTree) {
     notAutomatableParameterValueTree.removeAllProperties(nullptr);
-    // SendParameters::clearNotAutomatableValueTree();
+    SendParameters::clearNotAutomatableValueTree();
 }
 
 juce::StringArray PluginParameters::getSettingsList() {

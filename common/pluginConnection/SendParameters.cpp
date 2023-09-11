@@ -51,7 +51,7 @@ juce::StringArray SendParameters::getPluginParameterList() {
 void SendParameters::createNotAutomatableValueTree()
 {
     if (! notAutomatableParameterValueTree.isValid()) {
-        notAutomatableParameterValueTree = juce::ValueTree("Settings");
+        notAutomatableParameterValueTree = juce::ValueTree("SendParameters");
         notAutomatableParameterValueTree.setProperty(SOURCE_IDX_NAME, juce::var(-1), nullptr);
     }
     
@@ -64,7 +64,7 @@ void SendParameters::createNotAutomatableValueTree()
 
 void SendParameters::clearNotAutomatableValueTree() {
     notAutomatableParameterValueTree.removeProperty(SOURCE_IDX_NAME, nullptr);
-    // notAutomatableParameterValueTree = juce::ValueTree(); // clears the ValueTree so that we are not leaking
+    notAutomatableParameterValueTree = juce::ValueTree(); // clears the ValueTree so that we are not leaking
 }
 
 juce::StringArray SendParameters::getSettingsList() {

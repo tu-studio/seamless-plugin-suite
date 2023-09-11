@@ -28,20 +28,20 @@ void Grid::paint(juce::Graphics& g) {
         break;
     case 1:
         for (int i = -9; i<=9; i++) {
-            g.drawLine(juce::Line<float>(convertMeterToPixel(-10, i), convertMeterToPixel(10, i)));
-            g.drawLine(juce::Line<float>(convertMeterToPixel(i, -10), convertMeterToPixel(i, 10)));
+            g.drawLine(juce::Line<float>(convertMeterToPixel(-10.f, i), convertMeterToPixel(10.f, i)));
+            g.drawLine(juce::Line<float>(convertMeterToPixel(i, -10.f), convertMeterToPixel(i, 10.f)));
         }
         break;
     case 2:
         for (int i = 1; i <= 13; i++)
             g.drawRoundedRectangle(juce::Rectangle<float>(convertMeterToPixel(-i, -i), convertMeterToPixel(i, i)), 100 * (i), 1);
         
-            g.drawLine(juce::Line<float>(convertMeterToPixel(0, 10), convertMeterToPixel(0, -10)), 0.8f);
-            g.drawLine(juce::Line<float>(convertMeterToPixel(-10, 0), convertMeterToPixel(10, 0)), 0.8f);
-            g.drawLine(juce::Line<float>(convertMeterToPixel(4.2264973081f - 10, 10),  convertMeterToPixel(5.7735026919f, -10)), 0.8f);
-            g.drawLine(juce::Line<float>(convertMeterToPixel(4.2264973081f - 10, -10), convertMeterToPixel(5.7735026919f, 10)),  0.8f);
-            g.drawLine(juce::Line<float>(convertMeterToPixel(-10, 4.2264973081f - 10), convertMeterToPixel(10, 5.7735026919f)),  0.8f);
-            g.drawLine(juce::Line<float>(convertMeterToPixel(10, 4.2264973081f - 10),  convertMeterToPixel(-10, 5.7735026919f)), 0.8f);
+            g.drawLine(juce::Line<float>(convertMeterToPixel(0.f, 10.f), convertMeterToPixel(0.f, -10.f)), 0.8f);
+            g.drawLine(juce::Line<float>(convertMeterToPixel(-10.f, 0.f), convertMeterToPixel(10.f, 0.f)), 0.8f);
+            g.drawLine(juce::Line<float>(convertMeterToPixel(4.2264973081f - 10.f, 10.f),  convertMeterToPixel(5.7735026919f, -10.f)), 0.8f);
+            g.drawLine(juce::Line<float>(convertMeterToPixel(4.2264973081f - 10.f, -10.f), convertMeterToPixel(5.7735026919f, 10.f)),  0.8f);
+            g.drawLine(juce::Line<float>(convertMeterToPixel(-10.f, 4.2264973081f - 10.f), convertMeterToPixel(10.f, 5.7735026919f)),  0.8f);
+            g.drawLine(juce::Line<float>(convertMeterToPixel(10.f, 4.2264973081f - 10.f),  convertMeterToPixel(-10.f, 5.7735026919f)), 0.8f);
         break;
     }
 
@@ -57,7 +57,7 @@ void Grid::paint(juce::Graphics& g) {
     }
 
     // draw the outline
-    g.drawRoundedRectangle(juce::Rectangle<float>(juce::Point<float>(4,4), juce::Point<float>(getWidth()-4, getHeight()-4)), 25, 6);
+    g.drawRoundedRectangle(juce::Rectangle<float>(juce::Point<float>(4.f,4.f), juce::Point<float>((float) (getWidth()-4), (float) (getHeight()-4))), 25.f, 6.f);
 
 
 }

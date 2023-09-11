@@ -95,12 +95,12 @@ void SphericalSliderBox::sliderDragEnded(juce::Slider* slider) {
 }
 
 void SphericalSliderBox::updateCartesianCoordinates(float radius, float azimuth, float elevation) {
-    float x = juce::jlimit(-10.f, 10.f, radius * cosf(azimuth * (float) M_PI / 180) * cosf(elevation * (float) M_PI / 180));
-    x = (x + 10.f) / 20.f;
-    float y = juce::jlimit(-10.f, 10.f, radius * sinf(azimuth * (float) M_PI / 180) * cosf(elevation * (float) M_PI / 180));
-    y = (y + 10.f) / 20.f;
-    float z = juce::jlimit(-10.f, 10.f, radius * sinf(elevation * (float) M_PI / 180));
-    z = (z + 10.f) / 20.f;
+    float x = limitMetricValue(radius * cosf(azimuth * (float) M_PI / 180) * cosf(elevation * (float) M_PI / 180));
+    x = normalizeMetricValue(x);
+    float y = limitMetricValue(radius * sinf(azimuth * (float) M_PI / 180) * cosf(elevation * (float) M_PI / 180));
+    y = normalizeMetricValue(y);
+    float z = limitMetricValue(radius * sinf(elevation * (float) M_PI / 180));
+    z = normalizeMetricValue(z);
     
     juce::AudioProcessorParameterWithID *xParam = apvts.getParameter(SendParameters::POS_X_ID.getParamID());
     juce::AudioProcessorParameterWithID *yParam = apvts.getParameter(SendParameters::POS_Y_ID.getParamID());
@@ -118,4 +118,18 @@ void SphericalSliderBox::updateCartesianCoordinates(float radius, float azimuth,
     zParam->beginChangeGesture();
     zParam->setValueNotifyingHost(z);
     zParam->endChangeGesture();
+}
+
+float SphericalSliderBox::limitMetricValue(float value) {
+    if (value > 10.f) {
+        return 10.f;
+    } else if (value < -10.f) {
+        return -10.f;
+    } else {
+        return value;
+    }
+}
+
+float SphericalSliderBox::normalizeMetricValue(float value) {
+    return (value + 10.f) / 20.f;
 }

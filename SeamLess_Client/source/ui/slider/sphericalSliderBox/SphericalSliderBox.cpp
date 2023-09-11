@@ -60,9 +60,9 @@ void SphericalSliderBox::parameterChanged(const juce::String& parameterID, float
 }
 
 void SphericalSliderBox::updateSphericalCoordinates(float x, float y, float z) {
-    float radius = sqrt(powf(x, 2) + powf(y, 2) + powf(z, 2));
-    float azimuth = atan2(y, x) * 180  / (float) M_PI;
-    float elevation = asin(z / radius) * 180 / (float) M_PI;
+    float radius = sqrtf(powf(x, 2) + powf(y, 2) + powf(z, 2));
+    float azimuth = atan2f(y, x) * 180  / (float) M_PI;
+    float elevation = asinf(z / radius) * 180 / (float) M_PI;
 
     apvts.state.getChild(0).setProperty(PluginParameters::RADIUS_ID, radius, nullptr);
     apvts.state.getChild(0).setProperty(PluginParameters::AZIMUTH_ID, azimuth, nullptr);

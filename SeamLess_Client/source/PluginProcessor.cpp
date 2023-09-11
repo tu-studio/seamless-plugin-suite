@@ -26,6 +26,7 @@ AudioPluginAudioProcessor::~AudioPluginAudioProcessor()
     for (auto & parameterID : PluginParameters::getPluginParameterList()) {
         apvts.removeParameterListener(parameterID, this);
     }
+    if (JUCE_DEBUG) std::cout << "processor tries to stop listener on apvts.state." << std::endl;
     apvts.state.removeListener(this);
     if (JUCE_DEBUG) std::cout << "processor stopped listener on apvts.state." << std::endl;
     PluginParameters::clearNotAutomatableValueTree(apvts.state.getChild(0));

@@ -5,6 +5,25 @@
             "name": "(lldb) Launch",
             "type": "cppdbg",
             "request": "launch",
+            "program": "${command:cmake.launchTargetPath}",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [
+                {
+                    "name": "PATH",
+                    "value": "$PATH:${command:cmake.launchTargetDirectory}"
+                }
+            ],
+            "MIMode": "lldb",
+            "logging": {
+                "moduleLoad": false
+            }
+        },
+        {
+            "name": "(lldb) Attach",
+            "type": "cppdbg",
+            "request": "launch",
             "program": "/Applications/Ableton Live 11 Suite.app",
             "args": [],
             "stopAtEntry": false,
@@ -19,6 +38,6 @@
             "logging": {
                 "moduleLoad": false
             }
-        }
+        }   
     ]
 }

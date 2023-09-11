@@ -17,8 +17,7 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
         apvts.addParameterListener(parameterID, this);
     }
     apvts.state.addChild(PluginParameters::createNotAutomatableValueTree(), 0 , nullptr);
-    notAutomatableValueTree = apvts.state.getChild(0); // Listener is not working if the ValueTree instance is not defined in the AudioPluginAudioProcessor
-    notAutomatableValueTree.addListener(this);
+    apvts.state.addListener(this);
     pluginConnection.connect(apvts, PluginParameters::getPluginParameterList(), PluginParameters::getSettingsList());
 }
 
@@ -27,9 +26,9 @@ AudioPluginAudioProcessor::~AudioPluginAudioProcessor()
     for (auto & parameterID : PluginParameters::getPluginParameterList()) {
         apvts.removeParameterListener(parameterID, this);
     }
-    notAutomatableValueTree.removeListener(this);
+    apvts.state.removeListener(this);
     PluginParameters::clearNotAutomatableValueTree(apvts.state.getChild(0));
-    apvts.state.removeChild(0 , nullptr);
+    // apvts.state.removeChild(0 , nullptr);
 }
 
 //==============================================================================

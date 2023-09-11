@@ -35,6 +35,12 @@ SphericalSliderBox::SphericalSliderBox(juce::AudioProcessorValueTreeState &a) : 
     apvts.addParameterListener(SendParameters::POS_Z_ID.getParamID(), this);
 }
 
+SphericalSliderBox::~SphericalSliderBox() {
+    apvts.removeParameterListener(SendParameters::POS_X_ID.getParamID(), this);
+    apvts.removeParameterListener(SendParameters::POS_Y_ID.getParamID(), this);
+    apvts.removeParameterListener(SendParameters::POS_Z_ID.getParamID(), this);
+}
+
 void SphericalSliderBox::resized() {
     auto area = getLocalBounds();
     radiusSlider.setBounds(0, 0, area.getWidth()/3, area.getHeight());

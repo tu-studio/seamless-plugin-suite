@@ -12,17 +12,17 @@ Author:  Fares Schulz
 
 SphericalSliderBox::SphericalSliderBox(juce::AudioProcessorValueTreeState &a) : apvts(a) {
 
-    radiusSlider.slider.setDoubleClickReturnValue(0.f);
+    radiusSlider.setDoubleClickReturnValue(0.f);
     radiusSlider.slider.setRange(0.f, 14.14213562373095f, 0.01f);
     radiusSlider.slider.getValueObject().referTo(apvts.state.getChild(0).getPropertyAsValue(PluginParameters::RADIUS_ID, nullptr));
     addAndMakeVisible(radiusSlider);
 
-    azimuthSlider.slider.setDoubleClickReturnValue(0.f);
+    azimuthSlider.setDoubleClickReturnValue(0.f);
     azimuthSlider.slider.setRange(-180.f, 180.f, 0.01f);
     azimuthSlider.slider.getValueObject().referTo(apvts.state.getChild(0).getPropertyAsValue(PluginParameters::AZIMUTH_ID, nullptr));
     addAndMakeVisible(azimuthSlider);
 
-    elevationSlider.slider.setDoubleClickReturnValue(0.f);
+    elevationSlider.setDoubleClickReturnValue(0.f);
     elevationSlider.slider.setRange(-90.f, 90.f, 0.01f);
     elevationSlider.slider.getValueObject().referTo(apvts.state.getChild(0).getPropertyAsValue(PluginParameters::ELEVATION_ID, nullptr));
     addAndMakeVisible(elevationSlider);

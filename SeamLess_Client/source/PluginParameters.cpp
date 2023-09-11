@@ -46,6 +46,8 @@ juce::ValueTree PluginParameters::createNotAutomatableValueTree()
 
 void PluginParameters::clearNotAutomatableValueTree(juce::ValueTree notAutomatableParameterValueTree) {
     notAutomatableParameterValueTree.removeAllProperties(nullptr);
+    if (JUCE_DEBUG) std::cout << "All properties from PluginParameters removed" << std::endl;
+    notAutomatableParameterValueTree = juce::ValueTree();
     SendParameters::clearNotAutomatableValueTree();
 }
 

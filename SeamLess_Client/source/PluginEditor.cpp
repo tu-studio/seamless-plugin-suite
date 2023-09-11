@@ -34,9 +34,12 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAud
 AudioPluginAudioProcessorEditor::~AudioPluginAudioProcessorEditor()
 {
     cartesianToggleButton.removeListener(& sphericalToggleButton);
+    if (JUCE_DEBUG) std::cout << "sphericalToogleButton stopped listener on cartesianToggleButton." << std::endl;
     sphericalToggleButton.removeListener(& cartesianToggleButton);
+    if (JUCE_DEBUG) std::cout << "cartesianToggleButton stopped listener on sphericalToogleButton." << std::endl;
 
     apvts.state.removeListener(this);
+    if (JUCE_DEBUG) std::cout << "processorEditor stopped listener on apvts.state." << std::endl;
 }
 
 //==============================================================================

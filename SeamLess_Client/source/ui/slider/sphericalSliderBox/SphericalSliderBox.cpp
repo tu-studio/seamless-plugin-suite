@@ -76,9 +76,9 @@ void SphericalSliderBox::updateSphericalCoordinates(float x, float y, float z) {
 }
 
 void SphericalSliderBox::sliderValueChanged(juce::Slider* slider) {
-    float radius = (float) radiusSlider.slider.getValue();
-    float azimuth = (float) azimuthSlider.slider.getValue();
-    float elevation = (float) elevationSlider.slider.getValue();
+    float radius = (float) apvts.state.getChild(0).getPropertyAsValue(PluginParameters::RADIUS_ID, nullptr).toString().getFloatValue();
+    float azimuth = (float) apvts.state.getChild(0).getPropertyAsValue(PluginParameters::AZIMUTH_ID, nullptr).toString().getFloatValue();
+    float elevation = (float) apvts.state.getChild(0).getPropertyAsValue(PluginParameters::ELEVATION_ID, nullptr).toString().getFloatValue();
 
     if (slider == &radiusSlider.slider) {
         radius = (float) slider->getValue();

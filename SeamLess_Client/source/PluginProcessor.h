@@ -51,7 +51,6 @@ private:
 
 private:
     juce::AudioProcessorValueTreeState apvts;
-    juce::ValueTree notAutomatableValueTree;
     
     PluginConnection pluginConnection;
     

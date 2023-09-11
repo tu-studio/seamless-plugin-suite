@@ -64,7 +64,7 @@ void SendParameters::createNotAutomatableValueTree()
 
 void SendParameters::clearNotAutomatableValueTree() {
     notAutomatableParameterValueTree.removeProperty(SOURCE_IDX_NAME, nullptr);
-    notAutomatableParameterValueTree = juce::ValueTree(); // clears the ValueTree so that we are not leaking
+    // notAutomatableParameterValueTree = juce::ValueTree(); // clears the ValueTree so that we are not leaking
 }
 
 juce::StringArray SendParameters::getSettingsList() {

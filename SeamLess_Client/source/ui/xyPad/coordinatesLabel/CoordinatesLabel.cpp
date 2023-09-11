@@ -23,8 +23,16 @@ CoordinatesLabel::CoordinatesLabel() {
 }
 
 void CoordinatesLabel::updateCoordinatesLabelText(float newXPosition, float newYPosition) {
-    newXPosition = juce::jlimit(-10.f, 10.f, newXPosition);
-    newYPosition = juce::jlimit(-10.f, 10.f, newYPosition);
+    newXPosition = limitMetricValue(newXPosition);
+    newYPosition = limitMetricValue(newYPosition);
     coordinatesLabelText = "x = " + juce::String(newXPosition, 2) + "\ny = " + juce::String(newYPosition, 2);
     setText(coordinatesLabelText, juce::dontSendNotification);
+}
+
+float CoordinatesLabel::limitMetricValue(float value) {
+    if (value > 10.f)
+        return 10.f;
+    else if (value < -10.f)
+        return -10.f;
+    else return value;
 }

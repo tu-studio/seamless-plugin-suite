@@ -21,6 +21,9 @@ public:
     void updateCoordinatesLabelText(float newXPosition, float newYPosition);
 
 private:
+    float limitMetricValue(float value);
+
+private:
     juce::String coordinatesLabelText;    
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(CoordinatesLabel)

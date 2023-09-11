@@ -12,6 +12,7 @@ Author:  Fares Schulz
 #define SphericalSliderBox_h
 
 #include <JuceHeader.h>
+#include <SeamLess.h>
 #include <PluginParameters.h>
 #include <CostumRotarySlider.h>
 #include <XYPad.h>
@@ -29,6 +30,8 @@ private:
     void sliderDragEnded(juce::Slider* slider) override;
     void updateSphericalCoordinates(float x, float y, float z);
     void updateCartesianCoordinates(float radius, float azimuth, float elevation);
+    float limitMetricValue(float value);
+    float normalizeMetricValue(float value);
 
 private:
     CostumRotarySlider radiusSlider {"radius"};

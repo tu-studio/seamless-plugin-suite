@@ -103,9 +103,12 @@ void SphericalSliderBox::parameterValueChanged(juce::RangedAudioParameter& param
 }
 
 void SphericalSliderBox::updateSphericalCoordinates(float x, float y, float z) {
-    float radius = sqrtf(powf(x, 2) + powf(y, 2) + powf(z, 2));
-    float azimuth = atan2f(y, x) * 180  / (float) M_PI;
-    float elevation = asinf(z / radius) * 180 / (float) M_PI;
+    float radius, azimuth, elevation;
+
+    radius = sqrtf(powf(x, 2) + powf(y, 2) + powf(z, 2));
+    azimuth = atan2f(y, x) * 180  / (float) M_PI;
+    if (radius != 0.f) elevation = asinf(z / radius) * 180 / (float) M_PI;
+    else elevation = 0.f;
 
     apvts.state.getChild(0).setProperty(PluginParameters::RADIUS_ID, radius, nullptr);
     apvts.state.getChild(0).setProperty(PluginParameters::AZIMUTH_ID, azimuth, nullptr);

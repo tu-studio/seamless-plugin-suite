@@ -12,7 +12,7 @@
 #include <MainServer.h>
 
 struct Source {
-    int sourceIdx;
+    int sourceIdx = -1;
     float xPosition;
     float yPosition;
     float zPosition;

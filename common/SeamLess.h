@@ -1,16 +1,31 @@
-//
-//  SeamLess.h
-//  SeamlessPluginSuite
-//
-//  Created by Fares Schulz on 06.06.23.
-//
+/*
+=====================================================================
+
+SeamLess.h
+Created: 6 Jun 2023
+Author:  Fares Schulz
+
+=====================================================================
+*/
+
+/*===================================================================
+Configurations for SeamLess Plugin Suite
+===================================================================*/
 
 #ifndef SeamLess_h
 #define SeamLess_h
 
-#define PORT_NUMBER 52713
+#define DEFAULT_OSC_SEND_ADRESS "127.0.0.1"
+#define DEFAULT_OSC_SEND_PORT 9000
+
+#define DEFAULT_OSC_RECEIVE_PORT 9001
+
 // send interval (ms) for outgoing OSC messages
 #define SEND_INTERVAL 20
+
+//==================================================================
+
+#define IPC_PORT 52713
 
 #ifndef M_PI
 #define M_PI        3.14159265358979323846264338327950288   /* pi             */

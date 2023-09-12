@@ -1,13 +1,13 @@
-#include "SendParameters.h"
+#include "OSCParameters.h"
 
-SendParameters::SendParameters() {
+OSCParameters::OSCParameters() {
     createNotAutomatableValueTree();
 }
-SendParameters::~SendParameters() {
+OSCParameters::~OSCParameters() {
     clearNotAutomatableValueTree();
 }
 
-juce::AudioProcessorValueTreeState::ParameterLayout SendParameters::createParameterLayout() {
+juce::AudioProcessorValueTreeState::ParameterLayout OSCParameters::createParameterLayout() {
     std::vector<std::unique_ptr<juce::RangedAudioParameter>> params;
     
     params.push_back(std::make_unique<juce::AudioParameterFloat> (GAIN_1_ID,
@@ -54,14 +54,14 @@ juce::AudioProcessorValueTreeState::ParameterLayout SendParameters::createParame
     return { params.begin(), params.end() };
 }
 
-juce::StringArray SendParameters::getPluginParameterList() {
+juce::StringArray OSCParameters::getPluginParameterList() {
     return parameterList;
 }
 
-void SendParameters::createNotAutomatableValueTree()
+void OSCParameters::createNotAutomatableValueTree()
 {
     if (! notAutomatableParameterValueTree.isValid()) {
-        notAutomatableParameterValueTree = juce::ValueTree("SendParameters");
+        notAutomatableParameterValueTree = juce::ValueTree("OSCParameters");
         notAutomatableParameterValueTree.setProperty(SOURCE_IDX_ID, juce::var(-1), nullptr);
     }
     
@@ -72,17 +72,17 @@ void SendParameters::createNotAutomatableValueTree()
     return;
 }
 
-void SendParameters::clearNotAutomatableValueTree() {
+void OSCParameters::clearNotAutomatableValueTree() {
     notAutomatableParameterValueTree.removeProperty(SOURCE_IDX_ID, nullptr);
-    if (JUCE_DEBUG) std::cout << "All properties from SendParameters removed." << std::endl;
+    if (JUCE_DEBUG) std::cout << "All properties from OSCParameters removed." << std::endl;
     notAutomatableParameterValueTree = juce::ValueTree(); // clears the ValueTree so that we are not leaking
-    if (JUCE_DEBUG) std::cout << "SendParameters Value Tree to nullptr." << std::endl;
+    if (JUCE_DEBUG) std::cout << "OSCParameters Value Tree to nullptr." << std::endl;
 }
 
-juce::StringArray SendParameters::getSettingsList() {
+juce::StringArray OSCParameters::getSettingsList() {
     return settingsList;
 }
 
-juce::ValueTree SendParameters::getNotAutomatableValueTree() {
+juce::ValueTree OSCParameters::getNotAutomatableValueTree() {
     return notAutomatableParameterValueTree;
 }

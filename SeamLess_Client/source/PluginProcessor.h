@@ -53,7 +53,7 @@ private:
     void connected(PluginConnection* pluginConnectionThatCalled) override;
     void timerCallback() override;
 
-
+    //==============================================================================
 private:
     juce::AudioProcessorValueTreeState apvts;
     

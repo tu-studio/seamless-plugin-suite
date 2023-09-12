@@ -22,7 +22,7 @@ ZPositionSlider::ZPositionSlider(juce::AudioProcessorValueTreeState& a) : apvts(
     sliderLabel.attachToComponent(&slider,false);
     addAndMakeVisible(sliderLabel);
 
-    addSliderAttachment(apvts, SendParameters::POS_Z_ID.getParamID());
+    addSliderAttachment(apvts, OSCParameters::POS_Z_ID.getParamID());
 }
 
 ZPositionSlider::~ZPositionSlider() {

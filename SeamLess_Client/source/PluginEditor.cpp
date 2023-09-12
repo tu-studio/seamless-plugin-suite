@@ -32,6 +32,8 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAud
     gainToggleButton.addListener(& sphericalToggleButton);
     sphericalToggleButton.addListener(& gainToggleButton);
 
+    addAndMakeVisible(tooltipWindow);
+
     apvts.state.addListener(this);
 }
 

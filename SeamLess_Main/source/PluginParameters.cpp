@@ -8,28 +8,46 @@
 #include "PluginParameters.h"
 
 juce::AudioProcessorValueTreeState::ParameterLayout PluginParameters::createParameterLayout() {
-    std::vector<std::unique_ptr<juce::RangedAudioParameter>> params;
     
-    // params.push_back(std::make_unique<juce::AudioParameterFloat> (SEND_1_ID,
-    //                                                               SEND_1_NAME,
-    //                                                               sendRange,
-    //                                                               0.f));
+    juce::AudioProcessorValueTreeState::ParameterLayout parameterLayout = OSCParameters::createParameterLayout();
     
-    // params.push_back(std::make_unique<juce::AudioParameterFloat> (SEND_2_ID,
-    //                                                               SEND_2_NAME,
-    //                                                               sendRange,
-    //                                                               0.f));
-
-        
     if (parameterList.isEmpty()) {
-        for (const auto & param : params) {
-            parameterList.add(param->getParameterID());
+        for (const auto & param : OSCParameters::getPluginParameterList()) {
+            parameterList.add(param);
         }
     }
-
-    return { params.begin(), params.end() };
+    
+    return parameterLayout;
 }
 
 juce::StringArray PluginParameters::getPluginParameterList() {
     return parameterList;
+}
+
+juce::ValueTree PluginParameters::createNotAutomatableValueTree()
+{
+    OSCParameters::createNotAutomatableValueTree();
+    juce::ValueTree notAutomatableParameterValueTree = juce::ValueTree("Settings");
+    notAutomatableParameterValueTree.copyPropertiesFrom(OSCParameters::getNotAutomatableValueTree(), nullptr);
+    
+    notAutomatableParameterValueTree.setProperty(PluginParameters::OSC_SEND_ADRESS_ID, PluginParameters::OSC_SEND_ADRESS_INITIAL, nullptr);
+    notAutomatableParameterValueTree.setProperty(PluginParameters::OSC_SEND_PORT_ID, PluginParameters::OSC_SEND_PORT_INITIAL, nullptr);
+    notAutomatableParameterValueTree.setProperty(PluginParameters::OSC_RECEIVE_PORT_ID, PluginParameters::OSC_RECEIVE_PORT_INITIAL, nullptr);
+    
+    notAutomatableParameterValueTree.setProperty(PluginParameters::NUM_CLIENTS_ID, 0, nullptr);
+    
+    settingsList = OSCParameters::getSettingsList();
+    
+    return notAutomatableParameterValueTree;
+}
+
+void PluginParameters::clearNotAutomatableValueTree(juce::ValueTree notAutomatableParameterValueTree) {
+    notAutomatableParameterValueTree.removeAllProperties(nullptr);
+    if (JUCE_DEBUG) std::cout << "All properties from PluginParameters removed" << std::endl;
+    notAutomatableParameterValueTree = juce::ValueTree();
+    OSCParameters::clearNotAutomatableValueTree();
+}
+
+juce::StringArray PluginParameters::getSettingsList() {
+    return settingsList;
 }

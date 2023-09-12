@@ -1,20 +1,20 @@
 //
-//  SendParameters.hpp
+//  OSCParameters.h
 //  SeamlessPluginSuite
 //
 //  Created by Fares Schulz on 06.06.23.
 //
 
-#ifndef SendParameters_h
-#define SendParameters_h
+#ifndef OSCParameters_h
+#define OSCParameters_h
 
 #include <JuceHeader.h>
 
-class SendParameters {
+class OSCParameters {
 public:
     
-    SendParameters();
-    ~SendParameters();
+    OSCParameters();
+    ~OSCParameters();
     
     inline static const juce::ParameterID
         
@@ -28,7 +28,7 @@ public:
 
     inline static const juce::String
 
-        // not automatable SendParameters
+        // not automatable OSCParameters
         SOURCE_IDX_ID = "param_source_idx";
     
     inline static const juce::String
@@ -57,7 +57,7 @@ private:
     inline static juce::NormalisableRange<float> GAIN_RANGE {0.f, 1.f, 0.01f};
     inline static juce::NormalisableRange<float> POS_RANGE {-10.f, 10.f, 0.01f};
     
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(SendParameters)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(OSCParameters)
 };
 
-#endif /* SendParameters_h */
+#endif /* OSCParameters_h */

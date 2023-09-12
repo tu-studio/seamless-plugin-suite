@@ -8,16 +8,16 @@
 #include "GainSliderBox.h"
 
 GainSliderBox::GainSliderBox(juce::AudioProcessorValueTreeState &a) : apvts(a) {
-    gain1Slider.addSliderAttachment(apvts, SendParameters::GAIN_1_ID.getParamID());
+    gain1Slider.addSliderAttachment(apvts, OSCParameters::GAIN_1_ID.getParamID());
     gain1Slider.setDoubleClickReturnValue(0.f);
     addAndMakeVisible(gain1Slider);
-    gain2Slider.addSliderAttachment(apvts, SendParameters::GAIN_2_ID.getParamID());
+    gain2Slider.addSliderAttachment(apvts, OSCParameters::GAIN_2_ID.getParamID());
     gain2Slider.setDoubleClickReturnValue(0.f);
     addAndMakeVisible(gain2Slider);
-    gain3Slider.addSliderAttachment(apvts, SendParameters::GAIN_3_ID.getParamID());
+    gain3Slider.addSliderAttachment(apvts, OSCParameters::GAIN_3_ID.getParamID());
     gain3Slider.setDoubleClickReturnValue(0.f);
     addAndMakeVisible(gain3Slider);
-    gain4Slider.addSliderAttachment(apvts, SendParameters::GAIN_4_ID.getParamID());
+    gain4Slider.addSliderAttachment(apvts, OSCParameters::GAIN_4_ID.getParamID());
     gain4Slider.setDoubleClickReturnValue(0.f);
     addAndMakeVisible(gain4Slider);
 }

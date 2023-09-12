@@ -9,10 +9,10 @@
 
 juce::AudioProcessorValueTreeState::ParameterLayout PluginParameters::createParameterLayout() {
     
-    juce::AudioProcessorValueTreeState::ParameterLayout parameterLayout = SendParameters::createParameterLayout();
+    juce::AudioProcessorValueTreeState::ParameterLayout parameterLayout = OSCParameters::createParameterLayout();
     
     if (parameterList.isEmpty()) {
-        for (const auto & param : SendParameters::getPluginParameterList()) {
+        for (const auto & param : OSCParameters::getPluginParameterList()) {
             parameterList.add(param);
         }
     }
@@ -26,9 +26,9 @@ juce::StringArray PluginParameters::getPluginParameterList() {
 
 juce::ValueTree PluginParameters::createNotAutomatableValueTree()
 {
-    SendParameters::createNotAutomatableValueTree();
+    OSCParameters::createNotAutomatableValueTree();
     juce::ValueTree notAutomatableParameterValueTree = juce::ValueTree("Settings");
-    notAutomatableParameterValueTree.copyPropertiesFrom(SendParameters::getNotAutomatableValueTree(), nullptr);
+    notAutomatableParameterValueTree.copyPropertiesFrom(OSCParameters::getNotAutomatableValueTree(), nullptr);
     
     notAutomatableParameterValueTree.setProperty(PluginParameters::RADIUS_ID, 0.f, nullptr);
     notAutomatableParameterValueTree.setProperty(PluginParameters::AZIMUTH_ID, 0.f, nullptr);
@@ -41,7 +41,7 @@ juce::ValueTree PluginParameters::createNotAutomatableValueTree()
 
     notAutomatableParameterValueTree.setProperty(PluginParameters::MAIN_CONNECTION_STATUS_ID, 0, nullptr);
     
-    settingsList = SendParameters::getSettingsList();
+    settingsList = OSCParameters::getSettingsList();
     
     return notAutomatableParameterValueTree;
 }
@@ -50,7 +50,7 @@ void PluginParameters::clearNotAutomatableValueTree(juce::ValueTree notAutomatab
     notAutomatableParameterValueTree.removeAllProperties(nullptr);
     if (JUCE_DEBUG) std::cout << "All properties from PluginParameters removed" << std::endl;
     notAutomatableParameterValueTree = juce::ValueTree();
-    SendParameters::clearNotAutomatableValueTree();
+    OSCParameters::clearNotAutomatableValueTree();
 }
 
 juce::StringArray PluginParameters::getSettingsList() {

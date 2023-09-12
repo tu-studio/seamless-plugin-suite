@@ -58,7 +58,6 @@ void AudioPluginAudioProcessorEditor::resized()
     area.removeFromBottom(spacingBetween);
     area.removeFromLeft(spacingBetween);
     area.removeFromRight(spacingBetween);
-    auto fullArea = area;
 
     auto leftSide = area.removeFromLeft(area.getWidth()/10);
     leftSide.removeFromRight(spacingBetween);

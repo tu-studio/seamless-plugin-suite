@@ -48,9 +48,9 @@ public:
 private:
     void parameterChanged (const juce::String& parameterID, float newValue) override;
     void valueTreePropertyChanged(juce::ValueTree& treeWhosePropertyHasChanged, const juce::Identifier& property) override;
-    void forwardMessage(PluginConnection* pluginConnectionThatSends, const juce::MemoryBlock& memoryBlock) override;
-    void disconnected(PluginConnection* pluginConnectionThatSends) override;
-    void connected(PluginConnection* pluginConnectionThatSends) override;
+    void forwardMessage(PluginConnection* pluginConnectionThatCalled, const juce::MemoryBlock& memoryBlock) override;
+    void disconnected(PluginConnection* pluginConnectionThatCalled) override;
+    void connected(PluginConnection* pluginConnectionThatCalled) override;
     void timerCallback() override;
 
 

@@ -18,14 +18,15 @@ Author:  Fares Schulz
 #include <XYPad.h>
 
 
-class SphericalSliderBox : public juce::Component, private juce::Slider::Listener, private juce::AudioProcessorValueTreeState::Listener {
+class SphericalSliderBox : public juce::Component, private juce::Slider::Listener {
 public:
     SphericalSliderBox(juce::AudioProcessorValueTreeState& apvts);
     ~SphericalSliderBox() override;
     void resized() override;
     
 private:
-    void parameterChanged(const juce::String& parameterID, float newValue) override;
+    void addParameterAttachment(juce::RangedAudioParameter& parameter);
+    void parameterValueChanged(juce::RangedAudioParameter& parameter, float newValue);
     void sliderValueChanged(juce::Slider* slider) override;
     void sliderDragStarted(juce::Slider* slider) override;
     void sliderDragEnded(juce::Slider* slider) override;
@@ -43,6 +44,9 @@ private:
     bool cartesianUpdate = false;
     
     juce::AudioProcessorValueTreeState& apvts;
+    std::unique_ptr<juce::ParameterAttachment> xAttachment;
+    std::unique_ptr<juce::ParameterAttachment> yAttachment;
+    std::unique_ptr<juce::ParameterAttachment> zAttachment;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(SphericalSliderBox)
 };

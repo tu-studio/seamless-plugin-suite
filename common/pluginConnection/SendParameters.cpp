@@ -19,6 +19,16 @@ juce::AudioProcessorValueTreeState::ParameterLayout SendParameters::createParame
                                                                   GAIN_2_NAME,
                                                                   GAIN_RANGE,
                                                                   0.f));
+                                                                  
+    params.push_back(std::make_unique<juce::AudioParameterFloat> (GAIN_3_ID,
+                                                                  GAIN_3_NAME,
+                                                                  GAIN_RANGE,
+                                                                  0.f));
+
+    params.push_back(std::make_unique<juce::AudioParameterFloat> (GAIN_4_ID,
+                                                                  GAIN_4_NAME,
+                                                                  GAIN_RANGE,
+                                                                  0.f));
     
     params.push_back(std::make_unique<juce::AudioParameterFloat> (POS_X_ID,
                                                                   POS_X_NAME,

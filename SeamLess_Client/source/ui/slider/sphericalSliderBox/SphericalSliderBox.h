@@ -22,6 +22,7 @@ class SphericalSliderBox : public juce::Component, private juce::Slider::Listene
 public:
     SphericalSliderBox(juce::AudioProcessorValueTreeState& apvts);
     ~SphericalSliderBox() override;
+    void paint(juce::Graphics& g) override;
     void resized() override;
     
 private:

@@ -35,7 +35,7 @@ private:
     ZPositionSlider zPositionSlider;
     CustomChoiceButton gridChoiceButton;
     CustomChoiceButton venueChoiceButton;
-    CustomToggleButton cartesianToggleButton;
+    CustomToggleButton gainToggleButton;
     CustomToggleButton sphericalToggleButton;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioPluginAudioProcessorEditor)

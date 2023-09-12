@@ -58,12 +58,22 @@ void SourceTree::parameterChanged(PluginConnection *pluginConnection, Parameter 
                 source.gain2 = value1;
                 juce::ignoreUnused(value2);
                 juce::ignoreUnused(value3);
+            } else if (parameter == PARAM_GAIN_3) {
+                source.gain3 = value1;
+                juce::ignoreUnused(value2);
+                juce::ignoreUnused(value3);
+            } else if (parameter == PARAM_GAIN_4) {
+                source.gain4 = value1;
+                juce::ignoreUnused(value2);
+                juce::ignoreUnused(value3);
             }
             std::cout << "Parameter changed:" << std::endl;
             std::cout << "Source Index: " << source.sourceIdx << std::endl;
             std::cout << "Position: (" << source.xPosition << ", " << source.yPosition << ", " << source.zPosition << ")" << std::endl;
             std::cout << "Gain 1: " << source.gain1 << std::endl;
             std::cout << "Gain 2: " << source.gain2 << std::endl;
+            std::cout << "Gain 3: " << source.gain3 << std::endl;
+            std::cout << "Gain 4: " << source.gain4 << std::endl;
             
             listenerList.call([source, parameter] (Listener& l) {l.sourceParameterChanged(source, parameter);});
             return;

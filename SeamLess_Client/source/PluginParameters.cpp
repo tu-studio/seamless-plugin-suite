@@ -36,8 +36,10 @@ juce::ValueTree PluginParameters::createNotAutomatableValueTree()
     
     notAutomatableParameterValueTree.setProperty(PluginParameters::GRID_CHOICE_ID, (int) GridType::Off, nullptr);
     notAutomatableParameterValueTree.setProperty(PluginParameters::VENUE_CHOICE_ID, (int) VenueType::TU_Studio, nullptr);
-    notAutomatableParameterValueTree.setProperty(PluginParameters::CARTESIAN_TOGGLE_ID, 1, nullptr);
+    notAutomatableParameterValueTree.setProperty(PluginParameters::GAIN_TOGGLE_ID, 1, nullptr);
     notAutomatableParameterValueTree.setProperty(PluginParameters::SPHERICAL_TOGGLE_ID, 0, nullptr);
+
+    notAutomatableParameterValueTree.setProperty(PluginParameters::MAIN_CONNECTION_STATUS_ID, 0, nullptr);
     
     settingsList = SendParameters::getSettingsList();
     

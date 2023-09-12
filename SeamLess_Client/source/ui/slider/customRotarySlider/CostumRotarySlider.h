@@ -27,6 +27,7 @@ public:
     juce::Slider slider;
 
 private:
+    void paint(juce::Graphics& g) override;
     void resized() override;
     
 private:

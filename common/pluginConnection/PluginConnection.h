@@ -18,7 +18,9 @@ enum Parameter {
     PARAM_SOURCE_IDX,
     PARAM_POS,
     PARAM_GAIN_1,
-    PARAM_GAIN_2
+    PARAM_GAIN_2,
+    PARAM_GAIN_3,
+    PARAM_GAIN_4
 };
 
 struct Message {
@@ -35,6 +37,7 @@ public:
     public:
         virtual void forwardMessage(PluginConnection* pluginConnection, const juce::MemoryBlock& memoryBlock) = 0; // pure virtual function
         virtual void disconnected(PluginConnection* pluginConnection) = 0; // pure virtual function
+        virtual void connected(PluginConnection* pluginConnection) = 0; 
     };
     void addListener(Listener *);
     void removeListener(Listener *);

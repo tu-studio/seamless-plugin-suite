@@ -20,6 +20,8 @@ public:
         
         GAIN_1_ID = {"param_gain_1", 1},
         GAIN_2_ID = {"param_gain_2", 1},
+        GAIN_3_ID = {"param_gain_3", 1},
+        GAIN_4_ID = {"param_gain_4", 1},
         POS_X_ID = {"param_pos_x", 1},
         POS_Y_ID = {"param_pos_y", 1},
         POS_Z_ID = {"param_pos_z", 1};
@@ -28,6 +30,8 @@ public:
         
         GAIN_1_NAME = "Send HOA",
         GAIN_2_NAME = "Send WFS",
+        GAIN_3_NAME = "Send WFS",
+        GAIN_4_NAME = "Send WFS",
         POS_X_NAME = "X Position",
         POS_Y_NAME = "Y Position",
         POS_Z_NAME = "Z Position",

@@ -16,11 +16,14 @@
 class GainSliderBox : public juce::Component {
 public:
     GainSliderBox(juce::AudioProcessorValueTreeState& apvts);
+    void paint(juce::Graphics& g) override;
     void resized() override;
     
 private:
     CostumRotarySlider gain1Slider {"HOA"};
     CostumRotarySlider gain2Slider {"WFS"};
+    CostumRotarySlider gain3Slider {"Reverb"};
+    CostumRotarySlider gain4Slider {"LFE"};
     
     juce::AudioProcessorValueTreeState& apvts;
     

@@ -222,18 +222,18 @@ void AudioPluginAudioProcessor::timerCallback() {
     }
 }
 
-void AudioPluginAudioProcessor::forwardMessage(PluginConnection *pluginConnection, const juce::MemoryBlock &memoryBlock) {
-    juce::ignoreUnused(pluginConnection, memoryBlock);
+void AudioPluginAudioProcessor::forwardMessage(PluginConnection *pluginConnectionThatCalled, const juce::MemoryBlock &memoryBlock) {
+    juce::ignoreUnused(pluginConnectionThatCalled, memoryBlock);
 }
 
-void AudioPluginAudioProcessor::connected(PluginConnection *pluginConnection) {
-    juce::ignoreUnused(pluginConnection);
+void AudioPluginAudioProcessor::connected(PluginConnection *pluginConnectionThatCalled) {
+    juce::ignoreUnused(pluginConnectionThatCalled);
     apvts.state.getChild(0).setProperty(PluginParameters::MAIN_CONNECTION_STATUS_ID, 1, nullptr);
     stopTimer();
 }
 
-void AudioPluginAudioProcessor::disconnected(PluginConnection *pluginConnection) {
-    juce::ignoreUnused(pluginConnection);
+void AudioPluginAudioProcessor::disconnected(PluginConnection *pluginConnectionThatCalled) {
+    juce::ignoreUnused(pluginConnectionThatCalled);
     apvts.state.getChild(0).setProperty(PluginParameters::MAIN_CONNECTION_STATUS_ID, 0, nullptr);
     startTimer(1000);
 }

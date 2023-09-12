@@ -62,18 +62,18 @@ void SendParameters::createNotAutomatableValueTree()
 {
     if (! notAutomatableParameterValueTree.isValid()) {
         notAutomatableParameterValueTree = juce::ValueTree("SendParameters");
-        notAutomatableParameterValueTree.setProperty(SOURCE_IDX_NAME, juce::var(-1), nullptr);
+        notAutomatableParameterValueTree.setProperty(SOURCE_IDX_ID, juce::var(-1), nullptr);
     }
     
     if (settingsList.isEmpty()) {
-        settingsList.add(SOURCE_IDX_NAME);
+        settingsList.add(SOURCE_IDX_ID);
     }
     
     return;
 }
 
 void SendParameters::clearNotAutomatableValueTree() {
-    notAutomatableParameterValueTree.removeProperty(SOURCE_IDX_NAME, nullptr);
+    notAutomatableParameterValueTree.removeProperty(SOURCE_IDX_ID, nullptr);
     if (JUCE_DEBUG) std::cout << "All properties from SendParameters removed." << std::endl;
     notAutomatableParameterValueTree = juce::ValueTree(); // clears the ValueTree so that we are not leaking
     if (JUCE_DEBUG) std::cout << "SendParameters Value Tree to nullptr." << std::endl;

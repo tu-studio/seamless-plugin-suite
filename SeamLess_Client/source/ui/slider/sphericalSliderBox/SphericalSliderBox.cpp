@@ -30,9 +30,9 @@ SphericalSliderBox::SphericalSliderBox(juce::AudioProcessorValueTreeState &a) : 
     radiusSlider.slider.addListener(this);
     azimuthSlider.slider.addListener(this);
     elevationSlider.slider.addListener(this);
-    // apvts.addParameterListener(SendParameters::POS_X_ID.getParamID(), this);
-    // apvts.addParameterListener(SendParameters::POS_Y_ID.getParamID(), this);
-    // apvts.addParameterListener(SendParameters::POS_Z_ID.getParamID(), this);
+    addParameterAttachment(*(apvts.getParameter(SendParameters::POS_X_ID.getParamID())));
+    addParameterAttachment(*(apvts.getParameter(SendParameters::POS_Y_ID.getParamID())));
+    addParameterAttachment(*(apvts.getParameter(SendParameters::POS_Z_ID.getParamID())));
 }
 
 SphericalSliderBox::~SphericalSliderBox() {
@@ -42,12 +42,6 @@ SphericalSliderBox::~SphericalSliderBox() {
     if (JUCE_DEBUG) std::cout << "sphericalSliderBox stopped listener on azimuthSlider.slider." << std::endl;
     elevationSlider.slider.removeListener(this);
     if (JUCE_DEBUG) std::cout << "sphericalSliderBox stopped listener on elevationSlider.slider." << std::endl;
-    // apvts.removeParameterListener(SendParameters::POS_X_ID.getParamID(), this);
-    if (JUCE_DEBUG) std::cout << "sphericalSliderBox stopped listener on apvts.posx_param." << std::endl;
-    // apvts.removeParameterListener(SendParameters::POS_Y_ID.getParamID(), this);
-    if (JUCE_DEBUG) std::cout << "sphericalSliderBox stopped listener on apvts.posy_param." << std::endl;
-    // apvts.removeParameterListener(SendParameters::POS_Z_ID.getParamID(), this);
-    if (JUCE_DEBUG) std::cout << "sphericalSliderBox stopped listener on apvts.posz_param." << std::endl;
 }
 
 void SphericalSliderBox::resized() {
@@ -57,17 +51,51 @@ void SphericalSliderBox::resized() {
     elevationSlider.setBounds(area.getWidth()*2/3, 0, area.getWidth()/3, area.getHeight());
 }
 
-void SphericalSliderBox::parameterChanged(const juce::String& parameterID, float newValue) {
+void SphericalSliderBox::addParameterAttachment(juce::RangedAudioParameter& parameter) {
+    if (parameter.paramID == SendParameters::POS_X_ID.getParamID()) {
+        xAttachment = std::make_unique<juce::ParameterAttachment>(
+            parameter,
+            // callback function on parameter change
+            [this, &parameter] (float newValue) {
+                parameterValueChanged(parameter, newValue);
+            },
+            // undo manager
+            nullptr);
+        xAttachment->sendInitialUpdate();
+    } else if (parameter.paramID == SendParameters::POS_Y_ID.getParamID()) {
+        yAttachment = std::make_unique<juce::ParameterAttachment>(
+            parameter,
+            // callback function on parameter change
+            [this, &parameter] (float newValue) {
+                parameterValueChanged(parameter, newValue);
+            },
+            // undo manager
+            nullptr);
+        yAttachment->sendInitialUpdate();
+    } else if (parameter.paramID == SendParameters::POS_Z_ID.getParamID()) {
+        zAttachment = std::make_unique<juce::ParameterAttachment>(
+            parameter,
+            // callback function on parameter change
+            [this, &parameter] (float newValue) {
+                parameterValueChanged(parameter, newValue);
+            },
+            // undo manager
+            nullptr);
+        zAttachment->sendInitialUpdate();
+    }
+}
+
+void SphericalSliderBox::parameterValueChanged(juce::RangedAudioParameter& parameter, float newValue) {
     if (!activeDrag) {
         float x = apvts.getParameterAsValue(SendParameters::POS_X_ID.getParamID()).toString().getFloatValue();
         float y = apvts.getParameterAsValue(SendParameters::POS_Y_ID.getParamID()).toString().getFloatValue();
         float z = apvts.getParameterAsValue(SendParameters::POS_Z_ID.getParamID()).toString().getFloatValue();
 
-        if (parameterID == SendParameters::POS_X_ID.getParamID()) {
+        if (parameter.getParameterID() == SendParameters::POS_X_ID.getParamID()) {
             x = newValue;
-        } else if (parameterID == SendParameters::POS_Y_ID.getParamID()) {
+        } else if (parameter.getParameterID() == SendParameters::POS_Y_ID.getParamID()) {
             y = newValue;
-        } else if (parameterID == SendParameters::POS_Z_ID.getParamID()) {
+        } else if (parameter.getParameterID() == SendParameters::POS_Z_ID.getParamID()) {
             z = newValue;
         }
         updateSphericalCoordinates(x, y, z);

@@ -3,7 +3,7 @@
 
 //==============================================================================
 AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAudioProcessor& p, juce::AudioProcessorValueTreeState& pluginApvts)
-    : AudioProcessorEditor (&p), processorRef (p), apvts(pluginApvts), gainSliderBox(pluginApvts), sphericalSliderBox(pluginApvts), sourceIndexSelector(pluginApvts), xyPad(pluginApvts), zPositionSlider(pluginApvts), gridChoiceButton(pluginApvts, PluginParameters::GRID_CHOICE_ID, PluginParameters::GRID_CHOICE_LABELS, "None"), venueChoiceButton(pluginApvts, PluginParameters::VENUE_CHOICE_ID, PluginParameters::VENUE_CHOICE_LABELS, "None"), cartesianToggleButton(pluginApvts, PluginParameters::CARTESIAN_TOGGLE_ID, PluginParameters::CARTESIAN_TOGGLE_LABEL, "None"), sphericalToggleButton(apvts, PluginParameters::SPHERICAL_TOGGLE_ID, PluginParameters::SPHERICAL_TOGGLE_LABEL, "None")
+    : AudioProcessorEditor (&p), processorRef (p), apvts(pluginApvts), gainSliderBox(pluginApvts), sphericalSliderBox(pluginApvts), sourceIndexSelector(pluginApvts), xyPad(pluginApvts), zPositionSlider(pluginApvts), gridChoiceButton(pluginApvts, PluginParameters::GRID_CHOICE_ID, PluginParameters::GRID_CHOICE_LABELS, "None"), venueChoiceButton(pluginApvts, PluginParameters::VENUE_CHOICE_ID, PluginParameters::VENUE_CHOICE_LABELS, "None"), gainToggleButton(pluginApvts, PluginParameters::GAIN_TOGGLE_ID, PluginParameters::GAIN_TOGGLE_LABEL, "None"), sphericalToggleButton(apvts, PluginParameters::SPHERICAL_TOGGLE_ID, PluginParameters::SPHERICAL_TOGGLE_LABEL, "None")
 {
     juce::ignoreUnused (processorRef);
 
@@ -22,21 +22,21 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAud
     addAndMakeVisible(gridChoiceButton);
     addAndMakeVisible(venueChoiceButton);
 
-    addAndMakeVisible(cartesianToggleButton);
+    addAndMakeVisible(gainToggleButton);
     addAndMakeVisible(sphericalToggleButton);
-    // makes the cartesian toggle button toggle of if the spherical toggle button is toggled on and vice versa
-    cartesianToggleButton.addListener(& sphericalToggleButton);
-    sphericalToggleButton.addListener(& cartesianToggleButton);
+    // makes the gain toggle button toggle of if the spherical toggle button is toggled on and vice versa
+    gainToggleButton.addListener(& sphericalToggleButton);
+    sphericalToggleButton.addListener(& gainToggleButton);
 
     apvts.state.addListener(this);
 }
 
 AudioPluginAudioProcessorEditor::~AudioPluginAudioProcessorEditor()
 {
-    cartesianToggleButton.removeListener(& sphericalToggleButton);
-    if (JUCE_DEBUG) std::cout << "sphericalToogleButton stopped listener on cartesianToggleButton." << std::endl;
-    sphericalToggleButton.removeListener(& cartesianToggleButton);
-    if (JUCE_DEBUG) std::cout << "cartesianToggleButton stopped listener on sphericalToogleButton." << std::endl;
+    gainToggleButton.removeListener(& sphericalToggleButton);
+    if (JUCE_DEBUG) std::cout << "sphericalToogleButton stopped listener on gainToggleButton." << std::endl;
+    sphericalToggleButton.removeListener(& gainToggleButton);
+    if (JUCE_DEBUG) std::cout << "gainToggleButton stopped listener on sphericalToogleButton." << std::endl;
 
     apvts.state.removeListener(this);
     if (JUCE_DEBUG) std::cout << "processorEditor stopped listener on apvts.state." << std::endl;
@@ -50,35 +50,45 @@ void AudioPluginAudioProcessorEditor::paint (juce::Graphics& g)
 
 void AudioPluginAudioProcessorEditor::resized()
 {
+    
     // Borders for the GUI
     auto area = getLocalBounds();
-    area.removeFromTop(20);
-    area.removeFromBottom(20);
-    area.removeFromLeft(20);
-    area.removeFromRight(20);
+    auto spacingBetween = getWidth()/80;
+    area.removeFromTop(spacingBetween);
+    area.removeFromBottom(spacingBetween);
+    area.removeFromLeft(spacingBetween);
+    area.removeFromRight(spacingBetween);
+    auto fullArea = area;
 
-    auto leftSide = area.removeFromLeft(area.getWidth()/8);
-    zPositionSlider.setBounds(leftSide.removeFromTop(2 * leftSide.getHeight()/3));
-    gridChoiceButton.setBounds(leftSide.removeFromTop(leftSide.getHeight()/2));
+    auto leftSide = area.removeFromLeft(area.getWidth()/10);
+    leftSide.removeFromRight(spacingBetween);
+    zPositionSlider.setBounds(leftSide.removeFromTop((leftSide.getHeight()-spacingBetween)*3/4));
+    leftSide.removeFromTop(spacingBetween);
+    gridChoiceButton.setBounds(leftSide.removeFromTop((leftSide.getHeight()-spacingBetween)/2));
+    leftSide.removeFromTop(spacingBetween);
     venueChoiceButton.setBounds(leftSide);
 
-    auto middle = area.removeFromLeft(area.getWidth()/2);
+    auto middle = area.removeFromLeft(area.getHeight());
     xyPad.setBounds(middle);
 
+    area.removeFromLeft(spacingBetween);
     auto rightSide = area;
-    auto toogleButtonArea = rightSide.removeFromTop(rightSide.getHeight()/8);
-    cartesianToggleButton.setBounds(toogleButtonArea.removeFromLeft(toogleButtonArea.getWidth()/2));
+
+    auto toogleButtonArea = rightSide.removeFromTop((rightSide.getHeight()-spacingBetween)/8);
+    gainToggleButton.setBounds(toogleButtonArea.removeFromLeft((toogleButtonArea.getWidth()/2)));
     sphericalToggleButton.setBounds(toogleButtonArea);
 
-    auto sliderBoxesRightSide = rightSide.removeFromTop(rightSide.getHeight()*3/8);
+    rightSide.removeFromTop(spacingBetween);
+    auto sliderBoxesRightSide = rightSide.removeFromTop((rightSide.getHeight()-spacingBetween)*3/4);
     gainSliderBox.setBounds(sliderBoxesRightSide);
     sphericalSliderBox.setBounds(sliderBoxesRightSide);
 
+    rightSide.removeFromTop(spacingBetween);
     sourceIndexSelector.setBounds(rightSide);
 }
 
 void AudioPluginAudioProcessorEditor::valueTreePropertyChanged(juce::ValueTree& treeWhosePropertyHasChanged, const juce::Identifier& property) {
-    if (property.toString() == PluginParameters::CARTESIAN_TOGGLE_ID) {
+    if (property.toString() == PluginParameters::GAIN_TOGGLE_ID) {
         if (treeWhosePropertyHasChanged.getPropertyAsValue(property, nullptr).toString().getIntValue() == 1) {
             gainSliderBox.setVisible(true);
         } else {

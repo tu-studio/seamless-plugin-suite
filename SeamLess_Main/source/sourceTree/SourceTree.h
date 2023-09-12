@@ -18,6 +18,8 @@ struct Source {
     float zPosition;
     float gain1;
     float gain2;
+    float gain3;
+    float gain4;
     PluginConnection* pluginConnection;
 };
 

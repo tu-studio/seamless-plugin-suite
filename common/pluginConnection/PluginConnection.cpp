@@ -56,6 +56,18 @@ void PluginConnection::parameterChanged(const juce::String &parameterID, float n
             message.value1 = (float) newValue;
             juce::MemoryBlock memoryBlock (&message, sizeof(Message));
             sendMessage(memoryBlock);
+        } else if (parameterID == SendParameters::GAIN_3_ID.getParamID()) {
+            Message message;
+            message.parameter = Parameter::PARAM_GAIN_3;
+            message.value1 = (float) newValue;
+            juce::MemoryBlock memoryBlock (&message, sizeof(Message));
+            sendMessage(memoryBlock);
+        } else if (parameterID == SendParameters::GAIN_4_ID.getParamID()) {
+            Message message;
+            message.parameter = Parameter::PARAM_GAIN_4;
+            message.value1 = (float) newValue;
+            juce::MemoryBlock memoryBlock (&message, sizeof(Message));
+            sendMessage(memoryBlock);
         } else if (parameterID == SendParameters::POS_X_ID.getParamID()) {
             Message message;
             message.parameter = Parameter::PARAM_POS;
@@ -85,6 +97,7 @@ void PluginConnection::parameterChanged(const juce::String &parameterID, float n
 }
     
 void PluginConnection::connectionMade() {
+    listenerList.call([this] (Listener& l) {l.connected(this);});
     std::cout << "Connection estblished!" << std::endl;
 }
 

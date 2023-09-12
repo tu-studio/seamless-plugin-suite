@@ -64,3 +64,7 @@ void MainServer::disconnected(PluginConnection *pluginConnection) {
     }
     std::cout << "Main plugin deleted connection! N = " << mainConnections.size() << std::endl;
 }
+
+void MainServer::connected(PluginConnection *pluginConnection) {
+    juce::ignoreUnused(pluginConnection);
+}

@@ -34,6 +34,7 @@ private:
     
     void forwardMessage(PluginConnection* pluginConnection, const juce::MemoryBlock& memoryBlock) override;
     void disconnected(PluginConnection* pluginConnection) override;
+    void connected(PluginConnection* pluginConnection) override;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MainServer)
 };

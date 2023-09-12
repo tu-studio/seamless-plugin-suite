@@ -6,7 +6,7 @@
 #include <PluginParameters.h>
 
 //==============================================================================
-class AudioPluginAudioProcessor  : public juce::AudioProcessor, private juce::AudioProcessorValueTreeState::Listener, private juce::ValueTree::Listener
+class AudioPluginAudioProcessor  : public juce::AudioProcessor, private juce::AudioProcessorValueTreeState::Listener, private juce::ValueTree::Listener, private PluginConnection::Listener, private juce::Timer
 {
 public:
     //==============================================================================
@@ -48,6 +48,11 @@ public:
 private:
     void parameterChanged (const juce::String& parameterID, float newValue) override;
     void valueTreePropertyChanged(juce::ValueTree& treeWhosePropertyHasChanged, const juce::Identifier& property) override;
+    void forwardMessage(PluginConnection* pluginConnectionThatSends, const juce::MemoryBlock& memoryBlock) override;
+    void disconnected(PluginConnection* pluginConnectionThatSends) override;
+    void connected(PluginConnection* pluginConnectionThatSends) override;
+    void timerCallback() override;
+
 
 private:
     juce::AudioProcessorValueTreeState apvts;

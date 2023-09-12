@@ -18,7 +18,11 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
     }
     apvts.state.addChild(PluginParameters::createNotAutomatableValueTree(), 0 , nullptr);
     apvts.state.addListener(this);
+    pluginConnection.addListener(this);
     pluginConnection.connect(apvts, PluginParameters::getPluginParameterList(), PluginParameters::getSettingsList());
+    if (!pluginConnection.isConnected()) {
+        startTimer(1000);
+    }
 }
 
 AudioPluginAudioProcessor::~AudioPluginAudioProcessor()
@@ -208,4 +212,28 @@ void AudioPluginAudioProcessor::parameterChanged(const juce::String &parameterID
 
 void AudioPluginAudioProcessor::valueTreePropertyChanged(juce::ValueTree &treeWhosePropertyHasChanged, const juce::Identifier &property) {
     pluginConnection.parameterChanged(property.toString(), treeWhosePropertyHasChanged.getProperty(property));
+}
+
+void AudioPluginAudioProcessor::timerCallback() {
+    if (!pluginConnection.isConnected()) {
+        pluginConnection.connect(apvts, PluginParameters::getPluginParameterList(), PluginParameters::getSettingsList());
+    } else {
+        stopTimer();
+    }
+}
+
+void AudioPluginAudioProcessor::forwardMessage(PluginConnection *pluginConnection, const juce::MemoryBlock &memoryBlock) {
+    juce::ignoreUnused(pluginConnection, memoryBlock);
+}
+
+void AudioPluginAudioProcessor::connected(PluginConnection *pluginConnection) {
+    juce::ignoreUnused(pluginConnection);
+    apvts.state.getChild(0).setProperty(PluginParameters::MAIN_CONNECTION_STATUS_ID, 1, nullptr);
+    stopTimer();
+}
+
+void AudioPluginAudioProcessor::disconnected(PluginConnection *pluginConnection) {
+    juce::ignoreUnused(pluginConnection);
+    apvts.state.getChild(0).setProperty(PluginParameters::MAIN_CONNECTION_STATUS_ID, 0, nullptr);
+    startTimer(1000);
 }

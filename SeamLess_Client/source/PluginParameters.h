@@ -56,8 +56,10 @@ public:
         GRID_CHOICE_ID = "param_grid_choice",
         VENUE_CHOICE_ID = "param_venue_choice",
 
-        CARTESIAN_TOGGLE_ID = "param_cartesian_toggle",
-        SPHERICAL_TOGGLE_ID = "param_spherical_toggle";
+        GAIN_TOGGLE_ID = "param_gain_toggle",
+        SPHERICAL_TOGGLE_ID = "param_spherical_toggle",
+
+        MAIN_CONNECTION_STATUS_ID = "param_main_connection_status";
 
     inline static const juce::String
 
@@ -66,8 +68,10 @@ public:
         AZIMUTH_NAME = "Azimuth",
         ELEVATION_NAME = "Elevation",
 
-        CARTESIAN_TOGGLE_LABEL = "Cartesian",
-        SPHERICAL_TOGGLE_LABEL = "Spherical";
+        GAIN_TOGGLE_LABEL = "Gain",
+        SPHERICAL_TOGGLE_LABEL = "Spherical",
+
+        MAIN_CONNECTION_STATUS_NAME = "Main Connection Status";
 
     inline static const juce::StringArray
     

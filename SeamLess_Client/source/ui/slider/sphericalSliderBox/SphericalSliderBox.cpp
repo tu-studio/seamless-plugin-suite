@@ -44,11 +44,27 @@ SphericalSliderBox::~SphericalSliderBox() {
     if (JUCE_DEBUG) std::cout << "sphericalSliderBox stopped listener on elevationSlider.slider." << std::endl;
 }
 
+
+void SphericalSliderBox::paint(juce::Graphics &g) {
+    g.setColour (seamlessBlue);
+    g.fillRoundedRectangle(getLocalBounds().toFloat(), 15);   // draw an outline around the component
+}
+
 void SphericalSliderBox::resized() {
     auto area = getLocalBounds();
-    radiusSlider.setBounds(0, 0, area.getWidth()/3, area.getHeight());
-    azimuthSlider.setBounds(area.getWidth()/3, 0, area.getWidth()/3, area.getHeight());
-    elevationSlider.setBounds(area.getWidth()*2/3, 0, area.getWidth()/3, area.getHeight());
+    auto spacingBetween = area.getWidth()/40;
+    auto sliderWidth = (area.getWidth() - 3*spacingBetween)/2;
+    auto sliderHeight = (area.getHeight() - 3*spacingBetween)/2;
+    area = area.reduced(spacingBetween);
+    auto topSlider = area.removeFromTop(sliderHeight);
+    area.removeFromTop(spacingBetween);
+    auto bottomSlider = area;
+
+    azimuthSlider.setBounds(topSlider.removeFromLeft(sliderWidth));
+    topSlider.removeFromLeft(spacingBetween);
+    elevationSlider.setBounds(topSlider.removeFromLeft(sliderWidth));
+    bottomSlider.removeFromLeft(bottomSlider.getWidth()/4);
+    radiusSlider.setBounds(bottomSlider.removeFromLeft(sliderWidth));
 }
 
 void SphericalSliderBox::addParameterAttachment(juce::RangedAudioParameter& parameter) {

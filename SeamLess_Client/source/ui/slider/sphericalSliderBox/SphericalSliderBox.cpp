@@ -43,8 +43,11 @@ SphericalSliderBox::~SphericalSliderBox() {
     elevationSlider.slider.removeListener(this);
     if (JUCE_DEBUG) std::cout << "sphericalSliderBox stopped listener on elevationSlider.slider." << std::endl;
     apvts.removeParameterListener(SendParameters::POS_X_ID.getParamID(), this);
+    if (JUCE_DEBUG) std::cout << "sphericalSliderBox stopped listener on apvts.posx_param." << std::endl;
     apvts.removeParameterListener(SendParameters::POS_Y_ID.getParamID(), this);
+    if (JUCE_DEBUG) std::cout << "sphericalSliderBox stopped listener on apvts.posy_param." << std::endl;
     apvts.removeParameterListener(SendParameters::POS_Z_ID.getParamID(), this);
+    if (JUCE_DEBUG) std::cout << "sphericalSliderBox stopped listener on apvts.posz_param." << std::endl;
 }
 
 void SphericalSliderBox::resized() {

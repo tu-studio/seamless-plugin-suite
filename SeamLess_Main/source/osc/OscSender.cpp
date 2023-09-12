@@ -18,7 +18,9 @@ void OscSender::sendMessage(Source& source, Parameter parameter) {
             juce::OSCMessage oscMessagePosition("/source/pos/xyz", source.sourceIdx, source.xPosition, source.yPosition, source.zPosition);
             juce::OSCMessage oscMessageGain1("/send/gain",source.sourceIdx, 0, source.gain1);
             juce::OSCMessage oscMessageGain2("/send/gain",source.sourceIdx, 1, source.gain2);
-            if (! send(oscMessagePosition) || !send(oscMessageGain1) || !send(oscMessageGain2))
+            juce::OSCMessage oscMessageGain3("/send/gain",source.sourceIdx, 2, source.gain3);
+            juce::OSCMessage oscMessageGain4("/send/gain",source.sourceIdx, 3, source.gain4);
+            if (! send(oscMessagePosition) || !send(oscMessageGain1) || !send(oscMessageGain2) || !send(oscMessageGain3) || !send(oscMessageGain4))
                 showConnectionErrorMessage("Error: could not send OSC message.");
             return;
         }
@@ -30,6 +32,10 @@ void OscSender::sendMessage(Source& source, Parameter parameter) {
                 oscMessage = juce::OSCMessage("/send/gain",source.sourceIdx, 0, source.gain1);
             } else if (parameter == PARAM_GAIN_2) {
                 oscMessage = juce::OSCMessage("/send/gain",source.sourceIdx, 1, source.gain2);
+            } else if (parameter == PARAM_GAIN_3) {
+                oscMessage = juce::OSCMessage("/send/gain",source.sourceIdx, 2, source.gain3);
+            } else if (parameter == PARAM_GAIN_4) {
+                oscMessage = juce::OSCMessage("/send/gain",source.sourceIdx, 3, source.gain4);
             }
             if (! send(oscMessage))
                 showConnectionErrorMessage("Error: could not send OSC message.");

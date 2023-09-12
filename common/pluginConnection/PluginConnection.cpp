@@ -22,53 +22,59 @@ void PluginConnection::removeListener(Listener* listener) {
     listenerList.remove(listener);
 }
 
-void PluginConnection::connect(juce::AudioProcessorValueTreeState &pluginApvts, juce::StringArray parameterList, juce::StringArray settingsList) {
-    connectToSocket("localhost", PORT_NUMBER, 5000);
+void PluginConnection::connect() {
+    connectToSocket("localhost", IPC_PORT, 5000);
+}
+
+void PluginConnection::updateState(juce::AudioProcessorValueTreeState& apvts, juce::StringArray parameterList, juce::StringArray settingsList) {
     if (isConnected()) {
-        for (auto & setting : settingsList) {
-            parameterChanged(setting, pluginApvts.state.getChild(0).getProperty(setting));
-        }
+        // no need to initialize the parameterList since setStateInformation calls parameterChanged for each parameter
+        // but when the main server is started after the plugin, the plugin needs to initialize the parameterList
         for (auto & parameter : parameterList) {
-            parameterChanged(parameter, pluginApvts.getRawParameterValue(parameter)->load());
+            parameterChanged(parameter, apvts.getRawParameterValue(parameter)->load());
+        }
+        for (auto & setting : settingsList) {
+            parameterChanged(setting, apvts.state.getChild(0).getProperty(setting));
         }
     }
 }
 
 void PluginConnection::parameterChanged(const juce::String &parameterID, float newValue)
 {
+    std::cout << "Parameter changed: " << parameterID << " with value: " << newValue << std::endl;
     if (isConnected())
     {
-        if (parameterID == SendParameters::SOURCE_IDX_ID) {
+        if (parameterID == OSCParameters::SOURCE_IDX_ID) {
             Message message;
             message.parameter = Parameter::PARAM_SOURCE_IDX;
             message.value1 = (float) newValue;
             juce::MemoryBlock memoryBlock (&message, sizeof(Message));
             sendMessage(memoryBlock);
-        } else if (parameterID == SendParameters::GAIN_1_ID.getParamID()) {
+        } else if (parameterID == OSCParameters::GAIN_1_ID.getParamID()) {
             Message message;
             message.parameter = Parameter::PARAM_GAIN_1;
             message.value1 = (float) newValue;
             juce::MemoryBlock memoryBlock (&message, sizeof(Message));
             sendMessage(memoryBlock);
-        } else if (parameterID ==  SendParameters::GAIN_2_ID.getParamID()) {
+        } else if (parameterID ==  OSCParameters::GAIN_2_ID.getParamID()) {
             Message message;
             message.parameter = Parameter::PARAM_GAIN_2;
             message.value1 = (float) newValue;
             juce::MemoryBlock memoryBlock (&message, sizeof(Message));
             sendMessage(memoryBlock);
-        } else if (parameterID == SendParameters::GAIN_3_ID.getParamID()) {
+        } else if (parameterID == OSCParameters::GAIN_3_ID.getParamID()) {
             Message message;
             message.parameter = Parameter::PARAM_GAIN_3;
             message.value1 = (float) newValue;
             juce::MemoryBlock memoryBlock (&message, sizeof(Message));
             sendMessage(memoryBlock);
-        } else if (parameterID == SendParameters::GAIN_4_ID.getParamID()) {
+        } else if (parameterID == OSCParameters::GAIN_4_ID.getParamID()) {
             Message message;
             message.parameter = Parameter::PARAM_GAIN_4;
             message.value1 = (float) newValue;
             juce::MemoryBlock memoryBlock (&message, sizeof(Message));
             sendMessage(memoryBlock);
-        } else if (parameterID == SendParameters::POS_X_ID.getParamID()) {
+        } else if (parameterID == OSCParameters::POS_X_ID.getParamID()) {
             Message message;
             message.parameter = Parameter::PARAM_POS;
             message.value1 = newValue;
@@ -76,7 +82,7 @@ void PluginConnection::parameterChanged(const juce::String &parameterID, float n
             message.value3 = 99.f;
             juce::MemoryBlock memoryBlock (&message, sizeof(Message));
             sendMessage(memoryBlock);
-        } else if (parameterID == SendParameters::POS_Y_ID.getParamID()) {
+        } else if (parameterID == OSCParameters::POS_Y_ID.getParamID()) {
             Message message;
             message.parameter = Parameter::PARAM_POS;
             message.value1 = 99.f;
@@ -84,7 +90,7 @@ void PluginConnection::parameterChanged(const juce::String &parameterID, float n
             message.value3 = 99.f;
             juce::MemoryBlock memoryBlock (&message, sizeof(Message));
             sendMessage(memoryBlock);
-        } else if (parameterID == SendParameters::POS_Z_ID.getParamID()) {
+        } else if (parameterID == OSCParameters::POS_Z_ID.getParamID()) {
             Message message;
             message.parameter = Parameter::PARAM_POS;
             message.value1 = 99.f;

@@ -11,9 +11,9 @@ Author:  Fares Schulz
 # include "XYPad.h"
 
 XYPad::XYPad(juce::AudioProcessorValueTreeState& pluginApvts) : apvts(pluginApvts), grid(pluginApvts) {
-    addParameterAttachment(*(apvts.getParameter(SendParameters::POS_X_ID.getParamID())));
-    addParameterAttachment(*(apvts.getParameter(SendParameters::POS_Y_ID.getParamID())));
-    addParameterAttachment(*(apvts.getParameter(SendParameters::POS_Z_ID.getParamID())));
+    addParameterAttachment(*(apvts.getParameter(OSCParameters::POS_X_ID.getParamID())));
+    addParameterAttachment(*(apvts.getParameter(OSCParameters::POS_Y_ID.getParamID())));
+    addParameterAttachment(*(apvts.getParameter(OSCParameters::POS_Z_ID.getParamID())));
 
     addAndMakeVisible(grid);
 
@@ -72,7 +72,7 @@ void XYPad::setSourceWidthPx(int newSourceWidthPx) {
 }
 
 void XYPad::addParameterAttachment(juce::RangedAudioParameter& parameter) {
-    if (parameter.paramID == SendParameters::POS_X_ID.getParamID()) {
+    if (parameter.paramID == OSCParameters::POS_X_ID.getParamID()) {
         xAttachment = std::make_unique<juce::ParameterAttachment>(
             parameter,
             // callback function on parameter change
@@ -84,7 +84,7 @@ void XYPad::addParameterAttachment(juce::RangedAudioParameter& parameter) {
             // undo manager
             nullptr);
         xAttachment->sendInitialUpdate();
-    } else if (parameter.paramID == SendParameters::POS_Y_ID.getParamID()) {
+    } else if (parameter.paramID == OSCParameters::POS_Y_ID.getParamID()) {
         yAttachment = std::make_unique<juce::ParameterAttachment>(
             parameter,
             // callback function on parameter change
@@ -96,7 +96,7 @@ void XYPad::addParameterAttachment(juce::RangedAudioParameter& parameter) {
             // undo manager
             nullptr);
         yAttachment->sendInitialUpdate();
-    } else if (parameter.paramID == SendParameters::POS_Z_ID.getParamID()) {
+    } else if (parameter.paramID == OSCParameters::POS_Z_ID.getParamID()) {
         zAttachment = std::make_unique<juce::ParameterAttachment>(
             parameter,
             // callback function on parameter change

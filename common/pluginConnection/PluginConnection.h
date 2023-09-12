@@ -10,7 +10,7 @@
 
 #include <JuceHeader.h>
 #include <SeamLess.h>
-#include <SendParameters.h>
+#include <OSCParameters.h>
 
 class PluginConnection;
 
@@ -44,7 +44,8 @@ public:
     
     PluginConnection();
     ~PluginConnection() override;
-    void connect(juce::AudioProcessorValueTreeState &pluginApvts, juce::StringArray parameterList, juce::StringArray settingsList);
+    void connect();
+    void updateState(juce::AudioProcessorValueTreeState& apvts, juce::StringArray parameterList, juce::StringArray settingsList);
     void parameterChanged(const juce::String &parameterID, float newValue);
     
 private:

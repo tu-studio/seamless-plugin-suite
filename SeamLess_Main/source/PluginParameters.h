@@ -9,28 +9,38 @@
 #define PluginParameters_h
 
 #include <JuceHeader.h>
+#include <OSCParameters.h>
+#include <SeamLess.h>
 
 class PluginParameters {
 public:
+
+// Not automatable parameters
+
+    inline static const juce::String
     
-    // inline static const juce::ParameterID
-        
-    //     SEND_1_ID = {"param_send_1", 1},
-    //     SEND_2_ID = {"param_send_2", 1};
-    
-    // inline static const juce::String
-        
-    //     SEND_1_NAME = "Send HOA",
-    //     SEND_2_NAME = "Send WFS";
+        // not automatable Parameters
+        OSC_SEND_ADRESS_ID = "param_osc_send_adress",
+        OSC_SEND_PORT_ID = "param_osc_send_port",
+        OSC_RECEIVE_PORT_ID = "param_osc_receive_port",
+        NUM_CLIENTS_ID = "param_num_clients";
+
+    inline static const juce::String
+
+        OSC_SEND_ADRESS_INITIAL = DEFAULT_OSC_SEND_ADRESS,
+        OSC_SEND_PORT_INITIAL = (juce::String) DEFAULT_OSC_SEND_PORT,
+        OSC_RECEIVE_PORT_INITIAL = (juce::String) DEFAULT_OSC_RECEIVE_PORT;
     
     static juce::StringArray getPluginParameterList();
     static juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
+    static juce::StringArray getSettingsList();
+    static juce::ValueTree createNotAutomatableValueTree();
+    static void clearNotAutomatableValueTree(juce::ValueTree notAutomatableParameterValueTree);
     
 private:
-    
+
     inline static juce::StringArray parameterList;
-    
-    inline static juce::NormalisableRange<float> sendRange {0.f, 1.f, 0.01f};
+    inline static juce::StringArray settingsList;
 };
 
 #endif /* PluginParameters_h */

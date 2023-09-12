@@ -9,7 +9,7 @@
 #define PluginParameters_h
 
 #include <JuceHeader.h>
-#include <SendParameters.h>
+#include <OSCParameters.h>
 
 enum class GridType {
     Off,

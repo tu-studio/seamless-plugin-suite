@@ -7,8 +7,17 @@
 
 #include "OscSender.h"
 
-OscSender::OscSender() {
-    if (! connect ("127.0.0.1", 9001))
+OscSender::OscSender(juce::AudioProcessorValueTreeState& pluginApvts) : apvts(pluginApvts) {
+    apvts.state.addListener(this);
+}
+
+void OscSender::connectToPort() {
+    juce::String oscSendAdress = apvts.state.getChildWithName("Settings").getPropertyAsValue(PluginParameters::OSC_SEND_ADRESS_ID, nullptr).toString();
+    int oscSendPort = apvts.state.getChildWithName("Settings").getPropertyAsValue(PluginParameters::OSC_SEND_PORT_ID, nullptr).toString().getIntValue();
+
+    std::cout << "OSC Sender: " << oscSendAdress << " " << oscSendPort << std::endl;
+
+    if (! connect (oscSendAdress, oscSendPort))
         showConnectionErrorMessage ("Error: could not connect to UDP port 9001.");
 }
 
@@ -40,6 +49,15 @@ void OscSender::sendMessage(Source& source, Parameter parameter) {
             if (! send(oscMessage))
                 showConnectionErrorMessage("Error: could not send OSC message.");
         }
+    }
+}
+
+void OscSender::valueTreePropertyChanged(juce::ValueTree& treeWhosePropertyHasChanged, const juce::Identifier& property) {
+    if (property.toString() == PluginParameters::OSC_SEND_ADRESS_ID || property.toString() == PluginParameters::OSC_SEND_PORT_ID) {
+        juce::String oscSendAdress = treeWhosePropertyHasChanged.getChildWithName("Settings").getPropertyAsValue(PluginParameters::OSC_SEND_ADRESS_ID, nullptr).toString();
+        int oscSendPort = treeWhosePropertyHasChanged.getChildWithName("Settings").getPropertyAsValue(PluginParameters::OSC_SEND_PORT_ID, nullptr).toString().getIntValue();
+        if (! connect (oscSendAdress, oscSendPort))
+            showConnectionErrorMessage ("Error: could not connect to UDP port 9001.");
     }
 }
 

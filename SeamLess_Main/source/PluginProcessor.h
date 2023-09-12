@@ -2,13 +2,13 @@
 
 #include <juce_audio_processors/juce_audio_processors.h>
 #include <SeamLess.h>
-#include <MainServer.h>
 #include <PluginParameters.h>
+#include <MainServer.h>
 #include <SourceTree.h>
-#include <osc/OscSender.h>
+#include <OscSender.h>
 
 //==============================================================================
-class AudioPluginAudioProcessor  : public juce::AudioProcessor, private SourceTree::Listener
+class AudioPluginAudioProcessor  : public juce::AudioProcessor, private juce::ValueTree::Listener, private SourceTree::Listener
 {
 public:
     //==============================================================================
@@ -48,11 +48,17 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
 
 private:
+    void sourceParameterChanged(Source source, Parameter parameter) override;
+    void valueTreePropertyChanged(juce::ValueTree& treeWhosePropertyHasChanged, const juce::Identifier& property) override;
+
+    //==============================================================================
+private:
+    juce::AudioProcessorValueTreeState apvts;
+
     MainServer mainServer;
     SourceTree sourceTree;
     OscSender oscSender;
     
-    void sourceParameterChanged(Source source, Parameter parameter) override;
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioPluginAudioProcessor)
 };

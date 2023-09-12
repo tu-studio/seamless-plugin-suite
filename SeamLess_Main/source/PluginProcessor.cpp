@@ -11,15 +11,23 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
                        .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
                      #endif
                        ),
-    sourceTree(mainServer)
+                    apvts (*this, nullptr, juce::Identifier (JucePlugin_Name), PluginParameters::createParameterLayout()),
+                    sourceTree(mainServer), oscSender(apvts)
 {
-//    oscSender(apvts, PluginParameters::getPluginParameterList());
-    mainServer.beginWaitingForSocket(PORT_NUMBER);
+    apvts.state.addChild(PluginParameters::createNotAutomatableValueTree(), 0 , nullptr);
+    apvts.state.addListener(this);
+    mainServer.beginWaitingForSocket(IPC_PORT);
     sourceTree.addListener(this);
+    oscSender.connectToPort();
 }
 
 AudioPluginAudioProcessor::~AudioPluginAudioProcessor()
 {
+    if (JUCE_DEBUG) std::cout << "processor tries to stop listener on apvts.state." << std::endl;
+    apvts.state.removeListener(this);
+    if (JUCE_DEBUG) std::cout << "processor stopped listener on apvts.state." << std::endl;
+    PluginParameters::clearNotAutomatableValueTree(apvts.state.getChild(0));
+    apvts.state.removeChild(0 , nullptr);
 }
 
 //==============================================================================
@@ -171,17 +179,21 @@ juce::AudioProcessorEditor* AudioPluginAudioProcessor::createEditor()
 //==============================================================================
 void AudioPluginAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
 {
-    // You should use this method to store your parameters in the memory block.
-    // You could do that either as raw data, or use the XML or ValueTree classes
-    // as intermediaries to make it easy to save and load complex data.
-    juce::ignoreUnused (destData);
+    auto state = apvts.copyState();
+    std::unique_ptr<juce::XmlElement> xml (state.createXml());
+    copyXmlToBinary (*xml, destData);
+    if (JUCE_DEBUG) std::cout << xml->toString() << std::endl;
 }
 
 void AudioPluginAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
-    // You should use this method to restore your parameters from this memory block,
-    // whose contents will have been created by the getStateInformation() call.
-    juce::ignoreUnused (data, sizeInBytes);
+    std::unique_ptr<juce::XmlElement> xmlState (getXmlFromBinary (data, sizeInBytes));
+
+    if (xmlState.get() != nullptr) {
+        if (JUCE_DEBUG) std::cout << xmlState->toString() << std::endl;
+        if (xmlState->hasTagName (apvts.state.getType()))
+            apvts.replaceState (juce::ValueTree::fromXml (*xmlState));
+    }
 }
 
 //==============================================================================
@@ -193,4 +205,9 @@ juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 
 void AudioPluginAudioProcessor::sourceParameterChanged(Source source, Parameter parameter) {
     oscSender.sendMessage(source, parameter);
+}
+
+void AudioPluginAudioProcessor::valueTreePropertyChanged(juce::ValueTree &treeWhosePropertyHasChanged, const juce::Identifier &property) {
+    juce::ignoreUnused(treeWhosePropertyHasChanged);
+    juce::ignoreUnused(property);
 }

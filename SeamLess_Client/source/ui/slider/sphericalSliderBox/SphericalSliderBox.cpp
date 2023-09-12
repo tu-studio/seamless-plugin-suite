@@ -30,9 +30,9 @@ SphericalSliderBox::SphericalSliderBox(juce::AudioProcessorValueTreeState &a) : 
     radiusSlider.slider.addListener(this);
     azimuthSlider.slider.addListener(this);
     elevationSlider.slider.addListener(this);
-    addParameterAttachment(*(apvts.getParameter(SendParameters::POS_X_ID.getParamID())));
-    addParameterAttachment(*(apvts.getParameter(SendParameters::POS_Y_ID.getParamID())));
-    addParameterAttachment(*(apvts.getParameter(SendParameters::POS_Z_ID.getParamID())));
+    addParameterAttachment(*(apvts.getParameter(OSCParameters::POS_X_ID.getParamID())));
+    addParameterAttachment(*(apvts.getParameter(OSCParameters::POS_Y_ID.getParamID())));
+    addParameterAttachment(*(apvts.getParameter(OSCParameters::POS_Z_ID.getParamID())));
 }
 
 SphericalSliderBox::~SphericalSliderBox() {
@@ -68,7 +68,7 @@ void SphericalSliderBox::resized() {
 }
 
 void SphericalSliderBox::addParameterAttachment(juce::RangedAudioParameter& parameter) {
-    if (parameter.paramID == SendParameters::POS_X_ID.getParamID()) {
+    if (parameter.paramID == OSCParameters::POS_X_ID.getParamID()) {
         xAttachment = std::make_unique<juce::ParameterAttachment>(
             parameter,
             // callback function on parameter change
@@ -78,7 +78,7 @@ void SphericalSliderBox::addParameterAttachment(juce::RangedAudioParameter& para
             // undo manager
             nullptr);
         xAttachment->sendInitialUpdate();
-    } else if (parameter.paramID == SendParameters::POS_Y_ID.getParamID()) {
+    } else if (parameter.paramID == OSCParameters::POS_Y_ID.getParamID()) {
         yAttachment = std::make_unique<juce::ParameterAttachment>(
             parameter,
             // callback function on parameter change
@@ -88,7 +88,7 @@ void SphericalSliderBox::addParameterAttachment(juce::RangedAudioParameter& para
             // undo manager
             nullptr);
         yAttachment->sendInitialUpdate();
-    } else if (parameter.paramID == SendParameters::POS_Z_ID.getParamID()) {
+    } else if (parameter.paramID == OSCParameters::POS_Z_ID.getParamID()) {
         zAttachment = std::make_unique<juce::ParameterAttachment>(
             parameter,
             // callback function on parameter change
@@ -103,15 +103,15 @@ void SphericalSliderBox::addParameterAttachment(juce::RangedAudioParameter& para
 
 void SphericalSliderBox::parameterValueChanged(juce::RangedAudioParameter& parameter, float newValue) {
     if (!activeDrag) {
-        float x = apvts.getParameterAsValue(SendParameters::POS_X_ID.getParamID()).toString().getFloatValue();
-        float y = apvts.getParameterAsValue(SendParameters::POS_Y_ID.getParamID()).toString().getFloatValue();
-        float z = apvts.getParameterAsValue(SendParameters::POS_Z_ID.getParamID()).toString().getFloatValue();
+        float x = apvts.getParameterAsValue(OSCParameters::POS_X_ID.getParamID()).toString().getFloatValue();
+        float y = apvts.getParameterAsValue(OSCParameters::POS_Y_ID.getParamID()).toString().getFloatValue();
+        float z = apvts.getParameterAsValue(OSCParameters::POS_Z_ID.getParamID()).toString().getFloatValue();
 
-        if (parameter.getParameterID() == SendParameters::POS_X_ID.getParamID()) {
+        if (parameter.getParameterID() == OSCParameters::POS_X_ID.getParamID()) {
             x = newValue;
-        } else if (parameter.getParameterID() == SendParameters::POS_Y_ID.getParamID()) {
+        } else if (parameter.getParameterID() == OSCParameters::POS_Y_ID.getParamID()) {
             y = newValue;
-        } else if (parameter.getParameterID() == SendParameters::POS_Z_ID.getParamID()) {
+        } else if (parameter.getParameterID() == OSCParameters::POS_Z_ID.getParamID()) {
             z = newValue;
         }
         updateSphericalCoordinates(x, y, z);
@@ -164,9 +164,9 @@ void SphericalSliderBox::updateCartesianCoordinates(float radius, float azimuth,
     float z = limitMetricValue(radius * sinf(elevation * (float) M_PI / 180));
     z = normalizeMetricValue(z);
     
-    juce::AudioProcessorParameterWithID *xParam = apvts.getParameter(SendParameters::POS_X_ID.getParamID());
-    juce::AudioProcessorParameterWithID *yParam = apvts.getParameter(SendParameters::POS_Y_ID.getParamID());
-    juce::AudioProcessorParameterWithID *zParam = apvts.getParameter(SendParameters::POS_Z_ID.getParamID());
+    juce::AudioProcessorParameterWithID *xParam = apvts.getParameter(OSCParameters::POS_X_ID.getParamID());
+    juce::AudioProcessorParameterWithID *yParam = apvts.getParameter(OSCParameters::POS_Y_ID.getParamID());
+    juce::AudioProcessorParameterWithID *zParam = apvts.getParameter(OSCParameters::POS_Z_ID.getParamID());
 
 
     xParam->beginChangeGesture();

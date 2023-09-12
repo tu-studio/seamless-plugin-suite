@@ -11,7 +11,7 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
                        .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
                      #endif
                        ),
-        apvts (*this, nullptr, juce::Identifier ("Seamless_Client"), PluginParameters::createParameterLayout())
+        apvts (*this, nullptr, juce::Identifier (JucePlugin_Name), PluginParameters::createParameterLayout())
 {
     for (auto & parameterID : PluginParameters::getPluginParameterList()) {
         apvts.addParameterListener(parameterID, this);
@@ -19,7 +19,7 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
     apvts.state.addChild(PluginParameters::createNotAutomatableValueTree(), 0 , nullptr);
     apvts.state.addListener(this);
     pluginConnection.addListener(this);
-    pluginConnection.connect(apvts, PluginParameters::getPluginParameterList(), PluginParameters::getSettingsList());
+    pluginConnection.connect();
     if (!pluginConnection.isConnected()) {
         startTimer(1000);
     }
@@ -201,6 +201,10 @@ void AudioPluginAudioProcessor::setStateInformation (const void* data, int sizeI
         if (xmlState->hasTagName (apvts.state.getType()))
             apvts.replaceState (juce::ValueTree::fromXml (*xmlState));
     }
+    if (pluginConnection.isConnected()) apvts.state.getChild(0).setProperty(PluginParameters::MAIN_CONNECTION_STATUS_ID, 1, nullptr);
+    else apvts.state.getChild(0).setProperty(PluginParameters::MAIN_CONNECTION_STATUS_ID, 0, nullptr);
+
+    pluginConnection.updateState(apvts, PluginParameters::getPluginParameterList(), PluginParameters::getSettingsList());
 }
 
 //==============================================================================
@@ -220,7 +224,7 @@ void AudioPluginAudioProcessor::valueTreePropertyChanged(juce::ValueTree &treeWh
 
 void AudioPluginAudioProcessor::timerCallback() {
     if (!pluginConnection.isConnected()) {
-        pluginConnection.connect(apvts, PluginParameters::getPluginParameterList(), PluginParameters::getSettingsList());
+        pluginConnection.connect();
     } else {
         stopTimer();
     }
@@ -231,9 +235,10 @@ void AudioPluginAudioProcessor::forwardMessage(PluginConnection *pluginConnectio
 }
 
 void AudioPluginAudioProcessor::connected(PluginConnection *pluginConnectionThatCalled) {
-    juce::ignoreUnused(pluginConnectionThatCalled);
     apvts.state.getChild(0).setProperty(PluginParameters::MAIN_CONNECTION_STATUS_ID, 1, nullptr);
+    pluginConnection.updateState(apvts, PluginParameters::getPluginParameterList(), PluginParameters::getSettingsList());
     stopTimer();
+    juce::ignoreUnused(pluginConnectionThatCalled);
 }
 
 void AudioPluginAudioProcessor::disconnected(PluginConnection *pluginConnectionThatCalled) {

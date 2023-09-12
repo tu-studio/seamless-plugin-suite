@@ -12,8 +12,12 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAud
     setResizable(true, true);
     setResizeLimits(675, 600, 7000, 8000);
 
-    addAndMakeVisible(gainSliderBox);
-    addChildComponent(sphericalSliderBox);
+    if (apvts.state.getChild(0).getPropertyAsValue(PluginParameters::GAIN_TOGGLE_ID, nullptr).toString().getIntValue() == 1) addAndMakeVisible(gainSliderBox);
+    else addChildComponent(gainSliderBox);
+
+    if (apvts.state.getChild(0).getPropertyAsValue(PluginParameters::SPHERICAL_TOGGLE_ID, nullptr).toString().getIntValue() == 1) addAndMakeVisible(sphericalSliderBox);
+    else addChildComponent(sphericalSliderBox);
+    
     addAndMakeVisible(sourceIndexSelector);
 
     addAndMakeVisible(xyPad);

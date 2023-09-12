@@ -30,9 +30,9 @@ SphericalSliderBox::SphericalSliderBox(juce::AudioProcessorValueTreeState &a) : 
     radiusSlider.slider.addListener(this);
     azimuthSlider.slider.addListener(this);
     elevationSlider.slider.addListener(this);
-    apvts.addParameterListener(SendParameters::POS_X_ID.getParamID(), this);
-    apvts.addParameterListener(SendParameters::POS_Y_ID.getParamID(), this);
-    apvts.addParameterListener(SendParameters::POS_Z_ID.getParamID(), this);
+    // apvts.addParameterListener(SendParameters::POS_X_ID.getParamID(), this);
+    // apvts.addParameterListener(SendParameters::POS_Y_ID.getParamID(), this);
+    // apvts.addParameterListener(SendParameters::POS_Z_ID.getParamID(), this);
 }
 
 SphericalSliderBox::~SphericalSliderBox() {
@@ -42,11 +42,11 @@ SphericalSliderBox::~SphericalSliderBox() {
     if (JUCE_DEBUG) std::cout << "sphericalSliderBox stopped listener on azimuthSlider.slider." << std::endl;
     elevationSlider.slider.removeListener(this);
     if (JUCE_DEBUG) std::cout << "sphericalSliderBox stopped listener on elevationSlider.slider." << std::endl;
-    apvts.removeParameterListener(SendParameters::POS_X_ID.getParamID(), this);
+    // apvts.removeParameterListener(SendParameters::POS_X_ID.getParamID(), this);
     if (JUCE_DEBUG) std::cout << "sphericalSliderBox stopped listener on apvts.posx_param." << std::endl;
-    apvts.removeParameterListener(SendParameters::POS_Y_ID.getParamID(), this);
+    // apvts.removeParameterListener(SendParameters::POS_Y_ID.getParamID(), this);
     if (JUCE_DEBUG) std::cout << "sphericalSliderBox stopped listener on apvts.posy_param." << std::endl;
-    apvts.removeParameterListener(SendParameters::POS_Z_ID.getParamID(), this);
+    // apvts.removeParameterListener(SendParameters::POS_Z_ID.getParamID(), this);
     if (JUCE_DEBUG) std::cout << "sphericalSliderBox stopped listener on apvts.posz_param." << std::endl;
 }
 

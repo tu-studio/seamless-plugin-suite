@@ -38,7 +38,7 @@ void PluginConnection::parameterChanged(const juce::String &parameterID, float n
 {
     if (isConnected())
     {
-        if (parameterID == SendParameters::SOURCE_IDX_NAME) {
+        if (parameterID == SendParameters::SOURCE_IDX_ID) {
             Message message;
             message.parameter = Parameter::PARAM_SOURCE_IDX;
             message.value1 = (float) newValue;

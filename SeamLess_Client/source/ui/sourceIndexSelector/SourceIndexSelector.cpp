@@ -16,10 +16,11 @@ SourceIndexSelector::SourceIndexSelector(juce::AudioProcessorValueTreeState &a) 
     addAndMakeVisible(descLabel);
     
     sourceIndexText.setEditable(true);
-    if (sourceIndexText.getText().getIntValue() < 1)
+    if (apvts.state.getChildWithName("Settings").getPropertyAsValue(SendParameters::SOURCE_IDX_NAME, nullptr).toString().getIntValue() < 1)
         sourceIndexText.setColour (juce::Label::backgroundColourId, juce::Colours::red);
     else
         sourceIndexText.setColour (juce::Label::backgroundColourId, seamlessBlue);
+    sourceIndexText.setText(apvts.state.getChildWithName("Settings").getPropertyAsValue(SendParameters::SOURCE_IDX_NAME, nullptr).toString(), juce::dontSendNotification);
     sourceIndexText.setTooltip("Source Index of the audio stream that corresponds to this channel. Every channel should have a unique index.");
     addAndMakeVisible(sourceIndexText);
     

@@ -28,10 +28,10 @@ public:
     
     inline static const juce::String
         
-        GAIN_1_NAME = "Send HOA",
-        GAIN_2_NAME = "Send WFS",
-        GAIN_3_NAME = "Send WFS",
-        GAIN_4_NAME = "Send WFS",
+        GAIN_1_NAME = "HOA Gain",
+        GAIN_2_NAME = "WFS Gain",
+        GAIN_3_NAME = "Reverb Gain",
+        GAIN_4_NAME = "LFE Gain",
         POS_X_NAME = "X Position",
         POS_Y_NAME = "Y Position",
         POS_Z_NAME = "Z Position",

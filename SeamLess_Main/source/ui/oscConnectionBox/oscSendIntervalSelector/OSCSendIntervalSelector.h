@@ -15,7 +15,7 @@ Author:  Fares Schulz
 #include <SeamLess.h>
 #include <PluginParameters.h>
 
-class OSCSendIntervalSelector : public juce::Component, private juce::ValueTree::Listener {
+class OSCSendIntervalSelector : public juce::Component {
 public:
     OSCSendIntervalSelector(juce::AudioProcessorValueTreeState &apvts);
     ~OSCSendIntervalSelector() override;
@@ -25,7 +25,6 @@ public:
 
 private:
     void oscSendIntervalTextChanged();
-    // void valueTreePropertyChanged(juce::ValueTree& treeWhosePropertyHasChanged, const juce::Identifier& property) override;
 
 private:
     juce::AudioProcessorValueTreeState& apvts;

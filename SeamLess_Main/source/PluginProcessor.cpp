@@ -18,6 +18,7 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
     apvts.state.addListener(this);
     mainServer.beginWaitingForSocket(IPC_PORT);
     sourceTree.addListener(this);
+    oscSender.connectToPort();
 }
 
 AudioPluginAudioProcessor::~AudioPluginAudioProcessor()
@@ -197,6 +198,7 @@ void AudioPluginAudioProcessor::setStateInformation (const void* data, int sizeI
     }
 
     // Connect to port after all stats have been loaded
+    oscSender.disconnect();
     oscSender.connectToPort();
 }
 

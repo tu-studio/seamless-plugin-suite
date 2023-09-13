@@ -1,7 +1,7 @@
 #pragma once
 
 #include "PluginProcessor.h"
-#include <OSCSendIntervalSelector.h>
+#include <OSCConnectionBox.h>
 
 //==============================================================================
 class AudioPluginAudioProcessorEditor  : public juce::AudioProcessorEditor
@@ -19,7 +19,7 @@ private:
     // access the processor object that created it.
     AudioPluginAudioProcessor& processorRef;
     juce::AudioProcessorValueTreeState& apvts;
-    OSCSendIntervalSelector oscSendIntervalSelector;
+    OSCConnectionBox oscConnectionBox;
 
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioPluginAudioProcessorEditor)

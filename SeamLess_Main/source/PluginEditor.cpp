@@ -3,7 +3,7 @@
 
 //==============================================================================
 AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAudioProcessor& p, juce::AudioProcessorValueTreeState& pluginApvts)
-    : AudioProcessorEditor (&p), processorRef (p), apvts(pluginApvts), oscSendIntervalSelector(pluginApvts)
+    : AudioProcessorEditor (&p), processorRef (p), apvts(pluginApvts), oscConnectionBox(pluginApvts)
 {
     juce::ignoreUnused (processorRef);
 
@@ -12,7 +12,7 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAud
     setResizable(true, true);
     setResizeLimits(675, 600, 7000, 8000);
 
-    addAndMakeVisible(oscSendIntervalSelector);
+    addAndMakeVisible(oscConnectionBox);
 }
 
 AudioPluginAudioProcessorEditor::~AudioPluginAudioProcessorEditor()
@@ -28,5 +28,5 @@ void AudioPluginAudioProcessorEditor::paint (juce::Graphics& g)
 
 void AudioPluginAudioProcessorEditor::resized()
 {
-    oscSendIntervalSelector.setBounds(getLocalBounds());
+    oscConnectionBox.setBounds(getLocalBounds());
 }

@@ -31,7 +31,9 @@ PluginConnection* MainServer::createConnectionObject() {
     PluginConnection* newPluginConnection = new PluginConnection;
     mainConnections.push_back(newPluginConnection);
     newPluginConnection->addListener(this);
-    std::cout << "Main plugin received new connection! N = " << mainConnections.size() << std::endl;
+    #if JUCE_DEBUG
+        std::cout << "Main plugin created new connection! N = " << mainConnections.size() << std::endl;
+    #endif
     
     listenerList.call([newPluginConnection] (Listener& l) {l.newPluginConnection(newPluginConnection);});
      
@@ -39,12 +41,7 @@ PluginConnection* MainServer::createConnectionObject() {
 }
 
 void MainServer::forwardMessage(PluginConnection* pluginConnection, const juce::MemoryBlock& memoryBlock) {
-    std::cout << "Message:" << std::endl;
     Message* message = (Message*) memoryBlock.getData();
-    std::cout << "Parameter: " << message->parameter << std::endl;
-    std::cout << "Value 1: " << message->value1 << std::endl;
-    std::cout << "Value 2: " << message->value2 << std::endl;
-    std::cout << "Value 3: " << message->value3 << std::endl;
     Parameter parameter = message->parameter;
     float value1 = message->value1;
     float value2 = message->value2;
@@ -62,7 +59,9 @@ void MainServer::disconnected(PluginConnection *pluginConnection) {
             delete pluginConnection;
         }
     }
-    std::cout << "Main plugin deleted connection! N = " << mainConnections.size() << std::endl;
+    #if JUCE_DEBUG
+        std::cout << "Main plugin deleted connection! N = " << mainConnections.size() << std::endl;
+    #endif
 }
 
 void MainServer::connected(PluginConnection *pluginConnection) {

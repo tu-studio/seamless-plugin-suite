@@ -83,12 +83,13 @@ public:
     static juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
     static juce::StringArray getSettingsList();
     static juce::ValueTree createNotAutomatableValueTree();
-    static void clearNotAutomatableValueTree(juce::ValueTree notAutomatableParameterValueTree);
+    static void clearNotAutomatableValueTree();
     
 private:
 
     inline static juce::StringArray parameterList;
     inline static juce::StringArray settingsList;
+    inline static juce::ValueTree notAutomatableParameterValueTree;
 };
 
 #endif /* PluginParameters_h */

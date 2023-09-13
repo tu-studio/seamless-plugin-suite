@@ -49,8 +49,8 @@ juce::AudioProcessorValueTreeState::ParameterLayout OSCParameters::createParamet
         for (const auto & param : params) {
             parameterList.add(param->getParameterID());
         }
-
     }
+
     return { params.begin(), params.end() };
 }
 
@@ -62,7 +62,7 @@ void OSCParameters::createNotAutomatableValueTree()
 {
     if (! notAutomatableParameterValueTree.isValid()) {
         notAutomatableParameterValueTree = juce::ValueTree("OSCParameters");
-        notAutomatableParameterValueTree.setProperty(SOURCE_IDX_ID, juce::var(-1), nullptr);
+        notAutomatableParameterValueTree.setProperty(SOURCE_IDX_ID, SOURCE_IDX_INITIAL, nullptr);
     }
     
     if (settingsList.isEmpty()) {
@@ -74,9 +74,7 @@ void OSCParameters::createNotAutomatableValueTree()
 
 void OSCParameters::clearNotAutomatableValueTree() {
     notAutomatableParameterValueTree.removeProperty(SOURCE_IDX_ID, nullptr);
-    if (JUCE_DEBUG) std::cout << "All properties from OSCParameters removed." << std::endl;
     notAutomatableParameterValueTree = juce::ValueTree(); // clears the ValueTree so that we are not leaking
-    if (JUCE_DEBUG) std::cout << "OSCParameters Value Tree to nullptr." << std::endl;
 }
 
 juce::StringArray OSCParameters::getSettingsList() {

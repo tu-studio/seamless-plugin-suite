@@ -26,29 +26,42 @@ juce::StringArray PluginParameters::getPluginParameterList() {
 
 juce::ValueTree PluginParameters::createNotAutomatableValueTree()
 {
-    OSCParameters::createNotAutomatableValueTree();
-    juce::ValueTree notAutomatableParameterValueTree = juce::ValueTree("Settings");
-    notAutomatableParameterValueTree.copyPropertiesFrom(OSCParameters::getNotAutomatableValueTree(), nullptr);
-    
-    notAutomatableParameterValueTree.setProperty(PluginParameters::RADIUS_ID, 0.f, nullptr);
-    notAutomatableParameterValueTree.setProperty(PluginParameters::AZIMUTH_ID, 0.f, nullptr);
-    notAutomatableParameterValueTree.setProperty(PluginParameters::ELEVATION_ID, 0.f, nullptr);
-    
-    notAutomatableParameterValueTree.setProperty(PluginParameters::GRID_CHOICE_ID, (int) GridType::Off, nullptr);
-    notAutomatableParameterValueTree.setProperty(PluginParameters::VENUE_CHOICE_ID, (int) VenueType::TU_Studio, nullptr);
-    notAutomatableParameterValueTree.setProperty(PluginParameters::GAIN_TOGGLE_ID, 1, nullptr);
-    notAutomatableParameterValueTree.setProperty(PluginParameters::SPHERICAL_TOGGLE_ID, 0, nullptr);
+    if (! notAutomatableParameterValueTree.isValid()) {
 
-    notAutomatableParameterValueTree.setProperty(PluginParameters::MAIN_CONNECTION_STATUS_ID, 0, nullptr);
+        OSCParameters::createNotAutomatableValueTree();
+        notAutomatableParameterValueTree = juce::ValueTree("Settings");
+        notAutomatableParameterValueTree.copyPropertiesFrom(OSCParameters::getNotAutomatableValueTree(), nullptr);
+
+        notAutomatableParameterValueTree.setProperty(PluginParameters::RADIUS_ID, 0.f, nullptr);
+        notAutomatableParameterValueTree.setProperty(PluginParameters::AZIMUTH_ID, 0.f, nullptr);
+        notAutomatableParameterValueTree.setProperty(PluginParameters::ELEVATION_ID, 0.f, nullptr);
+        
+        notAutomatableParameterValueTree.setProperty(PluginParameters::GRID_CHOICE_ID, (int) GridType::Off, nullptr);
+        notAutomatableParameterValueTree.setProperty(PluginParameters::VENUE_CHOICE_ID, (int) VenueType::TU_Studio, nullptr);
+        notAutomatableParameterValueTree.setProperty(PluginParameters::GAIN_TOGGLE_ID, 1, nullptr);
+        notAutomatableParameterValueTree.setProperty(PluginParameters::SPHERICAL_TOGGLE_ID, 0, nullptr);
+
+        notAutomatableParameterValueTree.setProperty(PluginParameters::MAIN_CONNECTION_STATUS_ID, 0, nullptr);
+        
+    }
     
-    settingsList = OSCParameters::getSettingsList();
+    if (settingsList.isEmpty()) {
+        settingsList = OSCParameters::getSettingsList();
+        settingsList.add(PluginParameters::RADIUS_ID);
+        settingsList.add(PluginParameters::AZIMUTH_ID);
+        settingsList.add(PluginParameters::ELEVATION_ID);
+        settingsList.add(PluginParameters::GRID_CHOICE_ID);
+        settingsList.add(PluginParameters::VENUE_CHOICE_ID);
+        settingsList.add(PluginParameters::GAIN_TOGGLE_ID);
+        settingsList.add(PluginParameters::SPHERICAL_TOGGLE_ID);
+        settingsList.add(PluginParameters::MAIN_CONNECTION_STATUS_ID);
+    }
     
     return notAutomatableParameterValueTree;
 }
 
-void PluginParameters::clearNotAutomatableValueTree(juce::ValueTree notAutomatableParameterValueTree) {
+void PluginParameters::clearNotAutomatableValueTree() {
     notAutomatableParameterValueTree.removeAllProperties(nullptr);
-    if (JUCE_DEBUG) std::cout << "All properties from PluginParameters removed" << std::endl;
     notAutomatableParameterValueTree = juce::ValueTree();
     OSCParameters::clearNotAutomatableValueTree();
 }

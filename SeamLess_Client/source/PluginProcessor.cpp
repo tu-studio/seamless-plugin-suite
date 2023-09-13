@@ -30,10 +30,8 @@ AudioPluginAudioProcessor::~AudioPluginAudioProcessor()
     for (auto & parameterID : PluginParameters::getPluginParameterList()) {
         apvts.removeParameterListener(parameterID, this);
     }
-    if (JUCE_DEBUG) std::cout << "processor tries to stop listener on apvts.state." << std::endl;
     apvts.state.removeListener(this);
-    if (JUCE_DEBUG) std::cout << "processor stopped listener on apvts.state." << std::endl;
-    PluginParameters::clearNotAutomatableValueTree(apvts.state.getChild(0));
+    PluginParameters::clearNotAutomatableValueTree();
     apvts.state.removeChild(0 , nullptr);
 }
 
@@ -189,7 +187,9 @@ void AudioPluginAudioProcessor::getStateInformation (juce::MemoryBlock& destData
     auto state = apvts.copyState();
     std::unique_ptr<juce::XmlElement> xml (state.createXml());
     copyXmlToBinary (*xml, destData);
-    if (JUCE_DEBUG) std::cout << xml->toString() << std::endl;
+    #if JUCE_DEBUG
+        std::cout << xml->toString() << std::endl;
+    #endif
 }
 
 void AudioPluginAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
@@ -197,7 +197,9 @@ void AudioPluginAudioProcessor::setStateInformation (const void* data, int sizeI
     std::unique_ptr<juce::XmlElement> xmlState (getXmlFromBinary (data, sizeInBytes));
 
     if (xmlState.get() != nullptr) {
-        if (JUCE_DEBUG) std::cout << xmlState->toString() << std::endl;
+        #if JUCE_DEBUG
+            std::cout << xmlState->toString() << std::endl;
+        #endif
         if (xmlState->hasTagName (apvts.state.getType()))
             apvts.replaceState (juce::ValueTree::fromXml (*xmlState));
     }

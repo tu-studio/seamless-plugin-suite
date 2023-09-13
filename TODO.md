@@ -5,3 +5,4 @@
 - [ ] Send interval OSC limitation Main
 - [x] Main Connection Status in beginning Client Bug
 - [x] Main Connection osc send when the main starts second
+- [ ] getPropertyAsValue -> getProperty

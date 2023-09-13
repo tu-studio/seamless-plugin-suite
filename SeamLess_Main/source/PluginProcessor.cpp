@@ -18,15 +18,12 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
     apvts.state.addListener(this);
     mainServer.beginWaitingForSocket(IPC_PORT);
     sourceTree.addListener(this);
-    oscSender.connectToPort();
 }
 
 AudioPluginAudioProcessor::~AudioPluginAudioProcessor()
 {
-    if (JUCE_DEBUG) std::cout << "processor tries to stop listener on apvts.state." << std::endl;
     apvts.state.removeListener(this);
-    if (JUCE_DEBUG) std::cout << "processor stopped listener on apvts.state." << std::endl;
-    PluginParameters::clearNotAutomatableValueTree(apvts.state.getChild(0));
+    PluginParameters::clearNotAutomatableValueTree();
     apvts.state.removeChild(0 , nullptr);
 }
 
@@ -173,7 +170,7 @@ bool AudioPluginAudioProcessor::hasEditor() const
 
 juce::AudioProcessorEditor* AudioPluginAudioProcessor::createEditor()
 {
-    return new AudioPluginAudioProcessorEditor (*this);
+    return new AudioPluginAudioProcessorEditor (*this, apvts);
 }
 
 //==============================================================================
@@ -182,7 +179,9 @@ void AudioPluginAudioProcessor::getStateInformation (juce::MemoryBlock& destData
     auto state = apvts.copyState();
     std::unique_ptr<juce::XmlElement> xml (state.createXml());
     copyXmlToBinary (*xml, destData);
-    if (JUCE_DEBUG) std::cout << xml->toString() << std::endl;
+    #if JUCE_DEBUG
+        std::cout << xml->toString() << std::endl;
+    #endif
 }
 
 void AudioPluginAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
@@ -190,10 +189,15 @@ void AudioPluginAudioProcessor::setStateInformation (const void* data, int sizeI
     std::unique_ptr<juce::XmlElement> xmlState (getXmlFromBinary (data, sizeInBytes));
 
     if (xmlState.get() != nullptr) {
-        if (JUCE_DEBUG) std::cout << xmlState->toString() << std::endl;
+        #if JUCE_DEBUG
+            std::cout << xmlState->toString() << std::endl;
+        #endif
         if (xmlState->hasTagName (apvts.state.getType()))
             apvts.replaceState (juce::ValueTree::fromXml (*xmlState));
     }
+
+    // Connect to port after all stats have been loaded
+    oscSender.connectToPort();
 }
 
 //==============================================================================
@@ -204,7 +208,7 @@ juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 }
 
 void AudioPluginAudioProcessor::sourceParameterChanged(Source source, Parameter parameter) {
-    oscSender.sendMessage(source, parameter);
+    oscSender.sourceParameterChanged(source, parameter);
 }
 
 void AudioPluginAudioProcessor::valueTreePropertyChanged(juce::ValueTree &treeWhosePropertyHasChanged, const juce::Identifier &property) {

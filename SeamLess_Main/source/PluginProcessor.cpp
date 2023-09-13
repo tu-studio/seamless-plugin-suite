@@ -198,7 +198,7 @@ void AudioPluginAudioProcessor::setStateInformation (const void* data, int sizeI
     }
 
     // Connect to port after all stats have been loaded
-    oscSender.disconnect();
+    oscSender.disconnectFromPort();
     oscSender.connectToPort();
 }
 

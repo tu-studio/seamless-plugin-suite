@@ -19,6 +19,7 @@ public:
     explicit OscSender(juce::AudioProcessorValueTreeState& pluginApvts);
     
     void connectToPort();
+    void disconnectFromPort();
     void sourceParameterChanged(Source& source, Parameter parameter);
     
 private:

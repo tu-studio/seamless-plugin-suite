@@ -19,14 +19,15 @@ void OscSender::connectToPort() {
         std::cout << "OSC send adress: " << oscSendAdress << ":" << oscSendPort << std::endl;
     #endif
 
-    if (! connect (oscSendAdress, oscSendPort))
-        showConnectionErrorMessage ("Error: could not connect to UDP port.");
+    if (! connect (oscSendAdress, oscSendPort)) {
+        apvts.state.getChild(0).setProperty(PluginParameters::OSC_SEND_STATUS_ID, 0, nullptr);
+    }
     else {
         if ((int) apvts.state.getChildWithName("Settings").getProperty(PluginParameters::OSC_SEND_INTERVAL_ID) > 0) {
             startTimer((int) apvts.state.getChildWithName("Settings").getProperty(PluginParameters::OSC_SEND_INTERVAL_ID));
         }
+        apvts.state.getChild(0).setProperty(PluginParameters::OSC_SEND_STATUS_ID, 1, nullptr);
     }
-    
 }
 
 void OscSender::sourceParameterChanged(Source& source, Parameter parameter) {
@@ -78,7 +79,7 @@ void OscSender::sourceParameterChanged(Source& source, Parameter parameter) {
 
 void OscSender::sendMessage(juce::OSCMessage& message) {
     if (! send(message))
-        showConnectionErrorMessage("Error: could not send OSC message.");
+        apvts.state.getChild(0).setProperty(PluginParameters::OSC_SEND_STATUS_ID, 0, nullptr);
 }
 
 void OscSender::valueTreePropertyChanged(juce::ValueTree& treeWhosePropertyHasChanged, const juce::Identifier& property) {
@@ -89,8 +90,7 @@ void OscSender::valueTreePropertyChanged(juce::ValueTree& treeWhosePropertyHasCh
             std::cout << "OSC send adress: " << oscSendAdress << ":" << oscSendPort << std::endl;
         #endif
         disconnect();
-        if (! connect (oscSendAdress, oscSendPort))
-            showConnectionErrorMessage ("Error: could not connect to UDP port.");
+        connectToPort();
     }
     else if (property.toString() == PluginParameters::OSC_SEND_INTERVAL_ID) {
         if ((int) treeWhosePropertyHasChanged.getProperty(property) > 0) {

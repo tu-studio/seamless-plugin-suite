@@ -1,0 +1,46 @@
+/*
+=====================================================================
+
+OSCSendStatusLabel.cpp
+Created: 13 Sep 2021
+Author:  Fares Schulz
+
+=====================================================================
+*/
+
+#include "OSCSendStatusLabel.h"
+
+OSCSendStatusLabel::OSCSendStatusLabel(juce::AudioProcessorValueTreeState &a) : apvts(a){
+    apvts.state.addListener(this);
+
+    if ((int) apvts.state.getChildWithName("Settings").getProperty(PluginParameters::OSC_SEND_STATUS_ID) == 1) {
+        connectionStatusLabel.setColour(juce::Label::backgroundColourId, juce::Colours::green);
+        connectionStatusLabel.setText("Connected to UDP Port", juce::dontSendNotification);
+    } else {
+        connectionStatusLabel.setColour(juce::Label::backgroundColourId, juce::Colours::red);
+        connectionStatusLabel.setText("Not connected! Chose valid IP...", juce::dontSendNotification);
+    }
+    connectionStatusLabel.setJustificationType(juce::Justification::centred);
+    addAndMakeVisible(connectionStatusLabel);
+}
+
+OSCSendStatusLabel::~OSCSendStatusLabel()
+{
+    apvts.state.removeListener(this);
+}
+
+void OSCSendStatusLabel::resized() {
+    connectionStatusLabel.setBounds(getLocalBounds());
+}
+
+void OSCSendStatusLabel::valueTreePropertyChanged(juce::ValueTree& treeWhosePropertyHasChanged, const juce::Identifier& property) {
+    if (property.toString() == PluginParameters::OSC_SEND_STATUS_ID) {
+        if ((int) treeWhosePropertyHasChanged.getProperty(property) == 1) {
+            connectionStatusLabel.setColour(juce::Label::backgroundColourId, juce::Colours::green);
+            connectionStatusLabel.setText("Connected to UDP Port", juce::dontSendNotification);
+        } else {
+            connectionStatusLabel.setColour(juce::Label::backgroundColourId, juce::Colours::red);
+            connectionStatusLabel.setText("Not connected! Chose valid IP...", juce::dontSendNotification);
+        }
+    }
+}

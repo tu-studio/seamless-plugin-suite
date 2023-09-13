@@ -13,7 +13,7 @@ Author:  Fares Schulz
 OSCSendAdressSelector::OSCSendAdressSelector(juce::AudioProcessorValueTreeState &a) : apvts(a){
     descLabel.setText("OSC Send Adress:", juce::dontSendNotification);
     descLabel.setColour(juce::Label::textColourId, juce::Colours::black);
-    descLabel.setJustificationType(juce::Justification::left);
+    descLabel.setJustificationType(juce::Justification::centred);
     addAndMakeVisible(descLabel);
     
     oscSendAdressText.setEditable(true);
@@ -25,10 +25,19 @@ OSCSendAdressSelector::OSCSendAdressSelector(juce::AudioProcessorValueTreeState 
         oscSendAdressText.setText(apvts.state.getChildWithName("Settings").getProperty(PluginParameters::OSC_SEND_ADRESS_ID), juce::dontSendNotification);
     }
     oscSendAdressText.setTooltip("IP Adress to send OSC messages to.");
-    oscSendAdressText.setJustificationType(juce::Justification::centred);
+    oscSendAdressText.setJustificationType(juce::Justification::right);
     addAndMakeVisible(oscSendAdressText);
     
     oscSendAdressText.onTextChange = [this] {oscSendAdressTextChanged();};
+
+    oscSendPortText.setEditable(true);
+    oscSendPortText.setColour (juce::Label::backgroundColourId, seamlessBlue);
+    oscSendPortText.setText(apvts.state.getChildWithName("Settings").getProperty(PluginParameters::OSC_SEND_PORT_ID), juce::dontSendNotification);
+    oscSendPortText.setTooltip("Port to send OSC messages to.");
+    oscSendPortText.setJustificationType(juce::Justification::right);
+    addAndMakeVisible(oscSendPortText);
+
+    oscSendPortText.onTextChange = [this] {oscSendPortTextChanged();};
 }
 
 OSCSendAdressSelector::~OSCSendAdressSelector() {
@@ -41,10 +50,13 @@ void OSCSendAdressSelector::paint(juce::Graphics& g) {
 void OSCSendAdressSelector::resized() {
     auto area = getLocalBounds();
     auto spacingBetween = area.getWidth()/20;
-    auto descLabelArea = area.removeFromLeft(area.getWidth()*2/3);
-    descLabel.setBounds(descLabelArea.getX()+(descLabelArea.getWidth()*1/3)/2, descLabelArea.getY()+(descLabelArea.getHeight()-25)/2, descLabelArea.getWidth()*2/3, 25);
+    auto descLabelArea = area.removeFromTop((area.getHeight()-spacingBetween)/2);
+    descLabel.setBounds(descLabelArea);
+    area.removeFromTop(spacingBetween);
+    auto oscSendAdressTextArea = area.removeFromLeft((area.getWidth()-spacingBetween)*2/3); 
+    oscSendAdressText.setBounds(oscSendAdressTextArea.getX(), oscSendAdressTextArea.getY()+(oscSendAdressTextArea.getHeight()-25)/2, oscSendAdressTextArea.getWidth(), 25);
     area.removeFromLeft(spacingBetween);
-    oscSendAdressText.setBounds(area.getX()+(area.getWidth()-130)/2, area.getY()+(area.getHeight()-25)/2, 130, 25);
+    oscSendPortText.setBounds(area.getX(), area.getY()+(oscSendAdressTextArea.getHeight()-25)/2, area.getWidth(), 25);
 }
 
 void OSCSendAdressSelector::oscSendAdressTextChanged() {
@@ -55,4 +67,12 @@ void OSCSendAdressSelector::oscSendAdressTextChanged() {
     } else {
         apvts.state.getChildWithName("Settings").setProperty(PluginParameters::OSC_SEND_ADRESS_ID, newOSCSendAdress, nullptr);
     }
+}
+
+void OSCSendAdressSelector::oscSendPortTextChanged() {
+    int newOSCSendPort = oscSendPortText.getText().getIntValue();
+    if (! (newOSCSendPort >= 0 && newOSCSendPort <= 65536)) oscSendPortText.setColour (juce::Label::backgroundColourId, juce::Colours::red);
+    else oscSendPortText.setColour (juce::Label::backgroundColourId, seamlessBlue);
+    
+    apvts.state.getChildWithName("Settings").setProperty(PluginParameters::OSC_SEND_PORT_ID, (juce::String) newOSCSendPort , nullptr);
 }

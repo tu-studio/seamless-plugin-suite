@@ -23,6 +23,7 @@ SourceIndexSelector::SourceIndexSelector(juce::AudioProcessorValueTreeState &a) 
         
     sourceIndexText.setText(apvts.state.getChildWithName("Settings").getPropertyAsValue(OSCParameters::SOURCE_IDX_ID, nullptr).toString(), juce::dontSendNotification);
     sourceIndexText.setTooltip("Source Index of the audio stream that corresponds to this channel. Every channel should have a unique index.");
+    sourceIndexText.setJustificationType(juce::Justification::right);
     addAndMakeVisible(sourceIndexText);
     
     sourceIndexText.onTextChange = [this] {sourceIndexTextChanged();};
@@ -55,30 +56,25 @@ void SourceIndexSelector::paint(juce::Graphics& g) {
 }
 
 void SourceIndexSelector::resized() {
-    if (getWidth() > 200) {
-        descLabel.setVisible(true);
-        auto area = getLocalBounds();
-        auto spacingBetween = area.getWidth()/20;
-        area = area.reduced(spacingBetween);
-        auto topArea = area.removeFromTop((area.getHeight()-spacingBetween)/2);
-        area.removeFromTop(spacingBetween);
-        auto bottomArea = area;
-        auto descLabelArea = topArea.removeFromLeft(topArea.getWidth()*2/3);
-        descLabel.setBounds(descLabelArea.getX()+(descLabelArea.getWidth()*1/3)/2, descLabelArea.getY()+(descLabelArea.getHeight()-25)/2, descLabelArea.getWidth()*2/3, 25);
-        topArea.removeFromLeft(spacingBetween);
-        sourceIndexText.setBounds(topArea.getX()+(topArea.getWidth()-50)/2, topArea.getY()+(topArea.getHeight()-25)/2, 50, 25);
-        connectionStatusLabel.setBounds(bottomArea);
-    } else {
-        descLabel.setVisible(false);
-        auto area = getLocalBounds();
-        auto spacingBetween = area.getWidth()/20;
-        area = area.reduced(spacingBetween);
-        auto topArea = area.removeFromTop((area.getHeight()-spacingBetween)/2);
-        area.removeFromTop(spacingBetween);
-        auto bottomArea = area;
-        sourceIndexText.setBounds(topArea.getX()+(topArea.getWidth()-50)/2, topArea.getY()+(topArea.getHeight()-25)/2, 50, 25);
-        connectionStatusLabel.setBounds(bottomArea);
-    }
+    descLabel.setVisible(true);
+    auto area = getLocalBounds();
+    auto spacingBetween = area.getWidth()/20;
+    auto spacingBetweenVertical = area.getHeight()/15;
+    area.removeFromLeft(spacingBetween);
+    area.removeFromRight(spacingBetween);
+    area.removeFromBottom(spacingBetweenVertical);
+    area.removeFromTop(spacingBetweenVertical);
+    auto topArea = area.removeFromTop((area.getHeight()-spacingBetween)/2);
+    area.removeFromTop(spacingBetween);
+    auto bottomArea = area;
+    auto descLabelArea = topArea.removeFromLeft(topArea.getWidth()*2/3);
+    descLabel.setBounds(descLabelArea.getX(), descLabelArea.getY()+(descLabelArea.getHeight()-25)/2, descLabelArea.getWidth(), 25);
+    topArea.removeFromLeft(spacingBetween);
+    sourceIndexText.setBounds(topArea.getX(), topArea.getY()+(topArea.getHeight()-25)/2, topArea.getWidth(), 25);
+    bottomArea.removeFromLeft(spacingBetween);
+    bottomArea.removeFromBottom(spacingBetweenVertical);
+    bottomArea.removeFromRight(spacingBetween);
+    connectionStatusLabel.setBounds(bottomArea);
 }
 
 void SourceIndexSelector::sourceIndexTextChanged() {

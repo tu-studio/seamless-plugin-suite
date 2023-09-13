@@ -26,6 +26,7 @@ OSCSendIntervalSelector::OSCSendIntervalSelector(juce::AudioProcessorValueTreeSt
         
     oscSendIntervalText.setText(apvts.state.getChildWithName("Settings").getProperty(PluginParameters::OSC_SEND_INTERVAL_ID), juce::dontSendNotification);
     oscSendIntervalText.setTooltip("OSC Send Interval in ms. Set to 0 to disable.");
+    oscSendIntervalText.setJustificationType(juce::Justification::right);
     addAndMakeVisible(oscSendIntervalText);
     
     oscSendIntervalText.onTextChange = [this] {oscSendIntervalTextChanged();};
@@ -41,10 +42,11 @@ void OSCSendIntervalSelector::paint(juce::Graphics& g) {
 void OSCSendIntervalSelector::resized() {
     auto area = getLocalBounds();
     auto spacingBetween = area.getWidth()/20;
-    auto descLabelArea = area.removeFromLeft(area.getWidth()*2/3);
-    descLabel.setBounds(descLabelArea.getX()+(descLabelArea.getWidth()*1/3)/2, descLabelArea.getY()+(descLabelArea.getHeight()-25)/2, descLabelArea.getWidth()*2/3, 25);
+    auto descLabelArea = area.removeFromLeft((area.getWidth()-spacingBetween)*2/3);
+
+    descLabel.setBounds(descLabelArea.getX(), descLabelArea.getY()+(descLabelArea.getHeight()-25)/2, descLabelArea.getWidth(), 25);
     area.removeFromLeft(spacingBetween);
-    oscSendIntervalText.setBounds(area.getX()+(area.getWidth()-50)/2, area.getY()+(area.getHeight()-25)/2, 50, 25);
+    oscSendIntervalText.setBounds(area.getX(), area.getY()+(area.getHeight()-25)/2, area.getWidth(), 25);
 }
 
 void OSCSendIntervalSelector::oscSendIntervalTextChanged() {

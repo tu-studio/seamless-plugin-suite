@@ -32,7 +32,7 @@ void OSCConnectionBox::paint(juce::Graphics& g) {
 
 void OSCConnectionBox::resized() {
     auto area = getLocalBounds();
-    auto spacingBetween = area.getWidth()/40;
+    auto spacingBetween = area.getWidth()/10;
     auto parameterHeight = (area.getHeight() - 3*spacingBetween)/2;
     area = area.reduced(spacingBetween);
     oscSendAdressSelector.setBounds(area.removeFromTop(parameterHeight));

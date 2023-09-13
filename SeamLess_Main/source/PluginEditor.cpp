@@ -28,5 +28,12 @@ void AudioPluginAudioProcessorEditor::paint (juce::Graphics& g)
 
 void AudioPluginAudioProcessorEditor::resized()
 {
-    oscConnectionBox.setBounds(getLocalBounds());
+    auto area = getLocalBounds();
+    auto spacingBetween = getWidth()/80;
+    area = area.reduced(spacingBetween);
+    auto openGLContextArea = area.removeFromLeft(area.getHeight());
+    juce::ignoreUnused(openGLContextArea);
+
+    area.removeFromLeft(spacingBetween);
+    oscConnectionBox.setBounds(area);
 }

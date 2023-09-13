@@ -17,7 +17,7 @@ OSCSendIntervalSelector::OSCSendIntervalSelector(juce::AudioProcessorValueTreeSt
     addAndMakeVisible(descLabel);
     
     oscSendIntervalText.setEditable(true);
-    if ((int) apvts.state.getChildWithName("Settings").getProperty(PluginParameters::OSC_SEND_INTERVAL_ID) > 0) {
+    if ((int) apvts.state.getChildWithName("Settings").getProperty(PluginParameters::OSC_SEND_INTERVAL_ID) >= 0) {
         oscSendIntervalText.setColour (juce::Label::backgroundColourId, seamlessBlue);
     }
     else {

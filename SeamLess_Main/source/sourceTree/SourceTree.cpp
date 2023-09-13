@@ -31,14 +31,18 @@ void SourceTree::newPluginConnection(PluginConnection *pluginConnection) {
     newSource.pluginConnection = pluginConnection;
     sources.push_back(newSource);
     
-    std::cout << "SourceTree has new source! N = " << sources.size() << std::endl;
+    #if JUCE_DEBUG
+        std::cout << "SourceTree has new source! N = " << sources.size() << std::endl;
+    #endif
 }
 
 void SourceTree::deletedPluginConnection(PluginConnection *pluginConnection) {
     for (unsigned long i = 0; i < sources.size(); i++) {
         if (pluginConnection == sources[i].pluginConnection) sources.erase(sources.begin() + (long) i);
     }
-    std::cout << "SourceTree deleted source! N = " << sources.size() << std::endl;
+    #if JUCE_DEBUG
+        std::cout << "SourceTree deleted source! N = " << sources.size() << std::endl;
+    #endif
 }
 
 void SourceTree::parameterChanged(PluginConnection *pluginConnection, Parameter parameter, float value1, float value2, float value3) {
@@ -67,13 +71,6 @@ void SourceTree::parameterChanged(PluginConnection *pluginConnection, Parameter 
                 juce::ignoreUnused(value2);
                 juce::ignoreUnused(value3);
             }
-            std::cout << "Parameter changed:" << std::endl;
-            std::cout << "Source Index: " << source.sourceIdx << std::endl;
-            std::cout << "Position: (" << source.xPosition << ", " << source.yPosition << ", " << source.zPosition << ")" << std::endl;
-            std::cout << "Gain 1: " << source.gain1 << std::endl;
-            std::cout << "Gain 2: " << source.gain2 << std::endl;
-            std::cout << "Gain 3: " << source.gain3 << std::endl;
-            std::cout << "Gain 4: " << source.gain4 << std::endl;
             
             listenerList.call([source, parameter] (Listener& l) {l.sourceParameterChanged(source, parameter);});
             return;

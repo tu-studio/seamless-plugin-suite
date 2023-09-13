@@ -37,11 +37,8 @@ SphericalSliderBox::SphericalSliderBox(juce::AudioProcessorValueTreeState &a) : 
 
 SphericalSliderBox::~SphericalSliderBox() {
     radiusSlider.slider.removeListener(this);
-    if (JUCE_DEBUG) std::cout << "sphericalSliderBox stopped listener on radiusSlider.slider." << std::endl;
     azimuthSlider.slider.removeListener(this);
-    if (JUCE_DEBUG) std::cout << "sphericalSliderBox stopped listener on azimuthSlider.slider." << std::endl;
     elevationSlider.slider.removeListener(this);
-    if (JUCE_DEBUG) std::cout << "sphericalSliderBox stopped listener on elevationSlider.slider." << std::endl;
 }
 
 

@@ -40,12 +40,9 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAud
 AudioPluginAudioProcessorEditor::~AudioPluginAudioProcessorEditor()
 {
     gainToggleButton.removeListener(& sphericalToggleButton);
-    if (JUCE_DEBUG) std::cout << "sphericalToogleButton stopped listener on gainToggleButton." << std::endl;
     sphericalToggleButton.removeListener(& gainToggleButton);
-    if (JUCE_DEBUG) std::cout << "gainToggleButton stopped listener on sphericalToogleButton." << std::endl;
 
     apvts.state.removeListener(this);
-    if (JUCE_DEBUG) std::cout << "processorEditor stopped listener on apvts.state." << std::endl;
 }
 
 //==============================================================================

@@ -25,11 +25,6 @@ public:
         POS_X_ID = {"param_pos_x", 1},
         POS_Y_ID = {"param_pos_y", 1},
         POS_Z_ID = {"param_pos_z", 1};
-
-    inline static const juce::String
-
-        // not automatable OSCParameters
-        SOURCE_IDX_ID = "param_source_idx";
     
     inline static const juce::String
         
@@ -40,6 +35,18 @@ public:
         POS_X_NAME = "X Position",
         POS_Y_NAME = "Y Position",
         POS_Z_NAME = "Z Position";
+
+    /*===============================================================
+    not automatable OSCParameters
+    ===============================================================*/
+
+    inline static const juce::String
+
+        SOURCE_IDX_ID = "param_source_idx";
+
+    inline static const juce::String
+
+        SOURCE_IDX_INITIAL = "-1";
     
     static juce::StringArray getPluginParameterList();
     static juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();

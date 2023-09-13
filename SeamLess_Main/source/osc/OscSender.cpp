@@ -12,16 +12,24 @@ OscSender::OscSender(juce::AudioProcessorValueTreeState& pluginApvts) : apvts(pl
 }
 
 void OscSender::connectToPort() {
-    juce::String oscSendAdress = apvts.state.getChildWithName("Settings").getPropertyAsValue(PluginParameters::OSC_SEND_ADRESS_ID, nullptr).toString();
-    int oscSendPort = apvts.state.getChildWithName("Settings").getPropertyAsValue(PluginParameters::OSC_SEND_PORT_ID, nullptr).toString().getIntValue();
+    juce::String oscSendAdress = apvts.state.getChildWithName("Settings").getProperty(PluginParameters::OSC_SEND_ADRESS_ID);
+    int oscSendPort = (int) apvts.state.getChildWithName("Settings").getProperty(PluginParameters::OSC_SEND_PORT_ID);
 
-    std::cout << "OSC Sender: " << oscSendAdress << " " << oscSendPort << std::endl;
+    #if JUCE_DEBUG
+        std::cout << "OSC send adress: " << oscSendAdress << ":" << oscSendPort << std::endl;
+    #endif
 
     if (! connect (oscSendAdress, oscSendPort))
-        showConnectionErrorMessage ("Error: could not connect to UDP port 9001.");
+        showConnectionErrorMessage ("Error: could not connect to UDP port.");
+    else {
+        if ((int) apvts.state.getChildWithName("Settings").getProperty(PluginParameters::OSC_SEND_INTERVAL_ID) > 0) {
+            startTimer((int) apvts.state.getChildWithName("Settings").getProperty(PluginParameters::OSC_SEND_INTERVAL_ID));
+        }
+    }
+    
 }
 
-void OscSender::sendMessage(Source& source, Parameter parameter) {
+void OscSender::sourceParameterChanged(Source& source, Parameter parameter) {
     if (source.sourceIdx > 0) {
         if (parameter == PARAM_SOURCE_IDX) {
             juce::OSCMessage oscMessagePosition("/source/pos/xyz", source.sourceIdx, source.xPosition, source.yPosition, source.zPosition);
@@ -29,8 +37,20 @@ void OscSender::sendMessage(Source& source, Parameter parameter) {
             juce::OSCMessage oscMessageGain2("/send/gain",source.sourceIdx, 1, source.gain2);
             juce::OSCMessage oscMessageGain3("/send/gain",source.sourceIdx, 2, source.gain3);
             juce::OSCMessage oscMessageGain4("/send/gain",source.sourceIdx, 3, source.gain4);
-            if (! send(oscMessagePosition) || !send(oscMessageGain1) || !send(oscMessageGain2) || !send(oscMessageGain3) || !send(oscMessageGain4))
-                showConnectionErrorMessage("Error: could not send OSC message.");
+            if ((int) apvts.state.getChildWithName("Settings").getProperty(PluginParameters::OSC_SEND_INTERVAL_ID) != 0) {
+                oscMessageStack.push(oscMessagePosition);
+                oscMessageStack.push(oscMessageGain1);
+                oscMessageStack.push(oscMessageGain2);
+                oscMessageStack.push(oscMessageGain3);
+                oscMessageStack.push(oscMessageGain4);
+            }
+            else {
+                sendMessage(oscMessagePosition);
+                sendMessage(oscMessageGain1);
+                sendMessage(oscMessageGain2);
+                sendMessage(oscMessageGain3);
+                sendMessage(oscMessageGain4);
+            }
             return;
         }
         else {
@@ -46,18 +66,40 @@ void OscSender::sendMessage(Source& source, Parameter parameter) {
             } else if (parameter == PARAM_GAIN_4) {
                 oscMessage = juce::OSCMessage("/send/gain",source.sourceIdx, 3, source.gain4);
             }
-            if (! send(oscMessage))
-                showConnectionErrorMessage("Error: could not send OSC message.");
+            if ((int) apvts.state.getChildWithName("Settings").getProperty(PluginParameters::OSC_SEND_INTERVAL_ID) != 0) {
+                oscMessageStack.push(oscMessage);
+            }
+            else {
+                sendMessage(oscMessage);
+            }
         }
     }
 }
 
+void OscSender::sendMessage(juce::OSCMessage& message) {
+    if (! send(message))
+        showConnectionErrorMessage("Error: could not send OSC message.");
+}
+
 void OscSender::valueTreePropertyChanged(juce::ValueTree& treeWhosePropertyHasChanged, const juce::Identifier& property) {
     if (property.toString() == PluginParameters::OSC_SEND_ADRESS_ID || property.toString() == PluginParameters::OSC_SEND_PORT_ID) {
-        juce::String oscSendAdress = treeWhosePropertyHasChanged.getChildWithName("Settings").getPropertyAsValue(PluginParameters::OSC_SEND_ADRESS_ID, nullptr).toString();
-        int oscSendPort = treeWhosePropertyHasChanged.getChildWithName("Settings").getPropertyAsValue(PluginParameters::OSC_SEND_PORT_ID, nullptr).toString().getIntValue();
+        juce::String oscSendAdress = treeWhosePropertyHasChanged.getChildWithName("Settings").getProperty(PluginParameters::OSC_SEND_ADRESS_ID);
+        int oscSendPort = (int) treeWhosePropertyHasChanged.getChildWithName("Settings").getProperty(PluginParameters::OSC_SEND_PORT_ID);
+        disconnect();
         if (! connect (oscSendAdress, oscSendPort))
-            showConnectionErrorMessage ("Error: could not connect to UDP port 9001.");
+            showConnectionErrorMessage ("Error: could not connect to UDP port.");
+    }
+    else if (property.toString() == PluginParameters::OSC_SEND_INTERVAL_ID) {
+        if ((int) treeWhosePropertyHasChanged.getProperty(property) > 0) {
+            stopTimer();
+            startTimer((int) treeWhosePropertyHasChanged.getProperty(property));
+        } else {
+            stopTimer();
+            for (unsigned long i = 0; i < oscMessageStack.size(); i++) {
+                sendMessage(oscMessageStack.front());
+                oscMessageStack.pop();
+            }
+        }
     }
 }
 
@@ -66,4 +108,11 @@ void OscSender::showConnectionErrorMessage (const juce::String& messageText) {
                                               "Connection error",
                                               messageText,
                                               "OK");
+}
+
+void OscSender::hiResTimerCallback() {
+    if (! oscMessageStack.empty()) {
+        sendMessage(oscMessageStack.front());
+        oscMessageStack.pop();
+    }
 }

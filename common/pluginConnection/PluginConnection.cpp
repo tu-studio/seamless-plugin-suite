@@ -41,7 +41,6 @@ void PluginConnection::updateState(juce::AudioProcessorValueTreeState& apvts, ju
 
 void PluginConnection::parameterChanged(const juce::String &parameterID, float newValue)
 {
-    std::cout << "Parameter changed: " << parameterID << " with value: " << newValue << std::endl;
     if (isConnected())
     {
         if (parameterID == OSCParameters::SOURCE_IDX_ID) {
@@ -104,12 +103,16 @@ void PluginConnection::parameterChanged(const juce::String &parameterID, float n
     
 void PluginConnection::connectionMade() {
     listenerList.call([this] (Listener& l) {l.connected(this);});
-    std::cout << "Connection estblished!" << std::endl;
+    #if JUCE_DEBUG
+        std::cout << "Connection made!" << std::endl;
+    #endif
 }
 
 void PluginConnection::connectionLost() {
     listenerList.call([this] (Listener& l) {l.disconnected(this);});
-    std::cout << "Conection lost!" << std::endl;
+    #if JUCE_DEBUG
+        std::cout << "Connection lost!" << std::endl;
+    #endif
 }
 
 void PluginConnection::messageReceived(const juce::MemoryBlock& memoryBlock) {

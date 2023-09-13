@@ -57,10 +57,7 @@ void AudioPluginAudioProcessorEditor::resized()
     // Borders for the GUI
     auto area = getLocalBounds();
     auto spacingBetween = getWidth()/80;
-    area.removeFromTop(spacingBetween);
-    area.removeFromBottom(spacingBetween);
-    area.removeFromLeft(spacingBetween);
-    area.removeFromRight(spacingBetween);
+    area = area.reduced(spacingBetween);
 
     auto leftSide = area.removeFromLeft(area.getWidth()/10);
     leftSide.removeFromRight(spacingBetween);

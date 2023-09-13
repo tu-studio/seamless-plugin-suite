@@ -14,6 +14,7 @@ Author:  Fares Schulz
 #include <JuceHeader.h>
 #include <SeamLess.h>
 #include <PluginParameters.h>
+#include <OSCSendAdressSelector.h>
 #include <OSCSendIntervalSelector.h>
 
 class OSCConnectionBox : public juce::Component {
@@ -27,6 +28,7 @@ public:
 private:
     juce::AudioProcessorValueTreeState& apvts;
 
+    OSCSendAdressSelector oscSendAdressSelector;
     OSCSendIntervalSelector oscSendIntervalSelector;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (OSCConnectionBox)

@@ -10,7 +10,8 @@ Author:  Fares Schulz
 
 #include "OSCConnectionBox.h"
 
-OSCConnectionBox::OSCConnectionBox(juce::AudioProcessorValueTreeState &a) : apvts(a), oscSendIntervalSelector(a) {
+OSCConnectionBox::OSCConnectionBox(juce::AudioProcessorValueTreeState &a) : apvts(a), oscSendAdressSelector(a), oscSendIntervalSelector(a) {
+    addAndMakeVisible(oscSendAdressSelector);
     addAndMakeVisible(oscSendIntervalSelector);
 }
 
@@ -30,5 +31,11 @@ void OSCConnectionBox::paint(juce::Graphics& g) {
 }
 
 void OSCConnectionBox::resized() {
-    oscSendIntervalSelector.setBounds(getLocalBounds());
+    auto area = getLocalBounds();
+    auto spacingBetween = area.getWidth()/40;
+    auto parameterHeight = (area.getHeight() - 3*spacingBetween)/2;
+    area = area.reduced(spacingBetween);
+    oscSendAdressSelector.setBounds(area.removeFromTop(parameterHeight));
+    area.removeFromTop(spacingBetween);
+    oscSendIntervalSelector.setBounds(area);
 }

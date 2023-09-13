@@ -83,8 +83,11 @@ void OscSender::sendMessage(juce::OSCMessage& message) {
 
 void OscSender::valueTreePropertyChanged(juce::ValueTree& treeWhosePropertyHasChanged, const juce::Identifier& property) {
     if (property.toString() == PluginParameters::OSC_SEND_ADRESS_ID || property.toString() == PluginParameters::OSC_SEND_PORT_ID) {
-        juce::String oscSendAdress = treeWhosePropertyHasChanged.getChildWithName("Settings").getProperty(PluginParameters::OSC_SEND_ADRESS_ID);
-        int oscSendPort = (int) treeWhosePropertyHasChanged.getChildWithName("Settings").getProperty(PluginParameters::OSC_SEND_PORT_ID);
+        juce::String oscSendAdress = treeWhosePropertyHasChanged.getProperty(PluginParameters::OSC_SEND_ADRESS_ID);
+        int oscSendPort = (int) treeWhosePropertyHasChanged.getProperty(PluginParameters::OSC_SEND_PORT_ID);
+        #if JUCE_DEBUG
+            std::cout << "OSC send adress: " << oscSendAdress << ":" << oscSendPort << std::endl;
+        #endif
         disconnect();
         if (! connect (oscSendAdress, oscSendPort))
             showConnectionErrorMessage ("Error: could not connect to UDP port.");

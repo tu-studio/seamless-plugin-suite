@@ -25,12 +25,14 @@ public:
 
 private:
     void oscSendAdressTextChanged();
+    void oscSendPortTextChanged();
 
 private:
     juce::AudioProcessorValueTreeState& apvts;
 
     juce::Label descLabel;
     juce::Label oscSendAdressText;
+    juce::Label oscSendPortText;
     juce::Label connectionStatusLabel;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (OSCSendAdressSelector)

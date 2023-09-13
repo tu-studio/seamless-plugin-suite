@@ -30,6 +30,12 @@ void OscSender::connectToPort() {
     }
 }
 
+void OscSender::disconnectFromPort() {
+    stopTimer();
+    disconnect();
+    apvts.state.getChild(0).setProperty(PluginParameters::OSC_SEND_STATUS_ID, 0, nullptr);
+}
+
 void OscSender::sourceParameterChanged(Source& source, Parameter parameter) {
     if (source.sourceIdx > 0) {
         if (parameter == PARAM_SOURCE_IDX) {
@@ -89,7 +95,7 @@ void OscSender::valueTreePropertyChanged(juce::ValueTree& treeWhosePropertyHasCh
         #if JUCE_DEBUG
             std::cout << "OSC send adress: " << oscSendAdress << ":" << oscSendPort << std::endl;
         #endif
-        disconnect();
+        disconnectFromPort();
         connectToPort();
     }
     else if (property.toString() == PluginParameters::OSC_SEND_INTERVAL_ID) {

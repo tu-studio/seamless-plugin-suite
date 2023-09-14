@@ -84,8 +84,9 @@ void OscSender::sourceParameterChanged(Source& source, Parameter parameter) {
 }
 
 void OscSender::sendMessage(juce::OSCMessage& message) {
-    if (! send(message))
-        apvts.state.getChild(0).setProperty(PluginParameters::OSC_SEND_STATUS_ID, 0, nullptr);
+    if (! send(message)) {
+        setTreePropertyAsync(apvts.state.getChildWithName("Settings"), PluginParameters::OSC_SEND_STATUS_ID, 0);
+    }
 }
 
 void OscSender::valueTreePropertyChanged(juce::ValueTree& treeWhosePropertyHasChanged, const juce::Identifier& property) {
@@ -124,4 +125,8 @@ void OscSender::hiResTimerCallback() {
         sendMessage(oscMessageStack.front());
         oscMessageStack.pop();
     }
+}
+
+void OscSender::setTreePropertyAsync(juce::ValueTree tree, const juce::Identifier& propertyName, const juce::var& newValue) {
+    (new SetTreePropertyMessage{ tree, propertyName, newValue })->post();
 }

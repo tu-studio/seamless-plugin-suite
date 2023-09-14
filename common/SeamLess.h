@@ -12,6 +12,8 @@ Author:  Fares Schulz
 Configurations for SeamLess Plugin Suite
 ===================================================================*/
 
+#include <JuceHeader.h>
+
 #ifndef SeamLess_h
 #define SeamLess_h
 

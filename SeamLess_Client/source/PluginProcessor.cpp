@@ -11,7 +11,7 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
                        .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
                      #endif
                        ),
-        apvts (*this, nullptr, juce::Identifier ((std::string) "Parameters_" + (std::string) JucePlugin_Name), PluginParameters::createParameterLayout())
+        apvts (*this, nullptr, juce::Identifier ((std::string) "Parameters_SeamLess_Client"), PluginParameters::createParameterLayout())
 {
     for (auto & parameterID : PluginParameters::getPluginParameterList()) {
         apvts.addParameterListener(parameterID, this);
@@ -37,7 +37,6 @@ AudioPluginAudioProcessor::~AudioPluginAudioProcessor()
     // Remove the shared ValueTree for not automatalbe parameters
     PluginParameters::clearNotAutomatableValueTree();
     // Remove the ValueTree for the plugin
-    apvts.state.getChild(0).removeAllProperties(nullptr);
     apvts.state.removeChild(0 , nullptr);
 }
 

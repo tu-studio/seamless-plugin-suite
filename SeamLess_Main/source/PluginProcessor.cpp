@@ -11,8 +11,8 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
                        .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
                      #endif
                        ),
-                    apvts (*this, nullptr, juce::Identifier ((std::string) "Parameters_" + (std::string) JucePlugin_Name), PluginParameters::createParameterLayout()),
-                    sourceTree(mainServer), oscSender(apvts)
+                    apvts (*this, nullptr, juce::Identifier ((std::string) "Parameters_SeamLess_Main"), PluginParameters::createParameterLayout()),
+                    sourceTree(mainServer), oscSender(apvts), oscReceiver(apvts)
 {
     // A new not automatable value tree is created, since the one in PluginParameters is static and shared between all instances of the plugin
     // Therefore we can get ambiguous behaviour if we don't create a new one for each instance 
@@ -22,15 +22,20 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
     mainServer.beginWaitingForSocket(IPC_PORT);
     sourceTree.addListener(this);
     oscSender.connectToPort();
+    oscReceiver.connectToPort();
+    oscReceiver.addListener(this);
+    oscReceiver.addListener(& oscSender);
 }
 
 AudioPluginAudioProcessor::~AudioPluginAudioProcessor()
 {
     apvts.state.removeListener(this);
+    sourceTree.removeListener(this);
+    oscReceiver.removeListener(this);
+    oscReceiver.removeListener(& oscSender);
     // Remove the shared ValueTree for not automatalbe parameters
     PluginParameters::clearNotAutomatableValueTree();
     // Remove the ValueTree for the plugin
-    apvts.state.getChild(0).removeAllProperties(nullptr);
     apvts.state.removeChild(0 , nullptr);
 }
 
@@ -206,6 +211,8 @@ void AudioPluginAudioProcessor::setStateInformation (const void* data, int sizeI
     // Connect to port after all stats have been loaded
     oscSender.disconnectFromPort();
     oscSender.connectToPort();
+    oscReceiver.disconnectFromPort();
+    oscReceiver.connectToPort();
 }
 
 //==============================================================================
@@ -222,4 +229,8 @@ void AudioPluginAudioProcessor::sourceParameterChanged(Source source, Parameter 
 void AudioPluginAudioProcessor::valueTreePropertyChanged(juce::ValueTree &treeWhosePropertyHasChanged, const juce::Identifier &property) {
     juce::ignoreUnused(treeWhosePropertyHasChanged);
     juce::ignoreUnused(property);
+}
+
+void AudioPluginAudioProcessor::oscMessageReceived(const juce::OSCMessage& message) {
+    std::cout << "OSC message received: " << message.getAddressPattern().toString() << std::endl;
 }

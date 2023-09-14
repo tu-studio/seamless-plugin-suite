@@ -6,3 +6,9 @@
 - [x] Main Connection Status in beginning Client Bug
 - [x] Main Connection osc send when the main starts second
 - [ ] getPropertyAsValue -> getProperty
+- [ ] void Component::internalRepaintUnchecked (Rectangle<int> area, bool isEntireComponent)
+{
+    // if component methods are being called from threads other than the message
+    // thread, you'll need to use a MessageManagerLock object to make sure it's thread-safe.
+    JUCE_ASSERT_MESSAGE_MANAGER_IS_LOCKED
+    fix this

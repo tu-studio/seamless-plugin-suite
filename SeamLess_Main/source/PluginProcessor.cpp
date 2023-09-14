@@ -11,10 +11,13 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
                        .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
                      #endif
                        ),
-                    apvts (*this, nullptr, juce::Identifier (JucePlugin_Name), PluginParameters::createParameterLayout()),
+                    apvts (*this, nullptr, juce::Identifier ((std::string) "Parameters_" + (std::string) JucePlugin_Name), PluginParameters::createParameterLayout()),
                     sourceTree(mainServer), oscSender(apvts)
 {
-    apvts.state.addChild(PluginParameters::createNotAutomatableValueTree(), 0 , nullptr);
+    // A new not automatable value tree is created, since the one in PluginParameters is static and shared between all instances of the plugin
+    // Therefore we can get ambiguous behaviour if we don't create a new one for each instance 
+    juce::ValueTree newNotAutomatableValueTree = PluginParameters::createNotAutomatableValueTree().createCopy();
+    apvts.state.addChild(newNotAutomatableValueTree, 0 , nullptr);
     apvts.state.addListener(this);
     mainServer.beginWaitingForSocket(IPC_PORT);
     sourceTree.addListener(this);
@@ -24,7 +27,10 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
 AudioPluginAudioProcessor::~AudioPluginAudioProcessor()
 {
     apvts.state.removeListener(this);
+    // Remove the shared ValueTree for not automatalbe parameters
     PluginParameters::clearNotAutomatableValueTree();
+    // Remove the ValueTree for the plugin
+    apvts.state.getChild(0).removeAllProperties(nullptr);
     apvts.state.removeChild(0 , nullptr);
 }
 

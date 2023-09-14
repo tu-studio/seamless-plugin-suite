@@ -37,6 +37,7 @@ juce::ValueTree PluginParameters::createNotAutomatableValueTree()
         notAutomatableParameterValueTree.setProperty(OSC_SEND_STATUS_ID, OSC_SEND_STATUS_INITIAL, nullptr);
         
         notAutomatableParameterValueTree.setProperty(OSC_RECEIVE_PORT_ID, OSC_RECEIVE_PORT_INITIAL, nullptr);
+        notAutomatableParameterValueTree.setProperty(OSC_RECEIVE_STATUS_ID, OSC_RECEIVE_STATUS_INITIAL, nullptr);
         
         notAutomatableParameterValueTree.setProperty(NUM_CLIENTS_ID, NUM_CLIENTS_INITIAL, nullptr);
     }
@@ -47,6 +48,7 @@ juce::ValueTree PluginParameters::createNotAutomatableValueTree()
         settingsList.add(OSC_SEND_INTERVAL_ID);
         settingsList.add(OSC_SEND_STATUS_ID);
         settingsList.add(OSC_RECEIVE_PORT_ID);
+        settingsList.add(OSC_RECEIVE_STATUS_ID);
         settingsList.add(NUM_CLIENTS_ID);
     }
     

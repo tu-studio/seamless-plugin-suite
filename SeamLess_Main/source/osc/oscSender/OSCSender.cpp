@@ -1,17 +1,26 @@
 //
-//  OscSender.cpp
+//  OSCSender.cpp
 //  SeamlessPluginSuite
 //
 //  Created by Fares Schulz on 06.06.23.
 //
 
-#include "OscSender.h"
+#include "OSCSender.h"
 
-OscSender::OscSender(juce::AudioProcessorValueTreeState& pluginApvts) : apvts(pluginApvts) {
+OSCSender::OSCSender(juce::AudioProcessorValueTreeState& pluginApvts) : apvts(pluginApvts) {
     apvts.state.addListener(this);
 }
 
-void OscSender::connectToPort() {
+OSCSender::~OSCSender() {
+    stopTimer();
+    for (unsigned long i = 0; i < oscMessageStack.size(); i++) {
+        sendMessage(oscMessageStack.front());
+        oscMessageStack.pop();
+    }
+    apvts.state.removeListener(this);
+}
+
+void OSCSender::connectToPort() {
     juce::String oscSendAdress = apvts.state.getChildWithName("Settings").getProperty(PluginParameters::OSC_SEND_ADRESS_ID);
     int oscSendPort = (int) apvts.state.getChildWithName("Settings").getProperty(PluginParameters::OSC_SEND_PORT_ID);
 
@@ -30,13 +39,13 @@ void OscSender::connectToPort() {
     }
 }
 
-void OscSender::disconnectFromPort() {
+void OSCSender::disconnectFromPort() {
     stopTimer();
     disconnect();
     apvts.state.getChild(0).setProperty(PluginParameters::OSC_SEND_STATUS_ID, 0, nullptr);
 }
 
-void OscSender::sourceParameterChanged(Source& source, Parameter parameter) {
+void OSCSender::sourceParameterChanged(Source& source, Parameter parameter) {
     if (source.sourceIdx > 0) {
         if (parameter == PARAM_SOURCE_IDX) {
             juce::OSCMessage oscMessagePosition("/source/pos/xyz", source.sourceIdx, source.xPosition, source.yPosition, source.zPosition);
@@ -44,7 +53,7 @@ void OscSender::sourceParameterChanged(Source& source, Parameter parameter) {
             juce::OSCMessage oscMessageGain2("/send/gain",source.sourceIdx, 1, source.gain2);
             juce::OSCMessage oscMessageGain3("/send/gain",source.sourceIdx, 2, source.gain3);
             juce::OSCMessage oscMessageGain4("/send/gain",source.sourceIdx, 3, source.gain4);
-            if ((int) apvts.state.getChildWithName("Settings").getProperty(PluginParameters::OSC_SEND_INTERVAL_ID) != 0) {
+            if ((int) apvts.state.getChildWithName("Settings").getProperty(PluginParameters::OSC_SEND_INTERVAL_ID) > 0) {
                 oscMessageStack.push(oscMessagePosition);
                 oscMessageStack.push(oscMessageGain1);
                 oscMessageStack.push(oscMessageGain2);
@@ -73,7 +82,7 @@ void OscSender::sourceParameterChanged(Source& source, Parameter parameter) {
             } else if (parameter == PARAM_GAIN_4) {
                 oscMessage = juce::OSCMessage("/send/gain",source.sourceIdx, 3, source.gain4);
             }
-            if ((int) apvts.state.getChildWithName("Settings").getProperty(PluginParameters::OSC_SEND_INTERVAL_ID) != 0) {
+            if ((int) apvts.state.getChildWithName("Settings").getProperty(PluginParameters::OSC_SEND_INTERVAL_ID) > 0) {
                 oscMessageStack.push(oscMessage);
             }
             else {
@@ -83,18 +92,16 @@ void OscSender::sourceParameterChanged(Source& source, Parameter parameter) {
     }
 }
 
-void OscSender::sendMessage(juce::OSCMessage& message) {
+void OSCSender::sendMessage(juce::OSCMessage& message) {
     if (! send(message)) {
         setTreePropertyAsync(apvts.state.getChildWithName("Settings"), PluginParameters::OSC_SEND_STATUS_ID, 0);
     }
 }
 
-void OscSender::valueTreePropertyChanged(juce::ValueTree& treeWhosePropertyHasChanged, const juce::Identifier& property) {
+void OSCSender::valueTreePropertyChanged(juce::ValueTree& treeWhosePropertyHasChanged, const juce::Identifier& property) {
     if (property.toString() == PluginParameters::OSC_SEND_ADRESS_ID || property.toString() == PluginParameters::OSC_SEND_PORT_ID) {
-        juce::String oscSendAdress = treeWhosePropertyHasChanged.getProperty(PluginParameters::OSC_SEND_ADRESS_ID);
-        int oscSendPort = (int) treeWhosePropertyHasChanged.getProperty(PluginParameters::OSC_SEND_PORT_ID);
         #if JUCE_DEBUG
-            std::cout << "OSC send adress: " << oscSendAdress << ":" << oscSendPort << std::endl;
+            std::cout << "OSC send adress: " << (juce::String) treeWhosePropertyHasChanged.getProperty(PluginParameters::OSC_SEND_ADRESS_ID) << ":" << (int) treeWhosePropertyHasChanged.getProperty(PluginParameters::OSC_SEND_PORT_ID) << std::endl;
         #endif
         disconnectFromPort();
         connectToPort();
@@ -113,20 +120,23 @@ void OscSender::valueTreePropertyChanged(juce::ValueTree& treeWhosePropertyHasCh
     }
 }
 
-void OscSender::showConnectionErrorMessage (const juce::String& messageText) {
-      juce::AlertWindow::showMessageBoxAsync (juce::AlertWindow::WarningIcon,
-                                              "Connection error",
-                                              messageText,
-                                              "OK");
-}
-
-void OscSender::hiResTimerCallback() {
+void OSCSender::hiResTimerCallback() {
     if (! oscMessageStack.empty()) {
         sendMessage(oscMessageStack.front());
         oscMessageStack.pop();
     }
 }
 
-void OscSender::setTreePropertyAsync(juce::ValueTree tree, const juce::Identifier& propertyName, const juce::var& newValue) {
+void OSCSender::setTreePropertyAsync(juce::ValueTree tree, const juce::Identifier& propertyName, const juce::var& newValue) {
     (new SetTreePropertyMessage{ tree, propertyName, newValue })->post();
+}
+
+void OSCSender::oscMessageReceived(const juce::OSCMessage& message) {
+    juce::OSCMessage newOSCMessage(message);
+    if ((int) apvts.state.getChildWithName("Settings").getProperty(PluginParameters::OSC_SEND_INTERVAL_ID) > 0) {
+        oscMessageStack.push(newOSCMessage);
+    }
+    else {
+        sendMessage(newOSCMessage);
+    }
 }

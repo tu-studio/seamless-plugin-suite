@@ -5,10 +5,11 @@
 #include <PluginParameters.h>
 #include <MainServer.h>
 #include <SourceTree.h>
-#include <OscSender.h>
+#include <OSCSender.h>
+#include <OSCReceiver.h>
 
 //==============================================================================
-class AudioPluginAudioProcessor  : public juce::AudioProcessor, private juce::ValueTree::Listener, private SourceTree::Listener
+class AudioPluginAudioProcessor  : public juce::AudioProcessor, private juce::ValueTree::Listener, private SourceTree::Listener, public juce::OSCReceiver::Listener<juce::OSCReceiver::MessageLoopCallback>
 {
 public:
     //==============================================================================
@@ -50,6 +51,7 @@ public:
 private:
     void sourceParameterChanged(Source source, Parameter parameter) override;
     void valueTreePropertyChanged(juce::ValueTree& treeWhosePropertyHasChanged, const juce::Identifier& property) override;
+    void oscMessageReceived(const juce::OSCMessage& message) override;
 
     //==============================================================================
 private:
@@ -57,7 +59,8 @@ private:
 
     MainServer mainServer;
     SourceTree sourceTree;
-    OscSender oscSender;
+    OSCSender oscSender;
+    OSCReceiver oscReceiver;
     
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioPluginAudioProcessor)

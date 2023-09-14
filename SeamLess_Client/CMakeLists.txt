@@ -23,7 +23,7 @@ juce_add_plugin(${TARGET_NAME}
 		endif()
 
 		FORMATS ${FORMATS_TO_BUILD}                     # The formats to build. Other valid formats are: AAX Unity VST AU AUv3
-		PRODUCT_NAME "SeamLess_Client"			            # The name of the final executable, which can differ from the target name
+		PRODUCT_NAME "SeamLess Client"			            # The name of the final executable, which can differ from the target name
 		)
 
 # `juce_generate_juce_header` will create a JuceHeader.h for a given target, which will be generated

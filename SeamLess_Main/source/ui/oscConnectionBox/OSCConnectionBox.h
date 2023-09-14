@@ -14,6 +14,8 @@ Author:  Fares Schulz
 #include <JuceHeader.h>
 #include <SeamLess.h>
 #include <PluginParameters.h>
+#include <OSCReceivePortSelector.h>
+#include <OSCReceiveStatusLabel.h>
 #include <OSCSendAdressSelector.h>
 #include <OSCSendIntervalSelector.h>
 #include <OSCSendStatusLabel.h>
@@ -29,6 +31,8 @@ public:
 private:
     juce::AudioProcessorValueTreeState& apvts;
 
+    OSCReceivePortSelector oscReceivePortSelector;
+    OSCReceiveStatusLabel oscReceiveStatusLabel;
     OSCSendAdressSelector oscSendAdressSelector;
     OSCSendStatusLabel oscSendStatusLabel;
     OSCSendIntervalSelector oscSendIntervalSelector;

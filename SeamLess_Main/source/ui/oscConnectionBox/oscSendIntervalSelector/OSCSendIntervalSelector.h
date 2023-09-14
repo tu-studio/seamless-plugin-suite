@@ -31,7 +31,6 @@ private:
 
     juce::Label descLabel;
     juce::Label oscSendIntervalText;
-    juce::Label connectionStatusLabel;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (OSCSendIntervalSelector)
 };

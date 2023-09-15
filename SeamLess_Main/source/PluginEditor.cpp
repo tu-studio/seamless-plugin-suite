@@ -3,7 +3,7 @@
 
 //==============================================================================
 AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAudioProcessor& p, juce::AudioProcessorValueTreeState& pluginApvts)
-    : AudioProcessorEditor (&p), processorRef (p), apvts(pluginApvts), oscConnectionBox(pluginApvts)
+    : AudioProcessorEditor (&p), processorRef (p), apvts(pluginApvts), clientConnectionStatusLabel(pluginApvts), oscConnectionBox(pluginApvts)
 {
     juce::ignoreUnused (processorRef);
 
@@ -12,7 +12,7 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAud
     setResizable(true, true);
     setResizeLimits(300, 500, 500, 800);
 
-    // addAndMakeVisible(clientConnectionStatusLabel);
+    addAndMakeVisible(clientConnectionStatusLabel);
     addAndMakeVisible(oscConnectionBox);
 
     oscConnectionBox.addOSCReceiverListener(processorRef.getOSCReceiverRef());
@@ -36,7 +36,7 @@ void AudioPluginAudioProcessorEditor::resized()
     auto spacingBetween = getWidth()/20;
     area = area.reduced(spacingBetween);
 
-    // clientConnectionStatusLabel.setBounds(area.removeFromTop((area.getHeight()-spacingBetween)/6));
+    clientConnectionStatusLabel.setBounds(area.removeFromTop((area.getHeight()-spacingBetween)/6));
     area.removeFromTop(spacingBetween);
     oscConnectionBox.setBounds(area);
 }

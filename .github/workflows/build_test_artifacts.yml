@@ -13,7 +13,7 @@ concurrency:
 
 env:
   PROJECT_NAME: seamless-plugin-suite
-  PLUGINS: SeamLess_Client SeamLess_Main
+  PLUGINS: (SeamLess_Client SeamLess_Main)
   PLUGIN_RELEASE_NAMES: ("SeamLess Client" "SeamLess Main") 
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Release

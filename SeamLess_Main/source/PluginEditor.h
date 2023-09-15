@@ -20,7 +20,7 @@ private:
     // access the processor object that created it.
     AudioPluginAudioProcessor& processorRef;
     juce::AudioProcessorValueTreeState& apvts;
-    ClientConnectionStatusLabel clientConnectionStatusLabel;
+    // ClientConnectionStatusLabel clientConnectionStatusLabel;
     OSCConnectionBox oscConnectionBox;
 
 

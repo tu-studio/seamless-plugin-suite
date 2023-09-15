@@ -12,7 +12,7 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
                      #endif
                        ),
                     apvts (*this, nullptr, juce::Identifier ((std::string) "Parameters_SeamLess_Main"), PluginParameters::createParameterLayout()),
-                    sourceTree(mainServer), oscSender(apvts), oscReceiver(apvts)
+                    sourceTree(apvts, mainServer), oscSender(apvts), oscReceiver(apvts)
 {
     // A new not automatable value tree is created, since the one in PluginParameters is static and shared between all instances of the plugin
     // Therefore we can get ambiguous behaviour if we don't create a new one for each instance 

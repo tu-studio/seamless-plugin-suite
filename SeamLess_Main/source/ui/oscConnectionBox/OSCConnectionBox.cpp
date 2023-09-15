@@ -36,14 +36,14 @@ void OSCConnectionBox::paint(juce::Graphics& g) {
 void OSCConnectionBox::resized() {
     auto area = getLocalBounds();
     auto spacingBetween = area.getWidth()/10;
-    auto parameterHeight = (area.getHeight() - 6*spacingBetween)/5;
+    auto parameterHeight = (area.getHeight() - 5*spacingBetween)/6;
     area = area.reduced(spacingBetween);
     oscReceivePortSelector.setBounds(area.removeFromTop(parameterHeight));
-    area.removeFromTop(spacingBetween);
+    area.removeFromTop(spacingBetween/2);
     oscReceiveStatusLabel.setBounds(area.removeFromTop(parameterHeight));
     area.removeFromTop(spacingBetween);
-    oscSendAdressSelector.setBounds(area.removeFromTop(parameterHeight));
-    area.removeFromTop(spacingBetween);
+    oscSendAdressSelector.setBounds(area.removeFromTop(parameterHeight*2));
+    area.removeFromTop(spacingBetween/2);
     oscSendStatusLabel.setBounds(area.removeFromTop(parameterHeight));
     area.removeFromTop(spacingBetween);
     oscSendIntervalSelector.setBounds(area);

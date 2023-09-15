@@ -37,4 +37,27 @@ const juce::Colour transparent       = juce::Colour(00000000);
 const juce::Colour seamlessLightGrey = juce::Colour(220,220,220);
 const juce::Colour seamlessGrey      = juce::Colour(140,140,140);
 
+//==================================================================
+// Structure to update ValueTree properties on !message thread!
+// https://docs.juce.com/master/classCallbackMessage.html
+
+struct SetTreePropertyMessage : public juce::CallbackMessage
+{
+    SetTreePropertyMessage(juce::ValueTree tree_, const juce::Identifier& propertyName_, const juce::var& newValue_) :
+        tree(tree_),
+        propertyName(propertyName_),
+        newValue(newValue_)
+    {
+    }
+    
+    void messageCallback() override
+    {
+        tree.setProperty(propertyName, newValue, nullptr);
+    }
+    
+    juce::ValueTree tree;
+    const juce::Identifier propertyName;
+    const juce::var newValue;
+};
+
 #endif /* SeamLess_h */

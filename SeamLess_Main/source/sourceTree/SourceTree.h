@@ -10,6 +10,7 @@
 
 #include <JuceHeader.h>
 #include <PluginParameters.h>
+#include <SeamLess.h>
 #include <MainServer.h>
 
 struct Source {
@@ -43,6 +44,7 @@ private:
     void deletedPluginConnection(PluginConnection* pluginConnection) override;
     void parameterChanged(PluginConnection* pluginConnection, Parameter parameter, float value1, float value2, float value3) override;
     void deletedMainServer() override;
+    void setTreePropertyAsync(juce::ValueTree tree, const juce::Identifier& propertyName, const juce::var& newValue);
     
 private:
     juce::AudioProcessorValueTreeState& apvts;

@@ -48,6 +48,8 @@ jobs:
       - name: printout
         shell: bash
         run: |
+          PLUGINS=${{ env.PLUGINS }}
+          PLUGIN_RELEASE_NAMES=${{ env.PLUGIN_RELEASE_NAMES }}
           for index in ${!PLUGINS[@]}; do
             echo "PLUGIN=${PLUGINS[$index]}";
             echo "PLUGIN_RELEASE_NAME=${PLUGIN_RELEASE_NAMES[$index]}";

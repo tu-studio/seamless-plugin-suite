@@ -49,7 +49,7 @@ jobs:
         shell: bash
         run: |
           for index in ${!PLUGINS[@]}; do
-            echo "PLUGIN=${PLUGINS[$index]}"";
+            echo "PLUGIN=${PLUGINS[$index]}";
             # echo "PLUGIN_RELEASE_NAME=${PLUGIN_RELEASE_NAMES[$index]}";
             echo "matrix.name=${{ matrix.name }}";
             echo "matrix.os=${{ matrix.os }}";

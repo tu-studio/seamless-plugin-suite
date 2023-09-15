@@ -18,13 +18,13 @@ endif()
 
 cmake_minimum_required(VERSION 3.15)
 
-set (PROJECT_NAME SeamlessPluginSuite)
+set (PROJECT_NAME seamless-plugin-suite)
 
 # The top-level CMakeLists.txt file for a project must contain a literal, direct call to the
 # `project()` command. `project()` sets up some helpful variables that describe source/binary
 # directories, and the current project version. This is a standard CMake command.
 
-project (${PROJECT_NAME} VERSION 1.0.1)
+project (${PROJECT_NAME} VERSION 0.0.1)
 
 # Sets the cpp language minimum
 set(CMAKE_CXX_STANDARD 20)

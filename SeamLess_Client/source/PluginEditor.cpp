@@ -10,7 +10,7 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAud
     // window size settings
     setSize (1000, 600);    
     setResizable(true, true);
-    setResizeLimits(800, 500, 2000, 1200);
+    setResizeLimits(800, 500, 1000, 600);
 
     if ((int) apvts.state.getChildWithName("Settings").getProperty(PluginParameters::GAIN_TOGGLE_ID) == 1) addAndMakeVisible(gainSliderBox);
     else addChildComponent(gainSliderBox);

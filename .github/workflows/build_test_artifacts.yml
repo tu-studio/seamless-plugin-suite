@@ -13,7 +13,7 @@ concurrency:
 
 env:
   PROJECT_NAME: seamless-plugin-suite
-  PLUGINS: SeamLess_Client SeamLess_Main
+  PLUGINS: ("SeamLess Client" "SeamLess Main") 
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Release
   # Use up to 4 cpus to build juceaide, etc
@@ -23,9 +23,10 @@ env:
 
 jobs:
 
-  setup:
+  cmake-build_and_ctest:
     name: ${{ matrix.name }}
     strategy:
+      fail-fast: false # show all errors for each platform (vs. cancel jobs on error)
       matrix:
         os: [macos-latest, windows-latest, ubuntu-latest]
         include:
@@ -187,3 +188,22 @@ jobs:
         with:
           name: ${{ env.PRODUCT_NAME }}.zip
           path: artefacts/${{ env.PRODUCT_NAME }}.zip
+
+  release:
+    runs-on: ubuntu-latest
+    needs: cmake-build_and_ctest
+
+    steps:
+    - name: Get Artifacts
+      uses: actions/download-artifact@v3
+
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      with:
+        prerelease: true
+        # download-artifact puts these files in their own dirs...
+        # Using globs sidesteps having to pass the version around
+        files: |
+          */*.exe
+          */*.zip
+          */*.dmg

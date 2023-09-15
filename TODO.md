@@ -12,3 +12,4 @@
     JUCE_ASSERT_MESSAGE_MANAGER_IS_LOCKED
     fix this
 - [ ] think about allowed ports for OSC
+- [ ] receive OSC Message blink

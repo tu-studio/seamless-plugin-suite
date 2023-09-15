@@ -2,7 +2,7 @@
 
 #include "PluginProcessor.h"
 #include <OSCConnectionBox.h>
-#include <ClientConnectionStatusLabel.h>
+// #include <ClientConnectionStatusLabel.h>
 
 //==============================================================================
 class AudioPluginAudioProcessorEditor  : public juce::AudioProcessorEditor

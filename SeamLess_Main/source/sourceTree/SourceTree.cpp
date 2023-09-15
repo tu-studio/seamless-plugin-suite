@@ -31,7 +31,7 @@ void SourceTree::newPluginConnection(PluginConnection *pluginConnection) {
     newSource.pluginConnection = pluginConnection;
     sources.push_back(newSource);
     
-    // apvts.state.getChildWithName("Settings").setProperty(PluginParameters::NUM_CLIENTS_ID, (int) sources.size(), nullptr);
+    apvts.state.getChildWithName("Settings").setProperty(PluginParameters::NUM_CLIENTS_ID, (int) sources.size(), nullptr);
 
     #if JUCE_DEBUG
         std::cout << "SourceTree has new source! N = " << sources.size() << std::endl;
@@ -43,7 +43,7 @@ void SourceTree::deletedPluginConnection(PluginConnection *pluginConnection) {
         if (pluginConnection == sources[i].pluginConnection) sources.erase(sources.begin() + (long) i);
     }
 
-    // apvts.state.getChildWithName("Settings").setProperty(PluginParameters::NUM_CLIENTS_ID, (int) sources.size(), nullptr);
+    apvts.state.getChildWithName("Settings").setProperty(PluginParameters::NUM_CLIENTS_ID, (int) sources.size(), nullptr);
 
     #if JUCE_DEBUG
         std::cout << "SourceTree deleted source! N = " << sources.size() << std::endl;
@@ -89,5 +89,5 @@ void SourceTree::deletedMainServer() {
 }
 
 void SourceTree::updateNumClients() {
-    // apvts.state.getChildWithName("Settings").setProperty(PluginParameters::NUM_CLIENTS_ID, (int) sources.size(), nullptr);
+    apvts.state.getChildWithName("Settings").setProperty(PluginParameters::NUM_CLIENTS_ID, (int) sources.size(), nullptr);
 }

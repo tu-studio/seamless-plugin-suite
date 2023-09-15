@@ -108,7 +108,7 @@ jobs:
       - name: declare artefact variables
         shell: bash
         run: |
-          echo "PACKAGE_DIR=artefacts/${{ env.PROJECT_NAME }}-${{ matrix.name}}/" >> $GITHUB_ENV
+          echo "PACKAGE_DIR=artefacts/${{ env.PROJECT_NAME }}-${{ matrix.name}}" >> $GITHUB_ENV
           echo "PRODUCT_NAME=${{ env.PROJECT_NAME }}-${{ matrix.name }}" >> $GITHUB_ENV
       
       # Moving the artefacts to a packaging directory
@@ -215,4 +215,4 @@ jobs:
         # download-artifact puts these files in their own dirs...
         # Using globs sidesteps having to pass the version around
         files: |
-          */*.dmg
+          */*.zip

@@ -16,17 +16,17 @@ ClientConnectionStatusLabel::ClientConnectionStatusLabel(juce::AudioProcessorVal
     descLabel.setJustificationType(juce::Justification::left);
     addAndMakeVisible(descLabel);
     
-    // int numConnectedClients = (int) apvts.state.getChildWithName("Settings").getProperty(PluginParameters::NUM_CLIENTS_ID);
-    // numClientsLabel.setText((juce::String) numConnectedClients, juce::dontSendNotification);
-    // numClientsLabel.setColour(juce::Label::textColourId, juce::Colours::black);
-    // numClientsLabel.setJustificationType(juce::Justification::right);
-    // addAndMakeVisible(numClientsLabel);
+    int numConnectedClients = (int) apvts.state.getChildWithName("Settings").getProperty(PluginParameters::NUM_CLIENTS_ID);
+    numClientsLabel.setText((juce::String) numConnectedClients, juce::dontSendNotification);
+    numClientsLabel.setColour(juce::Label::textColourId, juce::Colours::black);
+    numClientsLabel.setJustificationType(juce::Justification::right);
+    addAndMakeVisible(numClientsLabel);
 
-    // apvts.state.addListener(this);
+    apvts.state.addListener(this);
 }
 
 ClientConnectionStatusLabel::~ClientConnectionStatusLabel() {
-    // apvts.state.removeListener(this);
+    apvts.state.removeListener(this);
 }
 
 void ClientConnectionStatusLabel::paint(juce::Graphics& g) {
@@ -48,12 +48,12 @@ void ClientConnectionStatusLabel::resized() {
     auto descLabelArea = area.removeFromLeft((area.getWidth()-spacingBetween)*2/3);
     descLabel.setBounds(descLabelArea.getX(), descLabelArea.getY()+(descLabelArea.getHeight()-25)/2, descLabelArea.getWidth(), 25);
     area.removeFromLeft(spacingBetween);
-    // numClientsLabel.setBounds(area.getX(), area.getY()+(area.getHeight()-25)/2, area.getWidth(), 25);
+    numClientsLabel.setBounds(area.getX(), area.getY()+(area.getHeight()-25)/2, area.getWidth(), 25);
 }
 
 void ClientConnectionStatusLabel::valueTreePropertyChanged(juce::ValueTree& treeWhosePropertyHasChanged, const juce::Identifier& property) {
-    // if (property.toString() == PluginParameters::NUM_CLIENTS_ID) {
-    //     juce::String numConnectedClients = (juce::String) treeWhosePropertyHasChanged.getProperty(property);
-    //     numClientsLabel.setText(numConnectedClients, juce::dontSendNotification);
-    // }
+    if (property.toString() == PluginParameters::NUM_CLIENTS_ID) {
+        juce::String numConnectedClients = (juce::String) treeWhosePropertyHasChanged.getProperty(property);
+        numClientsLabel.setText(numConnectedClients, juce::dontSendNotification);
+    }
 }

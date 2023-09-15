@@ -24,10 +24,10 @@ OSCConnectionBox::~OSCConnectionBox()
 
 void OSCConnectionBox::paint(juce::Graphics& g) {
     g.setColour(seamlessBlue);
-    g.fillRoundedRectangle(0,0,getWidth(),getHeight(), 30);
+    g.fillRoundedRectangle(0.f, 0.f, getWidth(), getHeight(), 30.f);
 
     g.setColour(seamlessLightGrey);
-    g.fillRoundedRectangle(5,5,getWidth()-10,getHeight()-10,25);
+    g.fillRoundedRectangle(5.f, 5.f, getWidth()-10, getHeight()-10, 25.f);
 
     g.setColour (seamlessBlue);
     g.setFont (14.0f);

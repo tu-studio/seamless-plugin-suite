@@ -48,15 +48,14 @@ jobs:
       - name: printout
         shell: bash
         run: |
-          i=1;
-          for PLUGIN in $PLUGINS; do 
-            echo "PLUGIN=$PLUGIN";
-            echo "PLUGIN_RELEASE_NAME=$PLUGIN_RELEASE_NAMES[i]";
+          for index in ${!PLUGINS[@]}; do
+            echo "PLUGIN=${PLUGINS[$index]}"";
+            echo "PLUGIN_RELEASE_NAME=${PLUGIN_RELEASE_NAMES[$index]}";
             echo "matrix.name=${{ matrix.name }}";
             echo "matrix.os=${{ matrix.os }}";
             echo "matrix.ccache=${{ matrix.ccache }}";
             i=((i+1));
-          done;
+          done
 
       # We need the osxutils to get the codesign and notorization tools
       # We need to install ccache here for Windows to grab the right version

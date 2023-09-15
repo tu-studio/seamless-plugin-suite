@@ -16,7 +16,7 @@ CustomChoiceButton::CustomChoiceButton(juce::AudioProcessorValueTreeState& state
     setColour(juce::TextButton::buttonColourId,seamlessBlue);
     setColour(juce::ComboBox::outlineColourId,seamlessBlue);
     setComponentID(buttonID);
-    setButtonText(labels[apvts.state.getChild(0).getPropertyAsValue(id, nullptr).toString().getIntValue()]);
+    setButtonText(labels[(int) apvts.state.getChildWithName("Settings").getProperty(id)]);
     setTooltip(buttonTooltip);
     addListener(this);
 }
@@ -27,9 +27,9 @@ CustomChoiceButton::~CustomChoiceButton() {
 
 void CustomChoiceButton::buttonClicked(juce::Button* button) {
     juce::ignoreUnused(button);
-    int i = apvts.state.getChild(0).getPropertyAsValue(id, nullptr).toString().getIntValue();
+    int i = (int) apvts.state.getChildWithName("Settings").getProperty(id);
     if (i == labels.size() - 1) i = 0;
     else i++;
-    apvts.state.getChild(0).setProperty(id, i, nullptr);
+    apvts.state.getChildWithName("Settings").setProperty(id, i, nullptr);
     setButtonText(labels[i]);
 }

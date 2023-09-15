@@ -14,17 +14,17 @@ SphericalSliderBox::SphericalSliderBox(juce::AudioProcessorValueTreeState &a) : 
 
     radiusSlider.setDoubleClickReturnValue(0.f);
     radiusSlider.slider.setRange(0.f, 14.14213562373095f, 0.01f);
-    radiusSlider.slider.getValueObject().referTo(apvts.state.getChild(0).getPropertyAsValue(PluginParameters::RADIUS_ID, nullptr));
+    radiusSlider.slider.getValueObject().referTo(apvts.state.getChildWithName("Settings").getPropertyAsValue(PluginParameters::RADIUS_ID, nullptr));
     addAndMakeVisible(radiusSlider);
 
     azimuthSlider.setDoubleClickReturnValue(0.f);
     azimuthSlider.slider.setRange(-180.f, 180.f, 0.01f);
-    azimuthSlider.slider.getValueObject().referTo(apvts.state.getChild(0).getPropertyAsValue(PluginParameters::AZIMUTH_ID, nullptr));
+    azimuthSlider.slider.getValueObject().referTo(apvts.state.getChildWithName("Settings").getPropertyAsValue(PluginParameters::AZIMUTH_ID, nullptr));
     addAndMakeVisible(azimuthSlider);
 
     elevationSlider.setDoubleClickReturnValue(0.f);
     elevationSlider.slider.setRange(-90.f, 90.f, 0.01f);
-    elevationSlider.slider.getValueObject().referTo(apvts.state.getChild(0).getPropertyAsValue(PluginParameters::ELEVATION_ID, nullptr));
+    elevationSlider.slider.getValueObject().referTo(apvts.state.getChildWithName("Settings").getPropertyAsValue(PluginParameters::ELEVATION_ID, nullptr));
     addAndMakeVisible(elevationSlider);
 
     radiusSlider.slider.addListener(this);
@@ -123,15 +123,15 @@ void SphericalSliderBox::updateSphericalCoordinates(float x, float y, float z) {
     if (radius != 0.f) elevation = asinf(z / radius) * 180 / (float) M_PI;
     else elevation = 0.f;
 
-    apvts.state.getChild(0).setProperty(PluginParameters::RADIUS_ID, radius, nullptr);
-    apvts.state.getChild(0).setProperty(PluginParameters::AZIMUTH_ID, azimuth, nullptr);
-    apvts.state.getChild(0).setProperty(PluginParameters::ELEVATION_ID, elevation, nullptr);
+    apvts.state.getChildWithName("Settings").setProperty(PluginParameters::RADIUS_ID, radius, nullptr);
+    apvts.state.getChildWithName("Settings").setProperty(PluginParameters::AZIMUTH_ID, azimuth, nullptr);
+    apvts.state.getChildWithName("Settings").setProperty(PluginParameters::ELEVATION_ID, elevation, nullptr);
 }
 
 void SphericalSliderBox::sliderValueChanged(juce::Slider* slider) {
-    float radius = (float) apvts.state.getChild(0).getPropertyAsValue(PluginParameters::RADIUS_ID, nullptr).toString().getFloatValue();
-    float azimuth = (float) apvts.state.getChild(0).getPropertyAsValue(PluginParameters::AZIMUTH_ID, nullptr).toString().getFloatValue();
-    float elevation = (float) apvts.state.getChild(0).getPropertyAsValue(PluginParameters::ELEVATION_ID, nullptr).toString().getFloatValue();
+    float radius = (float) apvts.state.getChildWithName("Settings").getProperty(PluginParameters::RADIUS_ID);
+    float azimuth = (float) apvts.state.getChildWithName("Settings").getProperty(PluginParameters::AZIMUTH_ID);
+    float elevation = (float) apvts.state.getChildWithName("Settings").getProperty(PluginParameters::ELEVATION_ID);
 
     if (slider == &radiusSlider.slider) {
         radius = (float) slider->getValue();

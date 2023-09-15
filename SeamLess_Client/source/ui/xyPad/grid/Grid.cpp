@@ -23,7 +23,7 @@ void Grid::paint(juce::Graphics& g) {
 
     // draw the Grid
     g.setColour(juce::Colours::silver);
-    switch (apvts.state.getChild(0).getPropertyAsValue(PluginParameters::GRID_CHOICE_ID, nullptr).toString().getIntValue()) {
+    switch ((int) apvts.state.getChildWithName("Settings").getProperty(PluginParameters::GRID_CHOICE_ID)) {
     case 0:
         break;
     case 1:
@@ -47,7 +47,7 @@ void Grid::paint(juce::Graphics& g) {
 
     // draw the Venue
     g.setColour(seamlessBlue);
-    switch (apvts.state.getChild(0).getPropertyAsValue(PluginParameters::VENUE_CHOICE_ID, nullptr).toString().getIntValue()) {
+    switch ((int) apvts.state.getChildWithName("Settings").getProperty(PluginParameters::VENUE_CHOICE_ID)) {
     case 0:
         g.strokePath(TUStudioPath, juce::PathStrokeType(5.0f));
         break;

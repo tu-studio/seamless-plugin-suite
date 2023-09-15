@@ -29,20 +29,20 @@ void OSCSender::connectToPort() {
     #endif
 
     if (! connect (oscSendAdress, oscSendPort)) {
-        apvts.state.getChild(0).setProperty(PluginParameters::OSC_SEND_STATUS_ID, 0, nullptr);
+        apvts.state.getChildWithName("Settings").setProperty(PluginParameters::OSC_SEND_STATUS_ID, 0, nullptr);
     }
     else {
         if ((int) apvts.state.getChildWithName("Settings").getProperty(PluginParameters::OSC_SEND_INTERVAL_ID) > 0) {
             startTimer((int) apvts.state.getChildWithName("Settings").getProperty(PluginParameters::OSC_SEND_INTERVAL_ID));
         }
-        apvts.state.getChild(0).setProperty(PluginParameters::OSC_SEND_STATUS_ID, 1, nullptr);
+        apvts.state.getChildWithName("Settings").setProperty(PluginParameters::OSC_SEND_STATUS_ID, 1, nullptr);
     }
 }
 
 void OSCSender::disconnectFromPort() {
     stopTimer();
     disconnect();
-    apvts.state.getChild(0).setProperty(PluginParameters::OSC_SEND_STATUS_ID, 0, nullptr);
+    apvts.state.getChildWithName("Settings").setProperty(PluginParameters::OSC_SEND_STATUS_ID, 0, nullptr);
 }
 
 void OSCSender::sourceParameterChanged(Source& source, Parameter parameter) {

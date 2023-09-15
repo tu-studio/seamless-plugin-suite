@@ -15,3 +15,4 @@
 - [x] receive OSC Message blink
 - [ ] better resizing
 - [ ] Attributes for slider
+- [ ] incorporate Value::listeners when only listening to single variables

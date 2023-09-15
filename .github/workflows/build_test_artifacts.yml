@@ -13,7 +13,8 @@ concurrency:
 
 env:
   PROJECT_NAME: seamless-plugin-suite
-  PLUGINS: ("SeamLess Client" "SeamLess Main") 
+  PLUGINS: SeamLess_Client SeamLess_Main
+  PLUGIN_RELEASE_NAMES: ("SeamLess Client" "SeamLess Main") 
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Release
   # Use up to 4 cpus to build juceaide, etc
@@ -49,6 +50,7 @@ jobs:
         run: |
           for PLUGIN in $PLUGINS; do 
             echo "PLUGIN=$PLUGIN";
+            echo "PLUGIN_RELEASE_NAME=$PLUGIN_RELEASE_NAMES[$PLUGIN]";
             echo "matrix.name=${{ matrix.name }}";
             echo "matrix.os=${{ matrix.os }}";
             echo "matrix.ccache=${{ matrix.ccache }}";
@@ -204,6 +206,4 @@ jobs:
         # download-artifact puts these files in their own dirs...
         # Using globs sidesteps having to pass the version around
         files: |
-          */*.exe
-          */*.zip
           */*.dmg

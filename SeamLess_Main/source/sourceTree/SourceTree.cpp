@@ -7,7 +7,7 @@
 
 #include "SourceTree.h"
 
-SourceTree::SourceTree(MainServer& m) : mainServer(m) {
+SourceTree::SourceTree(juce::AudioProcessorValueTreeState& pluginApvts, MainServer& m) : apvts(pluginApvts), mainServer(m) {
     mainServer.addListener(this);
 }
 
@@ -31,6 +31,8 @@ void SourceTree::newPluginConnection(PluginConnection *pluginConnection) {
     newSource.pluginConnection = pluginConnection;
     sources.push_back(newSource);
     
+    apvts.state.getChild(0).setProperty(PluginParameters::NUM_CLIENTS_ID, (int) sources.size(), nullptr);
+
     #if JUCE_DEBUG
         std::cout << "SourceTree has new source! N = " << sources.size() << std::endl;
     #endif
@@ -40,6 +42,9 @@ void SourceTree::deletedPluginConnection(PluginConnection *pluginConnection) {
     for (unsigned long i = 0; i < sources.size(); i++) {
         if (pluginConnection == sources[i].pluginConnection) sources.erase(sources.begin() + (long) i);
     }
+
+    apvts.state.getChild(0).setProperty(PluginParameters::NUM_CLIENTS_ID, (int) sources.size(), nullptr);
+
     #if JUCE_DEBUG
         std::cout << "SourceTree deleted source! N = " << sources.size() << std::endl;
     #endif

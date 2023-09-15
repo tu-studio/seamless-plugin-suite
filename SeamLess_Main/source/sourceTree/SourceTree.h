@@ -9,6 +9,7 @@
 #define SourceTree_h
 
 #include <JuceHeader.h>
+#include <PluginParameters.h>
 #include <MainServer.h>
 
 struct Source {
@@ -26,7 +27,7 @@ struct Source {
 class SourceTree: private MainServer::Listener
 {
 public:
-    SourceTree(MainServer& m);
+    SourceTree(juce::AudioProcessorValueTreeState& pluginApvts, MainServer& m);
     ~SourceTree();
     
     class Listener {
@@ -43,6 +44,7 @@ private:
     void deletedMainServer() override;
     
 private:
+    juce::AudioProcessorValueTreeState& apvts;
     MainServer& mainServer;
     std::vector<Source> sources;
     

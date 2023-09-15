@@ -3,15 +3,16 @@
 
 //==============================================================================
 AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAudioProcessor& p, juce::AudioProcessorValueTreeState& pluginApvts)
-    : AudioProcessorEditor (&p), processorRef (p), apvts(pluginApvts), oscConnectionBox(pluginApvts)
+    : AudioProcessorEditor (&p), processorRef (p), apvts(pluginApvts), clientConnectionStatusLabel(pluginApvts), oscConnectionBox(pluginApvts)
 {
     juce::ignoreUnused (processorRef);
 
     // window size settings
-    setSize (1000, 600);    
+    setSize (300, 500);    
     setResizable(true, true);
-    setResizeLimits(675, 600, 7000, 8000);
+    setResizeLimits(300, 500, 500, 800);
 
+    addAndMakeVisible(clientConnectionStatusLabel);
     addAndMakeVisible(oscConnectionBox);
 
     oscConnectionBox.addOSCReceiverListener(processorRef.getOSCReceiverRef());
@@ -32,11 +33,10 @@ void AudioPluginAudioProcessorEditor::paint (juce::Graphics& g)
 void AudioPluginAudioProcessorEditor::resized()
 {
     auto area = getLocalBounds();
-    auto spacingBetween = getWidth()/80;
+    auto spacingBetween = getWidth()/20;
     area = area.reduced(spacingBetween);
-    auto openGLContextArea = area.removeFromLeft(area.getHeight());
-    juce::ignoreUnused(openGLContextArea);
 
-    area.removeFromLeft(spacingBetween);
+    clientConnectionStatusLabel.setBounds(area.removeFromTop((area.getHeight()-spacingBetween)/6));
+    area.removeFromTop(spacingBetween);
     oscConnectionBox.setBounds(area);
 }

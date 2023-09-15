@@ -61,8 +61,9 @@ void OSCReceiveStatusLabel::valueTreePropertyChanged(juce::ValueTree& treeWhoseP
 }
 
 void OSCReceiveStatusLabel::oscMessageReceived(const juce::OSCMessage& message) {
-    connectionStatusLabel.setColour(juce::Label::backgroundColourId, juce::Colours::whitesmoke);
-    startTimer(300);
+    juce::ignoreUnused(message);
+    connectionStatusLabel.setColour(juce::Label::backgroundColourId, juce::Colours::navajowhite);
+    startTimer(150);
 }
 
 void OSCReceiveStatusLabel::timerCallback() {

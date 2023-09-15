@@ -48,6 +48,7 @@ jobs:
       - name: printout
         shell: bash
         run: |
+          echo "test"
           echo ${{ github.ref }}
           PLUGINS=${{ env.PLUGINS }}
           PLUGIN_RELEASE_NAMES=${{ env.PLUGIN_RELEASE_NAMES }}

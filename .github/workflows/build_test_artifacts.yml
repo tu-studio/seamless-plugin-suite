@@ -6,6 +6,7 @@ on:
   push:
     branches:
       - main
+    # This is needed otherwise the github.ref is not set with ref/tags/v...
     tags:
       - 'v*.*.*'
 
@@ -51,7 +52,6 @@ jobs:
       - name: printout
         shell: bash
         run: |
-          echo "test"
           echo ${{ github.ref }}
           PLUGINS=${{ env.PLUGINS }}
           PLUGIN_RELEASE_NAMES=${{ env.PLUGIN_RELEASE_NAMES }}
@@ -64,146 +64,146 @@ jobs:
             echo "matrix.ccache=${{ matrix.ccache }}";
           done
 
-      # # We need the osxutils to get the codesign and notorization tools
-      # # We need to install ccache here for Windows to grab the right version
-      # - name: install deps
-      #   shell: bash
-      #   run: |
-      #     if [ "${{ matrix.name }}" == "macOS" ]; then
-      #       brew install osxutils
-      #     elif [ "${{ matrix.name }}" == "Windows" ]; then
-      #       choco install ccache
-      #     elif [ "${{ matrix.name }}" == "Linux" ]; then
-      #       sudo apt-get update && sudo apt install libasound2-dev libx11-dev libxcomposite-dev libxcursor-dev libxext-dev libxinerama-dev libxrandr-dev libxrender-dev
-      #     else
-      #       echo "Unknown OS";
-      #     fi;
+      # We need the osxutils to get the codesign and notorization tools
+      # We need to install ccache here for Windows to grab the right version
+      - name: install deps
+        shell: bash
+        run: |
+          if [ "${{ matrix.name }}" == "macOS" ]; then
+            brew install osxutils
+          elif [ "${{ matrix.name }}" == "Windows" ]; then
+            choco install ccache
+          elif [ "${{ matrix.name }}" == "Linux" ]; then
+            sudo apt-get update && sudo apt install libasound2-dev libx11-dev libxcomposite-dev libxcursor-dev libxext-dev libxinerama-dev libxrandr-dev libxrender-dev
+          else
+            echo "Unknown OS";
+          fi;
 
-      # # With this we checkout to our repo
-      # - name: get repo and submodules
-      #   uses: actions/checkout@v3
-      # # Here we get the submodules like juce
-      #   with:
-      #     submodules: true      
+      # With this we checkout to our repo
+      - name: get repo and submodules
+        uses: actions/checkout@v3
+      # Here we get the submodules like juce
+        with:
+          submodules: true      
       
-      # # Using the ccache action to store the build cache and speed up the next builds
-      # - name: ccache
-      #   uses: hendrikmuhs/ccache-action@main
-      #   with:
-      #     key: v3-${{ matrix.os }}-${{ env.BUILD_TYPE }}
-      #     variant: ${{ matrix.ccache }}
+      # Using the ccache action to store the build cache and speed up the next builds
+      - name: ccache
+        uses: hendrikmuhs/ccache-action@main
+        with:
+          key: v3-${{ matrix.os }}-${{ env.BUILD_TYPE }}
+          variant: ${{ matrix.ccache }}
       
-      # # Typical cmake configuration with default generator
-      # # With DCMAKE_OSX_ARCHITECTURES="arm64;x86_64" we can build universal binaries for apple computers
-      # - name: cmake configure
-      #   shell: bash
-      #   run: cmake -B build -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -DCMAKE_C_COMPILER_LAUNCHER=${{ matrix.ccache }} -DCMAKE_CXX_COMPILER_LAUNCHER=${{ matrix.ccache }} -DCMAKE_OSX_ARCHITECTURES="arm64;x86_64"
+      # Typical cmake configuration with default generator
+      # With DCMAKE_OSX_ARCHITECTURES="arm64;x86_64" we can build universal binaries for apple computers
+      - name: cmake configure
+        shell: bash
+        run: cmake -B build -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -DCMAKE_C_COMPILER_LAUNCHER=${{ matrix.ccache }} -DCMAKE_CXX_COMPILER_LAUNCHER=${{ matrix.ccache }} -DCMAKE_OSX_ARCHITECTURES="arm64;x86_64"
 
-      # # Build the project
-      # - name: cmake build
-      #   shell: bash
-      #   run: cmake --build build --config ${{ env.BUILD_TYPE }} --parallel ${{ env.CMAKE_BUILD_PARALLEL_LEVEL }}
+      # Build the project
+      - name: cmake build
+        shell: bash
+        run: cmake --build build --config ${{ env.BUILD_TYPE }} --parallel ${{ env.CMAKE_BUILD_PARALLEL_LEVEL }}
       
-      # # Test the project
-      # - name: ctest
-      #   working-directory: ${{github.workspace}}/build
-      #   run: ctest --verbose
+      # Test the project
+      - name: ctest
+        working-directory: ${{github.workspace}}/build
+        run: ctest --verbose
 
-      # # Declaring the product name and the packaging directory
-      # - name: declare artefact variables
-      #   shell: bash
-      #   run: |
-      #     echo "PACKAGE_DIR=artefacts/${{ env.PROJECT_NAME }}-${{ matrix.name}}" >> $GITHUB_ENV
-      #     echo "PRODUCT_NAME=${{ env.PROJECT_NAME }}-${{ matrix.name }}" >> $GITHUB_ENV
+      # Declaring the product name and the packaging directory
+      - name: declare artefact variables
+        shell: bash
+        run: |
+          echo "PACKAGE_DIR=artefacts/${{ env.PROJECT_NAME }}-${{ matrix.name}}" >> $GITHUB_ENV
+          echo "PRODUCT_NAME=${{ env.PROJECT_NAME }}-${{ matrix.name }}" >> $GITHUB_ENV
       
-      # # Moving the artefacts to a packaging directory
-      # - name: move artefacts
-      #   shell: bash
-      #   run: |
-      #     mkdir -p ${{ env.PACKAGE_DIR }}
-      #     PLUGINS=${{ env.PLUGINS }}
-      #     PLUGIN_RELEASE_NAMES=${{ env.PLUGIN_RELEASE_NAMES }}
-      #     for index in ${!PLUGINS[@]}; do
-      #       mv "${{ env.BUILD_DIR }}/${PLUGINS[$index]}/${PLUGINS[$index]}_artefacts/${{ env.BUILD_TYPE }}/VST3/${PLUGIN_RELEASE_NAMES[$index]}.vst3" ${{ env.PACKAGE_DIR }};
-      #       if [ "${{ matrix.name }}" == "macOS" ]; then
-      #         mv "${{ env.BUILD_DIR }}/${PLUGINS[$index]}/${PLUGINS[$index]}_artefacts/${{ env.BUILD_TYPE }}/AU/${PLUGIN_RELEASE_NAMES[$index]}.component" ${{ env.PACKAGE_DIR }};
-      #         mv "${{ env.BUILD_DIR }}/${PLUGINS[$index]}/${PLUGINS[$index]}_artefacts/${{ env.BUILD_TYPE }}/Standalone/${PLUGIN_RELEASE_NAMES[$index]}.app" ${{ env.PACKAGE_DIR }};
-      #       elif [ "${{ matrix.name }}" == "Windows" ]; then
-      #         mv "${{ env.BUILD_DIR }}/${PLUGINS[$index]}/${PLUGINS[$index]}_artefacts/${{ env.BUILD_TYPE }}/Standalone/${PLUGIN_RELEASE_NAMES[$index]}.exe" ${{ env.PACKAGE_DIR }};
-      #       elif [ "${{ matrix.name }}" == "Linux" ]; then
-      #         mv "${{ env.BUILD_DIR }}/${PLUGINS[$index]}/${PLUGINS[$index]}_artefacts/${{ env.BUILD_TYPE }}/Standalone/${PLUGIN_RELEASE_NAMES[$index]}" ${{ env.PACKAGE_DIR }};
-      #       else
-      #         echo "Unknown OS";
-      #       fi;
-      #     done;
+      # Moving the artefacts to a packaging directory
+      - name: move artefacts
+        shell: bash
+        run: |
+          mkdir -p ${{ env.PACKAGE_DIR }}
+          PLUGINS=${{ env.PLUGINS }}
+          PLUGIN_RELEASE_NAMES=${{ env.PLUGIN_RELEASE_NAMES }}
+          for index in ${!PLUGINS[@]}; do
+            mv "${{ env.BUILD_DIR }}/${PLUGINS[$index]}/${PLUGINS[$index]}_artefacts/${{ env.BUILD_TYPE }}/VST3/${PLUGIN_RELEASE_NAMES[$index]}.vst3" ${{ env.PACKAGE_DIR }};
+            if [ "${{ matrix.name }}" == "macOS" ]; then
+              mv "${{ env.BUILD_DIR }}/${PLUGINS[$index]}/${PLUGINS[$index]}_artefacts/${{ env.BUILD_TYPE }}/AU/${PLUGIN_RELEASE_NAMES[$index]}.component" ${{ env.PACKAGE_DIR }};
+              mv "${{ env.BUILD_DIR }}/${PLUGINS[$index]}/${PLUGINS[$index]}_artefacts/${{ env.BUILD_TYPE }}/Standalone/${PLUGIN_RELEASE_NAMES[$index]}.app" ${{ env.PACKAGE_DIR }};
+            elif [ "${{ matrix.name }}" == "Windows" ]; then
+              mv "${{ env.BUILD_DIR }}/${PLUGINS[$index]}/${PLUGINS[$index]}_artefacts/${{ env.BUILD_TYPE }}/Standalone/${PLUGIN_RELEASE_NAMES[$index]}.exe" ${{ env.PACKAGE_DIR }};
+            elif [ "${{ matrix.name }}" == "Linux" ]; then
+              mv "${{ env.BUILD_DIR }}/${PLUGINS[$index]}/${PLUGINS[$index]}_artefacts/${{ env.BUILD_TYPE }}/Standalone/${PLUGIN_RELEASE_NAMES[$index]}" ${{ env.PACKAGE_DIR }};
+            else
+              echo "Unknown OS";
+            fi;
+          done;
 
-      # # We need to import the apple developer certificate so that we can codesign our binaries
-      # - name: import certificates (macOS)
-      #   uses: apple-actions/import-codesign-certs@v1
-      #   if: ${{ matrix.name == 'macOS' }}
-      #   with:
-      #     # GitHub encrypted secrets
-      #     p12-file-base64: ${{ secrets.DEV_ID_APP_CERT }}
-      #     p12-password: ${{ secrets.DEV_ID_APP_PWD }}
+      # We need to import the apple developer certificate so that we can codesign our binaries
+      - name: import certificates (macOS)
+        uses: apple-actions/import-codesign-certs@v1
+        if: ${{ matrix.name == 'macOS' }}
+        with:
+          # GitHub encrypted secrets
+          p12-file-base64: ${{ secrets.DEV_ID_APP_CERT }}
+          p12-password: ${{ secrets.DEV_ID_APP_PWD }}
 
-      # # Codesigning all the binaries
-      # - name: codesign (macOS)
-      #   if: ${{ matrix.name == 'macOS' }}
-      #   run: |
-      #     PLUGINS=${{ env.PLUGINS }}
-      #     PLUGIN_RELEASE_NAMES=${{ env.PLUGIN_RELEASE_NAMES }}
-      #     for index in ${!PLUGINS[@]}; do
-      #       codesign --force -s "${{ secrets.DEV_ID_APP}}" -v "${{ env.PACKAGE_DIR }}/${PLUGIN_RELEASE_NAMES[$index]}.vst3" --deep --strict --options=runtime --timestamp;
-      #       codesign --force -s "${{ secrets.DEV_ID_APP}}" -v "${{ env.PACKAGE_DIR }}/${PLUGIN_RELEASE_NAMES[$index]}.component" --deep --strict --options=runtime --timestamp;
-      #       # The standalone needs to have specific entitlements, which we need to add when we codesign the files. Since we have set the entitlements in the CMakeLists.txt we can use the generated file in the location below
-      #       codesign --entitlements "${{ env.BUILD_DIR }}/${PLUGINS[$index]}/${PLUGINS[$index]}_artefacts/JuceLibraryCode/${PLUGINS[$index]}_Standalone.entitlements" --force -s "${{ secrets.DEV_ID_APP}}" -v "${{ env.PACKAGE_DIR }}/${PLUGIN_RELEASE_NAMES[$index]}.app" --deep --strict --options=runtime --timestamp;
-      #       # Here we check the code signitures
-      #       codesign -dv --verbose=4 "${{ env.PACKAGE_DIR }}/${PLUGIN_RELEASE_NAMES[$index]}.vst3";
-      #       codesign -dv --verbose=4 "${{ env.PACKAGE_DIR }}/${PLUGIN_RELEASE_NAMES[$index]}.component";
-      #       codesign -dv --verbose=4 "${{ env.PACKAGE_DIR }}/${PLUGIN_RELEASE_NAMES[$index]}.app";
-      #     done;
+      # Codesigning all the binaries
+      - name: codesign (macOS)
+        if: ${{ matrix.name == 'macOS' }}
+        run: |
+          PLUGINS=${{ env.PLUGINS }}
+          PLUGIN_RELEASE_NAMES=${{ env.PLUGIN_RELEASE_NAMES }}
+          for index in ${!PLUGINS[@]}; do
+            codesign --force -s "${{ secrets.DEV_ID_APP}}" -v "${{ env.PACKAGE_DIR }}/${PLUGIN_RELEASE_NAMES[$index]}.vst3" --deep --strict --options=runtime --timestamp;
+            codesign --force -s "${{ secrets.DEV_ID_APP}}" -v "${{ env.PACKAGE_DIR }}/${PLUGIN_RELEASE_NAMES[$index]}.component" --deep --strict --options=runtime --timestamp;
+            # The standalone needs to have specific entitlements, which we need to add when we codesign the files. Since we have set the entitlements in the CMakeLists.txt we can use the generated file in the location below
+            codesign --entitlements "${{ env.BUILD_DIR }}/${PLUGINS[$index]}/${PLUGINS[$index]}_artefacts/JuceLibraryCode/${PLUGINS[$index]}_Standalone.entitlements" --force -s "${{ secrets.DEV_ID_APP}}" -v "${{ env.PACKAGE_DIR }}/${PLUGIN_RELEASE_NAMES[$index]}.app" --deep --strict --options=runtime --timestamp;
+            # Here we check the code signitures
+            codesign -dv --verbose=4 "${{ env.PACKAGE_DIR }}/${PLUGIN_RELEASE_NAMES[$index]}.vst3";
+            codesign -dv --verbose=4 "${{ env.PACKAGE_DIR }}/${PLUGIN_RELEASE_NAMES[$index]}.component";
+            codesign -dv --verbose=4 "${{ env.PACKAGE_DIR }}/${PLUGIN_RELEASE_NAMES[$index]}.app";
+          done;
       
-      # # Zip the artefact
-      # - name: zip artefacts
-      #   working-directory: ${{github.workspace}}/artefacts
-      #   shell: bash
-      #   run: |
-      #     if [ "${{ matrix.name }}" == "macOS" ]; then
-      #       zip -vr ${{ env.PRODUCT_NAME }}.zip ${{ env.PRODUCT_NAME }}/ -x "*.DS_Store"
-      #     elif [ "${{ matrix.name }}" == "Windows" ]; then
-      #       tar -a -c -f ${{ env.PRODUCT_NAME }}.zip ${{ env.PRODUCT_NAME }}/
-      #     elif [ "${{ matrix.name }}" == "Linux" ]; then
-      #       zip -r ${{ env.PRODUCT_NAME }}.zip ${{ env.PRODUCT_NAME }}/
-      #     else
-      #       echo "Unknown OS";
-      #     fi;
+      # Zip the artefact
+      - name: zip artefacts
+        working-directory: ${{github.workspace}}/artefacts
+        shell: bash
+        run: |
+          if [ "${{ matrix.name }}" == "macOS" ]; then
+            zip -vr ${{ env.PRODUCT_NAME }}.zip ${{ env.PRODUCT_NAME }}/ -x "*.DS_Store"
+          elif [ "${{ matrix.name }}" == "Windows" ]; then
+            tar -a -c -f ${{ env.PRODUCT_NAME }}.zip ${{ env.PRODUCT_NAME }}/
+          elif [ "${{ matrix.name }}" == "Linux" ]; then
+            zip -r ${{ env.PRODUCT_NAME }}.zip ${{ env.PRODUCT_NAME }}/
+          else
+            echo "Unknown OS";
+          fi;
 
-      # # Let's now notarize the zip file and with it all its contents / binaries
-      # - name: notarize (macOS)
-      #   working-directory: ${{github.workspace}}/artefacts
-      #   if: ${{ matrix.name == 'macOS' }}
-      #   run: |
-      #     # In contrast to dmg files zip files do not need to be codesigned before notarization
-      #     xcrun notarytool submit ${{ env.PRODUCT_NAME }}.zip --apple-id ${{ secrets.APPLE_DEV_ID }} --password ${{ secrets.APPLE_DEV_PWD }} --team-id ${{ secrets.TEAM_ID }} --wait
-      #     # Then we need to unzip it and staple the ticket for the gatekeeper to all binaries
-      #     unzip ${{ env.PRODUCT_NAME }}.zip && rm ${{ env.PRODUCT_NAME }}.zip
-      #     cd ${{ env.PRODUCT_NAME }}
-      #     PLUGINS=${{ env.PLUGINS }}
-      #     PLUGIN_RELEASE_NAMES=${{ env.PLUGIN_RELEASE_NAMES }}
-      #     for index in ${!PLUGINS[@]}; do
-      #       xcrun stapler staple "${PLUGIN_RELEASE_NAMES[$index]}.vst3";
-      #       xcrun stapler staple "${PLUGIN_RELEASE_NAMES[$index]}.component";
-      #       xcrun stapler staple "${PLUGIN_RELEASE_NAMES[$index]}.app";
-      #     done;
-      #     cd ..
-      #     # And finally zip it again
-      #     zip -vr ${{ env.PRODUCT_NAME }}.zip ${{ env.PRODUCT_NAME }}/ -x "*.DS_Store"
+      # Let's now notarize the zip file and with it all its contents / binaries
+      - name: notarize (macOS)
+        working-directory: ${{github.workspace}}/artefacts
+        if: ${{ matrix.name == 'macOS' }}
+        run: |
+          # In contrast to dmg files zip files do not need to be codesigned before notarization
+          xcrun notarytool submit ${{ env.PRODUCT_NAME }}.zip --apple-id ${{ secrets.APPLE_DEV_ID }} --password ${{ secrets.APPLE_DEV_PWD }} --team-id ${{ secrets.TEAM_ID }} --wait
+          # Then we need to unzip it and staple the ticket for the gatekeeper to all binaries
+          unzip ${{ env.PRODUCT_NAME }}.zip && rm ${{ env.PRODUCT_NAME }}.zip
+          cd ${{ env.PRODUCT_NAME }}
+          PLUGINS=${{ env.PLUGINS }}
+          PLUGIN_RELEASE_NAMES=${{ env.PLUGIN_RELEASE_NAMES }}
+          for index in ${!PLUGINS[@]}; do
+            xcrun stapler staple "${PLUGIN_RELEASE_NAMES[$index]}.vst3";
+            xcrun stapler staple "${PLUGIN_RELEASE_NAMES[$index]}.component";
+            xcrun stapler staple "${PLUGIN_RELEASE_NAMES[$index]}.app";
+          done;
+          cd ..
+          # And finally zip it again
+          zip -vr ${{ env.PRODUCT_NAME }}.zip ${{ env.PRODUCT_NAME }}/ -x "*.DS_Store"
           
-      # - name: upload artifact
-      #   uses: actions/upload-artifact@v3
-      #   with:
-      #     name: ${{ env.PRODUCT_NAME }}.zip
-      #     path: artefacts/${{ env.PRODUCT_NAME }}.zip
+      - name: upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ env.PRODUCT_NAME }}.zip
+          path: artefacts/${{ env.PRODUCT_NAME }}.zip
 
   release:
     if: startsWith(github.ref, 'refs/tags/')
@@ -217,8 +217,5 @@ jobs:
     - name: Create Release
       uses: softprops/action-gh-release@v1
       with:
-        prerelease: true
-        # download-artifact puts these files in their own dirs...
-        # Using globs sidesteps having to pass the version around
         files: |
           */*.zip

@@ -14,10 +14,12 @@ OSCReceiveStatusLabel::OSCReceiveStatusLabel(juce::AudioProcessorValueTreeState 
     apvts.state.addListener(this);
 
     if ((int) apvts.state.getChildWithName("Settings").getProperty(PluginParameters::OSC_RECEIVE_STATUS_ID) == 1) {
-        connectionStatusLabel.setColour(juce::Label::backgroundColourId, juce::Colours::green);
+        currentColor = juce::Colours::green;
+        connectionStatusLabel.setColour(juce::Label::backgroundColourId, currentColor);
         connectionStatusLabel.setText("OSC Receiver connected.", juce::dontSendNotification);
     } else {
-        connectionStatusLabel.setColour(juce::Label::backgroundColourId, juce::Colours::red);
+        currentColor = juce::Colours::red;
+        connectionStatusLabel.setColour(juce::Label::backgroundColourId, currentColor);
         connectionStatusLabel.setText("OSC Receiver disconnected! Choose valid Port...", juce::dontSendNotification);
     }
     connectionStatusLabel.setJustificationType(juce::Justification::centred);
@@ -36,20 +38,34 @@ void OSCReceiveStatusLabel::resized() {
 void OSCReceiveStatusLabel::valueTreePropertyChanged(juce::ValueTree& treeWhosePropertyHasChanged, const juce::Identifier& property) {
     if (property.toString() == PluginParameters::OSC_RECEIVE_STATUS_ID) {
         if ((int) treeWhosePropertyHasChanged.getProperty(property) == 1) {
-            connectionStatusLabel.setColour(juce::Label::backgroundColourId, juce::Colours::green);
+            currentColor = juce::Colours::green;
+            connectionStatusLabel.setColour(juce::Label::backgroundColourId, currentColor);
             connectionStatusLabel.setText("OSC Receiver connected.", juce::dontSendNotification);
         } else {
-            connectionStatusLabel.setColour(juce::Label::backgroundColourId, juce::Colours::red);
+            currentColor = juce::Colours::red;
+            connectionStatusLabel.setColour(juce::Label::backgroundColourId, currentColor);
             connectionStatusLabel.setText("OSC Receiver disconnected! Choose valid Port...", juce::dontSendNotification);
         }
     } else if (property.toString() == PluginParameters::OSC_RECEIVE_PORT_ID) {
         int oscReceivePort = (int) treeWhosePropertyHasChanged.getProperty(property);
         if (oscReceivePort >= 1 && oscReceivePort <= 65536) {
-            connectionStatusLabel.setColour(juce::Label::backgroundColourId, juce::Colours::green);
+            currentColor = juce::Colours::green;
+            connectionStatusLabel.setColour(juce::Label::backgroundColourId, currentColor);
             connectionStatusLabel.setText("OSC Receiver connected.", juce::dontSendNotification);
         } else {
-            connectionStatusLabel.setColour(juce::Label::backgroundColourId, juce::Colours::red);
+            currentColor = juce::Colours::red;
+            connectionStatusLabel.setColour(juce::Label::backgroundColourId, currentColor);
             connectionStatusLabel.setText("OSC Receiver disconnected! Choose valid Port...", juce::dontSendNotification);
         }        
     }
+}
+
+void OSCReceiveStatusLabel::oscMessageReceived(const juce::OSCMessage& message) {
+    connectionStatusLabel.setColour(juce::Label::backgroundColourId, juce::Colours::whitesmoke);
+    startTimer(300);
+}
+
+void OSCReceiveStatusLabel::timerCallback() {
+    connectionStatusLabel.setColour(juce::Label::backgroundColourId, currentColor);
+    stopTimer();
 }

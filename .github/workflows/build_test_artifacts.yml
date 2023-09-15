@@ -50,11 +50,10 @@ jobs:
         run: |
           for index in ${!PLUGINS[@]}; do
             echo "PLUGIN=${PLUGINS[$index]}"";
-            echo "PLUGIN_RELEASE_NAME=${PLUGIN_RELEASE_NAMES[$index]}";
+            # echo "PLUGIN_RELEASE_NAME=${PLUGIN_RELEASE_NAMES[$index]}";
             echo "matrix.name=${{ matrix.name }}";
             echo "matrix.os=${{ matrix.os }}";
             echo "matrix.ccache=${{ matrix.ccache }}";
-            i=((i+1));
           done
 
       # We need the osxutils to get the codesign and notorization tools

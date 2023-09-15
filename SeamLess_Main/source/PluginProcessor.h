@@ -9,7 +9,7 @@
 #include <OSCReceiver.h>
 
 //==============================================================================
-class AudioPluginAudioProcessor  : public juce::AudioProcessor, private juce::ValueTree::Listener, private SourceTree::Listener, public juce::OSCReceiver::Listener<juce::OSCReceiver::MessageLoopCallback>
+class AudioPluginAudioProcessor  : public juce::AudioProcessor, private juce::ValueTree::Listener, private SourceTree::Listener
 {
 public:
     //==============================================================================
@@ -48,10 +48,11 @@ public:
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
+    OSCReceiver& getOSCReceiverRef();
+
 private:
     void sourceParameterChanged(Source source, Parameter parameter) override;
     void valueTreePropertyChanged(juce::ValueTree& treeWhosePropertyHasChanged, const juce::Identifier& property) override;
-    void oscMessageReceived(const juce::OSCMessage& message) override;
 
     //==============================================================================
 private:

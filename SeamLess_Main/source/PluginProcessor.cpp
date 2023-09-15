@@ -23,7 +23,6 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
     sourceTree.addListener(this);
     oscSender.connectToPort();
     oscReceiver.connectToPort();
-    oscReceiver.addListener(this);
     oscReceiver.addListener(& oscSender);
 }
 
@@ -31,7 +30,6 @@ AudioPluginAudioProcessor::~AudioPluginAudioProcessor()
 {
     apvts.state.removeListener(this);
     sourceTree.removeListener(this);
-    oscReceiver.removeListener(this);
     oscReceiver.removeListener(& oscSender);
     // Remove the shared ValueTree for not automatalbe parameters
     PluginParameters::clearNotAutomatableValueTree();
@@ -231,6 +229,6 @@ void AudioPluginAudioProcessor::valueTreePropertyChanged(juce::ValueTree &treeWh
     juce::ignoreUnused(property);
 }
 
-void AudioPluginAudioProcessor::oscMessageReceived(const juce::OSCMessage& message) {
-    std::cout << "OSC message received: " << message.getAddressPattern().toString() << std::endl;
+OSCReceiver& AudioPluginAudioProcessor::getOSCReceiverRef() {
+    return oscReceiver;
 }

@@ -19,6 +19,7 @@ Author:  Fares Schulz
 #include <OSCSendAdressSelector.h>
 #include <OSCSendIntervalSelector.h>
 #include <OSCSendStatusLabel.h>
+#include <OSCReceiver.h>
 
 class OSCConnectionBox : public juce::Component {
 public:
@@ -27,6 +28,9 @@ public:
     
     void paint(juce::Graphics& g) override;
     void resized() override;
+
+    void addOSCReceiverListener(OSCReceiver& newOSCReceiver);
+    void removeOSCReceiverListener(OSCReceiver& newOSCReceiver);
 
 private:
     juce::AudioProcessorValueTreeState& apvts;

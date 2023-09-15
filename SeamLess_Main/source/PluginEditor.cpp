@@ -13,10 +13,13 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAud
     setResizeLimits(675, 600, 7000, 8000);
 
     addAndMakeVisible(oscConnectionBox);
+
+    oscConnectionBox.addOSCReceiverListener(processorRef.getOSCReceiverRef());
 }
 
 AudioPluginAudioProcessorEditor::~AudioPluginAudioProcessorEditor()
 {
+    oscConnectionBox.removeOSCReceiverListener(processorRef.getOSCReceiverRef());
 }
 
 //==============================================================================

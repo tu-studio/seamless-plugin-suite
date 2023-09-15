@@ -48,3 +48,11 @@ void OSCConnectionBox::resized() {
     area.removeFromTop(spacingBetween);
     oscSendIntervalSelector.setBounds(area);
 }
+
+void OSCConnectionBox::addOSCReceiverListener(OSCReceiver& newOSCReceiver) {
+    newOSCReceiver.addListener(& oscReceiveStatusLabel);
+}
+
+void OSCConnectionBox::removeOSCReceiverListener(OSCReceiver& newOSCReceiver) {
+    newOSCReceiver.removeListener(& oscReceiveStatusLabel);
+}

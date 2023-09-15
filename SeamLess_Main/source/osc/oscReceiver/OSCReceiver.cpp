@@ -19,16 +19,16 @@ void OSCReceiver::connectToPort() {
     #endif
 
     if (! connect (oscReceivePort)) {
-        apvts.state.getChild(0).setProperty(PluginParameters::OSC_RECEIVE_STATUS_ID, 0, nullptr);
+        apvts.state.getChildWithName("Settings").setProperty(PluginParameters::OSC_RECEIVE_STATUS_ID, 0, nullptr);
     }
     else {
-        apvts.state.getChild(0).setProperty(PluginParameters::OSC_RECEIVE_STATUS_ID, 1, nullptr);
+        apvts.state.getChildWithName("Settings").setProperty(PluginParameters::OSC_RECEIVE_STATUS_ID, 1, nullptr);
     }
 }
 
 void OSCReceiver::disconnectFromPort() {
     disconnect();
-    apvts.state.getChild(0).setProperty(PluginParameters::OSC_RECEIVE_STATUS_ID, 0, nullptr);
+    apvts.state.getChildWithName("Settings").setProperty(PluginParameters::OSC_RECEIVE_STATUS_ID, 0, nullptr);
 }
 
 void OSCReceiver::valueTreePropertyChanged(juce::ValueTree& treeWhosePropertyHasChanged, const juce::Identifier& property) {

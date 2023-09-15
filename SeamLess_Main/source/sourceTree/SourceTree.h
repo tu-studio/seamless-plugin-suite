@@ -36,6 +36,7 @@ public:
     };
     void addListener(Listener *);
     void removeListener(Listener *);
+    void updateNumClients();
     
 private:
     void newPluginConnection(PluginConnection* pluginConnection) override;

@@ -211,6 +211,8 @@ void AudioPluginAudioProcessor::setStateInformation (const void* data, int sizeI
     oscSender.connectToPort();
     oscReceiver.disconnectFromPort();
     oscReceiver.connectToPort();
+    //Update the number of Clients
+    sourceTree.updateNumClients();
 }
 
 //==============================================================================

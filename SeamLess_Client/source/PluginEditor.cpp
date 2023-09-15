@@ -10,12 +10,12 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAud
     // window size settings
     setSize (1000, 600);    
     setResizable(true, true);
-    setResizeLimits(675, 600, 7000, 8000);
+    setResizeLimits(800, 500, 2000, 1200);
 
-    if (apvts.state.getChild(0).getPropertyAsValue(PluginParameters::GAIN_TOGGLE_ID, nullptr).toString().getIntValue() == 1) addAndMakeVisible(gainSliderBox);
+    if ((int) apvts.state.getChildWithName("Settings").getProperty(PluginParameters::GAIN_TOGGLE_ID) == 1) addAndMakeVisible(gainSliderBox);
     else addChildComponent(gainSliderBox);
 
-    if (apvts.state.getChild(0).getPropertyAsValue(PluginParameters::SPHERICAL_TOGGLE_ID, nullptr).toString().getIntValue() == 1) addAndMakeVisible(sphericalSliderBox);
+    if ((int) apvts.state.getChildWithName("Settings").getProperty(PluginParameters::SPHERICAL_TOGGLE_ID) == 1) addAndMakeVisible(sphericalSliderBox);
     else addChildComponent(sphericalSliderBox);
     
     addAndMakeVisible(sourceIndexSelector);
@@ -53,7 +53,6 @@ void AudioPluginAudioProcessorEditor::paint (juce::Graphics& g)
 
 void AudioPluginAudioProcessorEditor::resized()
 {
-    
     // Borders for the GUI
     auto area = getLocalBounds();
     auto spacingBetween = getWidth()/80;
@@ -88,13 +87,13 @@ void AudioPluginAudioProcessorEditor::resized()
 
 void AudioPluginAudioProcessorEditor::valueTreePropertyChanged(juce::ValueTree& treeWhosePropertyHasChanged, const juce::Identifier& property) {
     if (property.toString() == PluginParameters::GAIN_TOGGLE_ID) {
-        if (treeWhosePropertyHasChanged.getPropertyAsValue(property, nullptr).toString().getIntValue() == 1) {
+        if ((int) treeWhosePropertyHasChanged.getProperty(property) == 1) {
             gainSliderBox.setVisible(true);
         } else {
             gainSliderBox.setVisible(false);
         }
     } else if (property.toString() == PluginParameters::SPHERICAL_TOGGLE_ID) {
-        if (treeWhosePropertyHasChanged.getPropertyAsValue(property, nullptr).toString().getIntValue() == 1) {
+        if ((int) treeWhosePropertyHasChanged.getProperty(property) == 1) {
             sphericalSliderBox.setVisible(true);
         } else {
             sphericalSliderBox.setVisible(false);

@@ -17,9 +17,8 @@ ZPositionSlider::ZPositionSlider(juce::AudioProcessorValueTreeState& a) : apvts(
     addAndMakeVisible(slider);
     
     sliderLabel.setColour (juce::Label::textColourId, seamlessBlue);
-    sliderLabel.setText ("z Position", juce::dontSendNotification);
+    sliderLabel.setText ("Z Position", juce::dontSendNotification);
     sliderLabel.setJustificationType (juce::Justification::centred);
-    sliderLabel.attachToComponent(&slider,false);
     addAndMakeVisible(sliderLabel);
 
     addSliderAttachment(apvts, OSCParameters::POS_Z_ID.getParamID());
@@ -39,5 +38,6 @@ void ZPositionSlider::setDoubleClickReturnValue(double valueToSetOnDoubleClick) 
 
 void ZPositionSlider::resized() {
     auto area = getLocalBounds();
+    sliderLabel.setBounds(area.removeFromTop(20));
     slider.setBounds(area);
 }

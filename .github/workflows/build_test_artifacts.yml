@@ -201,6 +201,7 @@ jobs:
           path: artefacts/${{ env.PRODUCT_NAME }}.zip
 
   release:
+    if: contains(github.ref, 'tags/v')
     runs-on: ubuntu-latest
     needs: cmake-build_and_ctest
 

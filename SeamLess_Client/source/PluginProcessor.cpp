@@ -208,8 +208,8 @@ void AudioPluginAudioProcessor::setStateInformation (const void* data, int sizeI
         if (xmlState->hasTagName (apvts.state.getType()))
             apvts.replaceState (juce::ValueTree::fromXml (*xmlState));
     }
-    if (pluginConnection.isConnected()) apvts.state.getChild(0).setProperty(PluginParameters::MAIN_CONNECTION_STATUS_ID, 1, nullptr);
-    else apvts.state.getChild(0).setProperty(PluginParameters::MAIN_CONNECTION_STATUS_ID, 0, nullptr);
+    if (pluginConnection.isConnected()) apvts.state.getChildWithName("Settings").setProperty(PluginParameters::MAIN_CONNECTION_STATUS_ID, 1, nullptr);
+    else apvts.state.getChildWithName("Settings").setProperty(PluginParameters::MAIN_CONNECTION_STATUS_ID, 0, nullptr);
 
     pluginConnection.updateState(apvts, PluginParameters::getPluginParameterList(), PluginParameters::getSettingsList());
 }
@@ -242,7 +242,7 @@ void AudioPluginAudioProcessor::forwardMessage(PluginConnection *pluginConnectio
 }
 
 void AudioPluginAudioProcessor::connected(PluginConnection *pluginConnectionThatCalled) {
-    apvts.state.getChild(0).setProperty(PluginParameters::MAIN_CONNECTION_STATUS_ID, 1, nullptr);
+    apvts.state.getChildWithName("Settings").setProperty(PluginParameters::MAIN_CONNECTION_STATUS_ID, 1, nullptr);
     pluginConnection.updateState(apvts, PluginParameters::getPluginParameterList(), PluginParameters::getSettingsList());
     stopTimer();
     juce::ignoreUnused(pluginConnectionThatCalled);
@@ -250,6 +250,6 @@ void AudioPluginAudioProcessor::connected(PluginConnection *pluginConnectionThat
 
 void AudioPluginAudioProcessor::disconnected(PluginConnection *pluginConnectionThatCalled) {
     juce::ignoreUnused(pluginConnectionThatCalled);
-    apvts.state.getChild(0).setProperty(PluginParameters::MAIN_CONNECTION_STATUS_ID, 0, nullptr);
+    apvts.state.getChildWithName("Settings").setProperty(PluginParameters::MAIN_CONNECTION_STATUS_ID, 0, nullptr);
     startTimer(1000);
 }

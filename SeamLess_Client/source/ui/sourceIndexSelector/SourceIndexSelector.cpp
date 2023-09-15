@@ -16,19 +16,19 @@ SourceIndexSelector::SourceIndexSelector(juce::AudioProcessorValueTreeState &a) 
     addAndMakeVisible(descLabel);
     
     sourceIndexText.setEditable(true);
-    if (apvts.state.getChildWithName("Settings").getPropertyAsValue(OSCParameters::SOURCE_IDX_ID, nullptr).toString().getIntValue() < 1)
+    if ((int) apvts.state.getChildWithName("Settings").getProperty(OSCParameters::SOURCE_IDX_ID) < 1)
         sourceIndexText.setColour (juce::Label::backgroundColourId, juce::Colours::red);
     else
         sourceIndexText.setColour (juce::Label::backgroundColourId, seamlessBlue);
         
-    sourceIndexText.setText(apvts.state.getChildWithName("Settings").getPropertyAsValue(OSCParameters::SOURCE_IDX_ID, nullptr).toString(), juce::dontSendNotification);
+    sourceIndexText.setText(apvts.state.getChildWithName("Settings").getProperty(OSCParameters::SOURCE_IDX_ID), juce::dontSendNotification);
     sourceIndexText.setTooltip("Source Index of the audio stream that corresponds to this channel. Every channel should have a unique index.");
     sourceIndexText.setJustificationType(juce::Justification::right);
     addAndMakeVisible(sourceIndexText);
     
     sourceIndexText.onTextChange = [this] {sourceIndexTextChanged();};
 
-    if (apvts.state.getChildWithName("Settings").getPropertyAsValue(PluginParameters::MAIN_CONNECTION_STATUS_ID, nullptr).toString().getIntValue() == 1) {
+    if ((int) apvts.state.getChildWithName("Settings").getProperty(PluginParameters::MAIN_CONNECTION_STATUS_ID) == 1) {
         connectionStatusLabel.setColour(juce::Label::backgroundColourId, juce::Colours::green);
         connectionStatusLabel.setText("Connected to Main!", juce::dontSendNotification);
     } else {
@@ -87,7 +87,7 @@ void SourceIndexSelector::sourceIndexTextChanged() {
 
 void SourceIndexSelector::valueTreePropertyChanged(juce::ValueTree& treeWhosePropertyHasChanged, const juce::Identifier& property) {
     if (property.toString() == PluginParameters::MAIN_CONNECTION_STATUS_ID) {
-        if (treeWhosePropertyHasChanged.getPropertyAsValue(property, nullptr).toString().getIntValue() == 1) {
+        if ((int) treeWhosePropertyHasChanged.getProperty(property) == 1) {
             connectionStatusLabel.setColour(juce::Label::backgroundColourId, juce::Colours::green);
             connectionStatusLabel.setText("Connected to Main!", juce::dontSendNotification);
         } else {

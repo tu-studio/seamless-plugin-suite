@@ -20,7 +20,7 @@ Configurations for SeamLess Plugin Suite
 #define DEFAULT_OSC_SEND_ADRESS "127.0.0.1"
 #define DEFAULT_OSC_SEND_PORT 9000
 // send interval (ms) for outgoing OSC messages
-#define DEFAULT_OSC_SEND_INTERVAL 3000
+#define DEFAULT_OSC_SEND_INTERVAL 0
 
 #define DEFAULT_OSC_RECEIVE_PORT 9001
 

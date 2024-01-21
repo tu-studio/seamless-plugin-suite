@@ -1,5 +1,6 @@
 # TODO
 
+- [ ] fix bug that ableton live does not recall the state of the plugin with notautomatable parameters
 - [ ] Limitation, that every source index can only exist once.
 - [ ] Tooltips!
 - [x] Send interval OSC limitation Main

@@ -27,23 +27,21 @@ void Grid::paint(juce::Graphics& g) {
     case 0:
         break;
     case 1:
-        // TODO update so that it is coherent with the XYPad x and y axis
-        for (int i = -9; i<=9; i++) {
-            g.drawLine(juce::Line<float>(convertMeterToPixel(-10.f, i), convertMeterToPixel(10.f, i)));
-            g.drawLine(juce::Line<float>(convertMeterToPixel(i, -10.f), convertMeterToPixel(i, 10.f)));
+        for (float i = -0.9f; i<0.91; i+=0.1) {
+            g.drawLine(juce::Line<float>(convertPositionToPixel(-1.f, i).toFloat(), convertPositionToPixel(1.f, i).toFloat()));
+            g.drawLine(juce::Line<float>(convertPositionToPixel(i, -1.f).toFloat(), convertPositionToPixel(i, 1.f).toFloat()));
         }
         break;
     case 2:
-        // TODO update so that it is coherent with the XYPad x and y axis
-        for (int i = 1; i <= 13; i++)
-            g.drawRoundedRectangle(juce::Rectangle<float>(convertMeterToPixel(-i, -i), convertMeterToPixel(i, i)), 100 * (i), 1);
-        
-            g.drawLine(juce::Line<float>(convertMeterToPixel(0.f, 10.f), convertMeterToPixel(0.f, -10.f)), 0.8f);
-            g.drawLine(juce::Line<float>(convertMeterToPixel(-10.f, 0.f), convertMeterToPixel(10.f, 0.f)), 0.8f);
-            g.drawLine(juce::Line<float>(convertMeterToPixel(4.2264973081f - 10.f, 10.f),  convertMeterToPixel(5.7735026919f, -10.f)), 0.8f);
-            g.drawLine(juce::Line<float>(convertMeterToPixel(4.2264973081f - 10.f, -10.f), convertMeterToPixel(5.7735026919f, 10.f)),  0.8f);
-            g.drawLine(juce::Line<float>(convertMeterToPixel(-10.f, 4.2264973081f - 10.f), convertMeterToPixel(10.f, 5.7735026919f)),  0.8f);
-            g.drawLine(juce::Line<float>(convertMeterToPixel(10.f, 4.2264973081f - 10.f),  convertMeterToPixel(-10.f, 5.7735026919f)), 0.8f);
+        for (float i = 0.1f; i < 1.31; i+=0.1f) {
+            g.drawRoundedRectangle(juce::Rectangle<float>(convertPositionToPixel(-i, -i).toFloat(), convertPositionToPixel(i, i).toFloat()), 1000 * (i), 1);
+        }
+        g.drawLine(juce::Line<float>(convertPositionToPixel(0.f, 1.f).toFloat(), convertPositionToPixel(0.f, -1.f).toFloat()), 0.8f);
+        g.drawLine(juce::Line<float>(convertPositionToPixel(-1.f, 0.f).toFloat(), convertPositionToPixel(1.f, 0.f).toFloat()), 0.8f);
+        g.drawLine(juce::Line<float>(convertPositionToPixel(0.42264973081f - 1.f, 1.f).toFloat(),  convertPositionToPixel(0.57735026919f, -1.f).toFloat()), 0.8f);
+        g.drawLine(juce::Line<float>(convertPositionToPixel(0.42264973081f - 1.f, -1.f).toFloat(), convertPositionToPixel(0.57735026919f, 1.f).toFloat()),  0.8f);
+        g.drawLine(juce::Line<float>(convertPositionToPixel(-1.f, 0.42264973081f - 1.f).toFloat(), convertPositionToPixel(1.f, 0.57735026919f).toFloat()),  0.8f);
+        g.drawLine(juce::Line<float>(convertPositionToPixel(1.f, 0.42264973081f - 1.f).toFloat(),  convertPositionToPixel(-1.f, 0.57735026919f).toFloat()), 0.8f);
         break;
     }
 
@@ -65,23 +63,23 @@ void Grid::paint(juce::Graphics& g) {
 }
 
 void Grid::resized() {
-    // Convert the HuFoPath from meter to pixel coordinates
+    // Convert the HuFoPath from position to pixel coordinates
     HuFoPath.clear();
-    HuFoPixel[0] = convertMeterToPixel(HuFoMeter[0].getX(), HuFoMeter[0].getY());
-    HuFoPath.startNewSubPath(HuFoPixel[0]);
+    HuFoPixel[0] = convertPositionToPixel(HuFoPosition[0].getX(), HuFoPosition[0].getY());
+    HuFoPath.startNewSubPath(HuFoPixel[0].toFloat());
     for (int i = 1; i <= 33; i++) {
-        HuFoPixel[i] = convertMeterToPixel(HuFoMeter[i].getX(), HuFoMeter[i].getY());
-        HuFoPath.lineTo(HuFoPixel[i]);
+        HuFoPixel[i] = convertPositionToPixel(HuFoPosition[i].getX(), HuFoPosition[i].getY());
+        HuFoPath.lineTo(HuFoPixel[i].toFloat());
     }
     HuFoPath.closeSubPath();
 
-    // Convert the TUStudioPath from meter to pixel coordinates
+    // Convert the TUStudioPath from position to pixel coordinates
     TUStudioPath.clear();
-    TUStudioPixel[0] = convertMeterToPixel(TUStudioMeter[0].getX(), TUStudioMeter[0].getY());
-    TUStudioPath.startNewSubPath(TUStudioPixel[0]);
+    TUStudioPixel[0] = convertPositionToPixel(TUStudioPosition[0].getX(), TUStudioPosition[0].getY());
+    TUStudioPath.startNewSubPath(TUStudioPixel[0].toFloat());
     for (int i = 1; i <= 7; i++) {
-        TUStudioPixel[i] = convertMeterToPixel(TUStudioMeter[i].getX(), TUStudioMeter[i].getY());
-        TUStudioPath.lineTo(TUStudioPixel[i]);
+        TUStudioPixel[i] = convertPositionToPixel(TUStudioPosition[i].getX(), TUStudioPosition[i].getY());
+        TUStudioPath.lineTo(TUStudioPixel[i].toFloat());
     }
     TUStudioPath.closeSubPath();
 }
@@ -91,18 +89,16 @@ void Grid::valueTreePropertyChanged(juce::ValueTree& treeWhosePropertyHasChanged
     if (property.toString() == PluginParameters::GRID_CHOICE_ID || property.toString() == PluginParameters::VENUE_CHOICE_ID) repaint();
 }
 
-// TODO update so that it is coherent with the XYPad x and y axis
-juce::Point<float> Grid::convertMeterToPixel(float xMeter, float yMeter)
+juce::Point<int> Grid::convertPositionToPixel(float xPosition, float yPosition)
 {
-    float xPixel = getLocalBounds().getWidth() * (xMeter + 10.f)/20.f;
-    float yPixel = getLocalBounds().getHeight() * (- yMeter + 10.f)/20.f;
-    return juce::Point<float>(xPixel, yPixel);
+    int xPixel = (int) (getLocalBounds().getWidth() * (- yPosition + 1.f)/2.f);
+    int yPixel = (int) (getLocalBounds().getHeight() * (- xPosition + 1.f)/2.f);
+    return juce::Point<int>(xPixel, yPixel);
 }
 
-// TODO update so that it is coherent with the XYPad x and y axis
-juce::Point<float> Grid::convertPixelToMeter(int xPixel, int yPixel)
+juce::Point<float> Grid::convertPixelToPosition(int xPixel, int yPixel)
 {   
-    float xMeter = (float) (xPixel) / getLocalBounds().getWidth() * 20.f - 10.f;
-    float yMeter = (float) (yPixel) / getLocalBounds().getHeight() * 20.f - 10.f;
-    return juce::Point<float>(xMeter, - yMeter);
+    float xPosition = (float) (yPixel) / getLocalBounds().getWidth() * 2.f - 1.f;
+    float yPosition = (float) (xPixel) / getLocalBounds().getHeight() * 2.f - 1.f;
+    return juce::Point<float>(- xPosition, - yPosition);
 }

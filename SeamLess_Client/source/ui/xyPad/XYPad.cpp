@@ -32,12 +32,12 @@ void XYPad::resized() {
     if (xPosition < -1.7f && yPosition < -6.7f)
         coordinatesLabel.setBounds(getLocalBounds().getX() + getLocalBounds().getWidth() - 90 - 10, getLocalBounds().getY() + getLocalBounds().getHeight() - 45, 90, 30);
     else coordinatesLabel.setBounds(getLocalBounds().getX() + 10, getLocalBounds().getY() + getLocalBounds().getHeight() - 45, 90, 30);
-    soundSource.setBounds(convertMeterToPixel(xPosition, yPosition).getX() - sourceWidthPx/2, convertMeterToPixel(xPosition, yPosition).getY() - sourceWidthPx/2, sourceWidthPx, sourceWidthPx);
+    soundSource.setBounds(convertPositionToPixel(xPosition, yPosition).getX() - sourceWidthPx/2, convertPositionToPixel(xPosition, yPosition).getY() - sourceWidthPx/2, sourceWidthPx, sourceWidthPx);
 }
 
 void XYPad::mouseDown(const juce::MouseEvent& e)
 {
-    auto pos = convertPixelToMeter(e.x, e.y);
+    auto pos = convertPixelToPosition(e.x, e.y);
     xAttachment->setValueAsCompleteGesture(pos.x);
     yAttachment->setValueAsCompleteGesture(pos.y);
 
@@ -50,7 +50,7 @@ void XYPad::mouseDown(const juce::MouseEvent& e)
 
 void XYPad::mouseDrag (const juce::MouseEvent& e)
 {
-    auto pos = convertPixelToMeter(e.x, e.y);
+    auto pos = convertPixelToPosition(e.x, e.y);
     xAttachment->setValueAsPartOfGesture(pos.x);
     yAttachment->setValueAsPartOfGesture(pos.y);
 
@@ -112,18 +112,18 @@ void XYPad::addParameterAttachment(juce::RangedAudioParameter& parameter) {
     }
 }
 
-juce::Point<int> XYPad::convertMeterToPixel(float xMeter, float yMeter)
+juce::Point<int> XYPad::convertPositionToPixel(float xPosition, float yPosition)
 {
-    int xPixel = (int) (getLocalBounds().getWidth() * (- yMeter + 1.f)/2.f);
-    int yPixel = (int) (getLocalBounds().getHeight() * (- xMeter + 1.f)/2.f);
+    int xPixel = (int) (getLocalBounds().getWidth() * (- yPosition + 1.f)/2.f);
+    int yPixel = (int) (getLocalBounds().getHeight() * (- xPosition + 1.f)/2.f);
     return juce::Point<int>(xPixel, yPixel);
 }
 
-juce::Point<float> XYPad::convertPixelToMeter(int xPixel, int yPixel)
+juce::Point<float> XYPad::convertPixelToPosition(int xPixel, int yPixel)
 {   
-    float xMeter = (float) (yPixel) / getLocalBounds().getWidth() * 2.f - 1.f;
-    float yMeter = (float) (xPixel) / getLocalBounds().getHeight() * 2.f - 1.f;
-    return juce::Point<float>(- xMeter, - yMeter);
+    float xPosition = (float) (yPixel) / getLocalBounds().getWidth() * 2.f - 1.f;
+    float yPosition = (float) (xPixel) / getLocalBounds().getHeight() * 2.f - 1.f;
+    return juce::Point<float>(- xPosition, - yPosition);
 }
 
 void XYPad::updateSourceWidthPx() {
@@ -136,8 +136,8 @@ void XYPad::paintSourceShadow(juce::Graphics &g) {
     float shadowWidth = sourceWidthPx*(1.1f + zPosition/20.f);
     float shadowXShift = xPosition * (1.f + zPosition/10.f);
     float shadowYShift = - yPosition * (1.f + zPosition/10.f);
-    shadowOrigin.addEllipse((convertMeterToPixel(xPosition, yPosition).getX() - shadowWidth/2) + shadowXShift,
-                            (convertMeterToPixel(xPosition, yPosition).getY() - shadowWidth/2) + shadowYShift,
+    shadowOrigin.addEllipse((convertPositionToPixel(xPosition, yPosition).getX() - shadowWidth/2) + shadowXShift,
+                            (convertPositionToPixel(xPosition, yPosition).getY() - shadowWidth/2) + shadowYShift,
                             shadowWidth,
                             shadowWidth);
     sourceShadow.drawForPath(g, shadowOrigin);

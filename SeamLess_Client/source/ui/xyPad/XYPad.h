@@ -32,8 +32,8 @@ public:
     void setSourceWidthPx(int newSourceWidthPx);
 
 private:
-    juce::Point<int> convertMeterToPixel(float xMeter, float yMeter);
-    juce::Point<float> convertPixelToMeter(int xPixel, int yPixel);
+    juce::Point<int> convertPositionToPixel(float xPosition, float yPosition);
+    juce::Point<float> convertPixelToPosition(int xPixel, int yPixel);
     void updateSourceWidthPx();
     void paintSourceShadow(juce::Graphics& g);
 

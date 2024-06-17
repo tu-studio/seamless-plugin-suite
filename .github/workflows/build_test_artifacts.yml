@@ -25,10 +25,12 @@ env:
   CMAKE_BUILD_PARALLEL_LEVEL: 4 
   # Name of the build directory
   BUILD_DIR: build
+  # Needed for mozilla sccache action
+  SCCACHE_GHA_ENABLED: "true"
 
 jobs:
 
-  cmake-build_and_ctest:
+  build:
     name: ${{ matrix.name }}
     strategy:
       fail-fast: false # show all errors for each platform (vs. cancel jobs on error)
@@ -37,14 +39,11 @@ jobs:
         include:
           - os: macOS-latest
             name: macOS
-            ccache: ccache
           - os: windows-latest
             name: Windows
-            ccache: sccache
           - name: Linux
             os: ubuntu-latest
-            ccache: ccache
-    
+
     runs-on: ${{ matrix.os }}
     steps:
       
@@ -70,34 +69,36 @@ jobs:
         shell: bash
         run: |
           if [ "${{ matrix.name }}" == "macOS" ]; then
-            brew install osxutils
+            brew install osxutils ninja
           elif [ "${{ matrix.name }}" == "Windows" ]; then
-            choco install ccache
+            choco install ninja
           elif [ "${{ matrix.name }}" == "Linux" ]; then
-            sudo apt-get update && sudo apt install libasound2-dev libx11-dev libxcomposite-dev libxcursor-dev libxext-dev libxinerama-dev libxrandr-dev libxrender-dev
+            sudo apt-get update && sudo apt install libasound2-dev libx11-dev libxcomposite-dev libxcursor-dev libxext-dev libxinerama-dev libxrandr-dev libxrender-dev ninja-build
           else
             echo "Unknown OS";
           fi;
 
       # With this we checkout to our repo
       - name: get repo and submodules
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       # Here we get the submodules like juce
         with:
           submodules: true      
       
-      # Using the ccache action to store the build cache and speed up the next builds
-      - name: ccache
-        uses: hendrikmuhs/ccache-action@main
-        with:
-          key: v3-${{ matrix.os }}-${{ env.BUILD_TYPE }}
-          variant: ${{ matrix.ccache }}
+      # We cache the build to speed up the build process
+      - name: cache the build
+        uses: mozilla-actions/sccache-action@v0.0.3
       
       # Typical cmake configuration with default generator
       # With DCMAKE_OSX_ARCHITECTURES="arm64;x86_64" we can build universal binaries for apple computers
       - name: cmake configure
         shell: bash
-        run: cmake -B build -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -DCMAKE_C_COMPILER_LAUNCHER=${{ matrix.ccache }} -DCMAKE_CXX_COMPILER_LAUNCHER=${{ matrix.ccache }} -DCMAKE_OSX_ARCHITECTURES="arm64;x86_64"
+        run: |
+          if [ "${{ matrix.name }}" == "macOS" ]; then
+              cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -DCMAKE_C_COMPILER_LAUNCHER=sccache -DCMAKE_CXX_COMPILER_LAUNCHER=sccache -DCMAKE_OSX_ARCHITECTURES="arm64;x86_64"
+          else
+              cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -DCMAKE_C_COMPILER_LAUNCHER=sccache -DCMAKE_CXX_COMPILER_LAUNCHER=sccache
+          fi;
 
       # Build the project
       - name: cmake build
@@ -109,12 +110,19 @@ jobs:
         working-directory: ${{github.workspace}}/build
         run: ctest --verbose
 
+      - name: define the current version
+        shell: bash
+        run: |
+          version=$(grep 'CMAKE_PROJECT_VERSION:STATIC' build/CMakeCache.txt | cut -d'=' -f2)
+          echo "VERSION_NUMBER=${version}" >> $GITHUB_ENV
+          echo "current version number: ${version}"
+
       # Declaring the product name and the packaging directory
       - name: declare artefact variables
         shell: bash
         run: |
-          echo "PACKAGE_DIR=artefacts/${{ env.PROJECT_NAME }}-${{ matrix.name}}" >> $GITHUB_ENV
-          echo "PRODUCT_NAME=${{ env.PROJECT_NAME }}-${{ matrix.name }}" >> $GITHUB_ENV
+          echo "PACKAGE_DIR=artefacts/${{ env.PROJECT_NAME }}-${{ env.VERSION_NUMBER }}-${{ matrix.name }}" >> $GITHUB_ENV
+          echo "PRODUCT_NAME=${{ env.PROJECT_NAME }}-${{ env.VERSION_NUMBER }}-${{ matrix.name }}" >> $GITHUB_ENV
       
       # Moving the artefacts to a packaging directory
       - name: move artefacts
@@ -139,7 +147,7 @@ jobs:
 
       # We need to import the apple developer certificate so that we can codesign our binaries
       - name: import certificates (macOS)
-        uses: apple-actions/import-codesign-certs@v1
+        uses: apple-actions/import-codesign-certs@v2
         if: ${{ matrix.name == 'macOS' }}
         with:
           # GitHub encrypted secrets
@@ -200,7 +208,7 @@ jobs:
           zip -vr ${{ env.PRODUCT_NAME }}.zip ${{ env.PRODUCT_NAME }}/ -x "*.DS_Store"
           
       - name: upload artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ env.PRODUCT_NAME }}.zip
           path: artefacts/${{ env.PRODUCT_NAME }}.zip
@@ -208,14 +216,14 @@ jobs:
   release:
     if: startsWith(github.ref, 'refs/tags/')
     runs-on: ubuntu-latest
-    needs: cmake-build_and_ctest
+    needs: build
 
     steps:
     - name: Get Artifacts
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
 
     - name: Create Release
-      uses: softprops/action-gh-release@v1
+      uses: softprops/action-gh-release@v2
       with:
         files: |
           */*.zip

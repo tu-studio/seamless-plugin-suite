@@ -30,9 +30,9 @@ void CoordinatesLabel::updateCoordinatesLabelText(float newXPosition, float newY
 }
 
 float CoordinatesLabel::limitMetricValue(float value) {
-    if (value > 10.f)
-        return 10.f;
-    else if (value < -10.f)
-        return -10.f;
+    if (value > 1.f)
+        return 1.f;
+    else if (value < -1.f)
+        return -1.f;
     else return value;
 }

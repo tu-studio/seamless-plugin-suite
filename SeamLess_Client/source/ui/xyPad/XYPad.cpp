@@ -114,16 +114,16 @@ void XYPad::addParameterAttachment(juce::RangedAudioParameter& parameter) {
 
 juce::Point<int> XYPad::convertMeterToPixel(float xMeter, float yMeter)
 {
-    int xPixel = (int) (getLocalBounds().getWidth() * (xMeter + 10.f)/20.f);
-    int yPixel = (int) (getLocalBounds().getHeight() * (- yMeter + 10.f)/20.f);
+    int xPixel = (int) (getLocalBounds().getWidth() * (- yMeter + 1.f)/2.f);
+    int yPixel = (int) (getLocalBounds().getHeight() * (- xMeter + 1.f)/2.f);
     return juce::Point<int>(xPixel, yPixel);
 }
 
 juce::Point<float> XYPad::convertPixelToMeter(int xPixel, int yPixel)
 {   
-    float xMeter = (float) (xPixel) / getLocalBounds().getWidth() * 20.f - 10.f;
-    float yMeter = (float) (yPixel) / getLocalBounds().getHeight() * 20.f - 10.f;
-    return juce::Point<float>(xMeter, - yMeter);
+    float xMeter = (float) (yPixel) / getLocalBounds().getWidth() * 2.f - 1.f;
+    float yMeter = (float) (xPixel) / getLocalBounds().getHeight() * 2.f - 1.f;
+    return juce::Point<float>(- xMeter, - yMeter);
 }
 
 void XYPad::updateSourceWidthPx() {

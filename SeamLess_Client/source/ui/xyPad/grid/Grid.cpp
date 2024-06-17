@@ -27,12 +27,14 @@ void Grid::paint(juce::Graphics& g) {
     case 0:
         break;
     case 1:
+        // TODO update so that it is coherent with the XYPad x and y axis
         for (int i = -9; i<=9; i++) {
             g.drawLine(juce::Line<float>(convertMeterToPixel(-10.f, i), convertMeterToPixel(10.f, i)));
             g.drawLine(juce::Line<float>(convertMeterToPixel(i, -10.f), convertMeterToPixel(i, 10.f)));
         }
         break;
     case 2:
+        // TODO update so that it is coherent with the XYPad x and y axis
         for (int i = 1; i <= 13; i++)
             g.drawRoundedRectangle(juce::Rectangle<float>(convertMeterToPixel(-i, -i), convertMeterToPixel(i, i)), 100 * (i), 1);
         
@@ -89,6 +91,7 @@ void Grid::valueTreePropertyChanged(juce::ValueTree& treeWhosePropertyHasChanged
     if (property.toString() == PluginParameters::GRID_CHOICE_ID || property.toString() == PluginParameters::VENUE_CHOICE_ID) repaint();
 }
 
+// TODO update so that it is coherent with the XYPad x and y axis
 juce::Point<float> Grid::convertMeterToPixel(float xMeter, float yMeter)
 {
     float xPixel = getLocalBounds().getWidth() * (xMeter + 10.f)/20.f;
@@ -96,6 +99,7 @@ juce::Point<float> Grid::convertMeterToPixel(float xMeter, float yMeter)
     return juce::Point<float>(xPixel, yPixel);
 }
 
+// TODO update so that it is coherent with the XYPad x and y axis
 juce::Point<float> Grid::convertPixelToMeter(int xPixel, int yPixel)
 {   
     float xMeter = (float) (xPixel) / getLocalBounds().getWidth() * 20.f - 10.f;

@@ -60,7 +60,6 @@ jobs:
             echo "PLUGIN_RELEASE_NAME=${PLUGIN_RELEASE_NAMES[$index]}";
             echo "matrix.name=${{ matrix.name }}";
             echo "matrix.os=${{ matrix.os }}";
-            echo "matrix.ccache=${{ matrix.ccache }}";
           done
 
       # We need the osxutils to get the codesign and notorization tools
@@ -71,7 +70,7 @@ jobs:
           if [ "${{ matrix.name }}" == "macOS" ]; then
             brew install osxutils ninja
           elif [ "${{ matrix.name }}" == "Windows" ]; then
-            choco install ninja
+            choco install
           elif [ "${{ matrix.name }}" == "Linux" ]; then
             sudo apt-get update && sudo apt install libasound2-dev libx11-dev libxcomposite-dev libxcursor-dev libxext-dev libxinerama-dev libxrandr-dev libxrender-dev ninja-build
           else
@@ -96,6 +95,8 @@ jobs:
         run: |
           if [ "${{ matrix.name }}" == "macOS" ]; then
               cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -DCMAKE_C_COMPILER_LAUNCHER=sccache -DCMAKE_CXX_COMPILER_LAUNCHER=sccache -DCMAKE_OSX_ARCHITECTURES="arm64;x86_64"
+          elif [ "${{ matrix.name }}" == "Windows" ]; then
+              cmake -B build -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -DCMAKE_C_COMPILER_LAUNCHER=sccache -DCMAKE_CXX_COMPILER_LAUNCHER=sccache
           else
               cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -DCMAKE_C_COMPILER_LAUNCHER=sccache -DCMAKE_CXX_COMPILER_LAUNCHER=sccache
           fi;

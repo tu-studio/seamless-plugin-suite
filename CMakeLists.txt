@@ -24,7 +24,7 @@ set (PROJECT_NAME seamless-plugin-suite)
 # `project()` command. `project()` sets up some helpful variables that describe source/binary
 # directories, and the current project version. This is a standard CMake command.
 
-project (${PROJECT_NAME} VERSION 0.0.1)
+project (${PROJECT_NAME} VERSION 0.0.4)
 
 # Sets the cpp language minimum
 set(CMAKE_CXX_STANDARD 20)

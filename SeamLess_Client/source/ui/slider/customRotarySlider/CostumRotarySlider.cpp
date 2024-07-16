@@ -26,7 +26,7 @@ CostumRotarySlider::~CostumRotarySlider() {
 
 void CostumRotarySlider::paint (juce::Graphics& g)
 {
-    g.setColour (seamlessGrey);
+    g.setColour (tuStudioDarkPurple);
     g.fillRoundedRectangle(getLocalBounds().toFloat(), 10);   // draw an outline around the component
 }
 

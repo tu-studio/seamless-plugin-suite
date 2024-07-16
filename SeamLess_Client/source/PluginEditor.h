@@ -10,6 +10,7 @@
 #include <ZPositionSlider.h>
 #include <CustomChoiceButton.h>
 #include <CustomToggleButton.h>
+#include <FontLookAndFeel.h>
 
 //==============================================================================
 class AudioPluginAudioProcessorEditor  : public juce::AudioProcessorEditor, public juce::ValueTree::Listener
@@ -38,6 +39,7 @@ private:
     CustomToggleButton gainToggleButton;
     CustomToggleButton sphericalToggleButton;
     juce::TooltipWindow tooltipWindow;
+    FontLookAndFeel fontLookAndFeel;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioPluginAudioProcessorEditor)
 };

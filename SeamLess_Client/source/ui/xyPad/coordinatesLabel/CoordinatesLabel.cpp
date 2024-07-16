@@ -17,7 +17,7 @@ CoordinatesLabel::CoordinatesLabel() {
 
     setText("", juce::dontSendNotification);
     setJustificationType(juce::Justification::centred);
-    setColour(juce::Label::textColourId, juce::Colours::darkgrey);
+    setColour(juce::Label::textColourId, juce::Colours::white);
     setVisible(false);
     setFont(juce::Font(juce::Font::getDefaultMonospacedFontName(), 14.0f, 0));
 }

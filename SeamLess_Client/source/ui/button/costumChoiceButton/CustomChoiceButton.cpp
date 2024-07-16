@@ -13,8 +13,8 @@ Author:  Fares Schulz
 // TODO Button needs to be updated when the value changes, better Architecture?
 
 CustomChoiceButton::CustomChoiceButton(juce::AudioProcessorValueTreeState& state, juce::String buttonID, juce::StringArray buttonLabels, juce::String buttonTooltip) : apvts(state), id(buttonID), labels(buttonLabels) {
-    setColour(juce::TextButton::buttonColourId,seamlessBlue);
-    setColour(juce::ComboBox::outlineColourId,seamlessBlue);
+    setColour(juce::TextButton::buttonColourId, tuStudioPurple);
+    setColour(juce::ComboBox::outlineColourId, transparent);
     setComponentID(buttonID);
     setButtonText(labels[(int) apvts.state.getChildWithName("Settings").getProperty(id)]);
     setTooltip(buttonTooltip);

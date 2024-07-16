@@ -26,6 +26,7 @@ public:
     void setDoubleClickReturnValue(double valueToSetOnDoubleClick);
     
 private:
+    void paint(juce::Graphics& g) override;
     void resized() override;
     
 private:

@@ -43,7 +43,7 @@ SphericalSliderBox::~SphericalSliderBox() {
 
 
 void SphericalSliderBox::paint(juce::Graphics &g) {
-    g.setColour (seamlessBlue);
+    g.setColour (tuStudioPurple);
     g.fillRoundedRectangle(getLocalBounds().toFloat(), 15);   // draw an outline around the component
 }
 

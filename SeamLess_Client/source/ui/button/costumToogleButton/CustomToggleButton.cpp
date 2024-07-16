@@ -14,8 +14,9 @@ Author:  Fares Schulz
 
 CustomToggleButton::CustomToggleButton(juce::AudioProcessorValueTreeState& state, juce::String buttonID, juce::String buttonLabel, juce::String buttonTooltip) : apvts(state), id(buttonID), label(buttonLabel) {
     setComponentID(buttonID);
-    if ((int) apvts.state.getChildWithName("Settings").getProperty(id) == 0) setColour(juce::TextButton::buttonColourId, seamlessBlue);
-    else setColour(juce::TextButton::buttonColourId, juce::Colours::grey);
+    setColour(juce::ComboBox::outlineColourId, transparent);
+    if ((int) apvts.state.getChildWithName("Settings").getProperty(id) == 0) setColour(juce::TextButton::buttonColourId, tuStudioDarkPurple);
+    else setColour(juce::TextButton::buttonColourId, tuStudioPurple);
     setButtonText(label);
     setTooltip(buttonTooltip);
     addListener(this);
@@ -28,9 +29,9 @@ CustomToggleButton::~CustomToggleButton() {
 void CustomToggleButton::buttonClicked(juce::Button* button) {
     if (button == this) {
         apvts.state.getChildWithName("Settings").setProperty(id, 1, nullptr);
-        setColour(juce::TextButton::buttonColourId, juce::Colours::grey);
+        setColour(juce::TextButton::buttonColourId, tuStudioPurple);
     } else {
         apvts.state.getChildWithName("Settings").setProperty(id, 0, nullptr);
-        setColour(juce::TextButton::buttonColourId, seamlessBlue);
+        setColour(juce::TextButton::buttonColourId, tuStudioDarkPurple);
     }
 }

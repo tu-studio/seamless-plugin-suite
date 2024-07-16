@@ -22,7 +22,7 @@ Grid::~Grid() {
 void Grid::paint(juce::Graphics& g) {
 
     // draw the Grid
-    g.setColour(juce::Colours::silver);
+    g.setColour(tuStudioTransparentEbony);
     switch ((int) apvts.state.getChildWithName("Settings").getProperty(PluginParameters::GRID_CHOICE_ID)) {
     case 0:
         break;
@@ -46,7 +46,7 @@ void Grid::paint(juce::Graphics& g) {
     }
 
     // draw the Venue
-    g.setColour(seamlessBlue);
+    g.setColour(tuStudioPurple);
     switch ((int) apvts.state.getChildWithName("Settings").getProperty(PluginParameters::VENUE_CHOICE_ID)) {
     case 0:
         g.strokePath(TUStudioPath, juce::PathStrokeType(5.0f));
@@ -54,10 +54,13 @@ void Grid::paint(juce::Graphics& g) {
     case 1:
         g.strokePath(HuFoPath, juce::PathStrokeType(5.0f));
         break;
+    case 2:
+        g.strokePath(H0104Path, juce::PathStrokeType(5.0f));
+        break;
     }
 
     // draw the outline
-    g.drawRoundedRectangle(juce::Rectangle<float>(juce::Point<float>(4.f,4.f), juce::Point<float>((float) (getWidth()-4), (float) (getHeight()-4))), 25.f, 6.f);
+    g.drawRoundedRectangle(juce::Rectangle<float>(juce::Point<float>(3.f,3.f), juce::Point<float>((float) (getWidth()-3), (float) (getHeight()-3))), 25.f, 6.f);
 
 
 }
@@ -67,7 +70,7 @@ void Grid::resized() {
     HuFoPath.clear();
     HuFoPixel[0] = convertPositionToPixel(HuFoPosition[0].getX(), HuFoPosition[0].getY());
     HuFoPath.startNewSubPath(HuFoPixel[0].toFloat());
-    for (int i = 1; i <= 33; i++) {
+    for (int i = 1; i < 34; i++) {
         HuFoPixel[i] = convertPositionToPixel(HuFoPosition[i].getX(), HuFoPosition[i].getY());
         HuFoPath.lineTo(HuFoPixel[i].toFloat());
     }
@@ -77,11 +80,21 @@ void Grid::resized() {
     TUStudioPath.clear();
     TUStudioPixel[0] = convertPositionToPixel(TUStudioPosition[0].getX(), TUStudioPosition[0].getY());
     TUStudioPath.startNewSubPath(TUStudioPixel[0].toFloat());
-    for (int i = 1; i <= 7; i++) {
+    for (int i = 1; i < 8; i++) {
         TUStudioPixel[i] = convertPositionToPixel(TUStudioPosition[i].getX(), TUStudioPosition[i].getY());
         TUStudioPath.lineTo(TUStudioPixel[i].toFloat());
     }
     TUStudioPath.closeSubPath();
+
+    // Convert the H0104Path from position to pixel coordinates
+    H0104Path.clear();
+    H0104Pixel[0] = convertPositionToPixel(H0104Position[0].getX(), H0104Position[0].getY());
+    H0104Path.startNewSubPath(H0104Pixel[0].toFloat());
+    for (int i = 1; i < 6; i++) {
+        H0104Pixel[i] = convertPositionToPixel(H0104Position[i].getX(), H0104Position[i].getY());
+        H0104Path.lineTo(H0104Pixel[i].toFloat());
+    }
+    H0104Path.closeSubPath();
 }
 
 void Grid::valueTreePropertyChanged(juce::ValueTree& treeWhosePropertyHasChanged, const juce::Identifier& property) {

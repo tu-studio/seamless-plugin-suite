@@ -12,12 +12,12 @@ Author:  Fares Schulz
 
 OSCSendAdressSelector::OSCSendAdressSelector(juce::AudioProcessorValueTreeState &a) : apvts(a){
     descLabel.setText("OSC Send Adress:", juce::dontSendNotification);
-    descLabel.setColour(juce::Label::textColourId, juce::Colours::black);
+    descLabel.setColour(juce::Label::textColourId, juce::Colours::white);
     descLabel.setJustificationType(juce::Justification::centred);
     addAndMakeVisible(descLabel);
     
     oscSendAdressText.setEditable(true);
-    oscSendAdressText.setColour (juce::Label::backgroundColourId, seamlessBlue);
+    oscSendAdressText.setColour (juce::Label::backgroundColourId, tuStudioPurple);
     
     if (apvts.state.getChildWithName("Settings").getProperty(PluginParameters::OSC_SEND_ADRESS_ID) == "127.0.0.1") {
         oscSendAdressText.setText("localhost", juce::dontSendNotification);
@@ -31,7 +31,7 @@ OSCSendAdressSelector::OSCSendAdressSelector(juce::AudioProcessorValueTreeState 
     oscSendAdressText.onTextChange = [this] {oscSendAdressTextChanged();};
 
     oscSendPortText.setEditable(true);
-    oscSendPortText.setColour (juce::Label::backgroundColourId, seamlessBlue);
+    oscSendPortText.setColour (juce::Label::backgroundColourId, tuStudioPurple);
     oscSendPortText.setText(apvts.state.getChildWithName("Settings").getProperty(PluginParameters::OSC_SEND_PORT_ID), juce::dontSendNotification);
     oscSendPortText.setTooltip("Port to send OSC messages to.");
     oscSendPortText.setJustificationType(juce::Justification::right);
@@ -71,8 +71,8 @@ void OSCSendAdressSelector::oscSendAdressTextChanged() {
 
 void OSCSendAdressSelector::oscSendPortTextChanged() {
     int newOSCSendPort = oscSendPortText.getText().getIntValue();
-    if (! (newOSCSendPort >= 0 && newOSCSendPort <= 65536)) oscSendPortText.setColour (juce::Label::backgroundColourId, juce::Colours::red);
-    else oscSendPortText.setColour (juce::Label::backgroundColourId, seamlessBlue);
+    if (! (newOSCSendPort >= 0 && newOSCSendPort <= 65536)) oscSendPortText.setColour (juce::Label::backgroundColourId, tuStudioRed);
+    else oscSendPortText.setColour (juce::Label::backgroundColourId, tuStudioPurple);
     
     apvts.state.getChildWithName("Settings").setProperty(PluginParameters::OSC_SEND_PORT_ID, (juce::String) newOSCSendPort , nullptr);
 }

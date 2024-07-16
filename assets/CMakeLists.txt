@@ -10,4 +10,8 @@ juce_add_binary_data(BinaryData SOURCES
     top_view.png
     HuFo_Logo.bmp
     HuFo.png
+
+    fonts/FiraCodeNerdFont-Bold.ttf
+    fonts/FiraCodeNerdFont-Medium.ttf
+    fonts/FiraCodeNerdFont-Regular.ttf
 )

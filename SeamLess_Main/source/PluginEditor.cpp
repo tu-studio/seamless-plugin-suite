@@ -7,6 +7,8 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAud
 {
     juce::ignoreUnused (processorRef);
 
+    juce::LookAndFeel::setDefaultLookAndFeel (&fontLookAndFeel);
+
     // window size settings
     setSize (300, 500);    
     setResizable(true, true);
@@ -21,13 +23,15 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAud
 AudioPluginAudioProcessorEditor::~AudioPluginAudioProcessorEditor()
 {
     oscConnectionBox.removeOSCReceiverListener(processorRef.getOSCReceiverRef());
+
+    juce::LookAndFeel::setDefaultLookAndFeel(nullptr);
 }
 
 //==============================================================================
 void AudioPluginAudioProcessorEditor::paint (juce::Graphics& g)
 {
     // (Our component is opaque, so we must completely fill the background with a solid colour)
-    g.fillAll (seamlessLightGrey);
+    g.fillAll (tuStudioNight);
 }
 
 void AudioPluginAudioProcessorEditor::resized()

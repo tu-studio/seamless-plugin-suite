@@ -32,14 +32,20 @@ Configurations for SeamLess Plugin Suite
 #define M_PI        3.14159265358979323846264338327950288   /* pi             */
 #endif /* M_PI */
 
-const juce::Colour seamlessBlue      = juce::Colour::fromRGBA(0, 65, 93, 255);
-const juce::Colour transparent       = juce::Colour(00000000);
-const juce::Colour seamlessLightGrey = juce::Colour(220,220,220);
-const juce::Colour seamlessGrey      = juce::Colour(140,140,140);
+const juce::Colour tuStudioPurple      = juce::Colour(0xff8c61b0);
+const juce::Colour tuStudioDarkPurple  = juce::Colour(0xff3f2951);
+const juce::Colour transparent       = juce::Colour(0x00000000);
+const juce::Colour tuStudioNight = juce::Colour(0xff0c0910);
+const juce::Colour tuStudioLightLavender      = juce::Colour(0xffd7dae5);
+const juce::Colour tuStudioTransparentLightLavender      = juce::Colour(0x55d7dae5);
+const juce::Colour tuStudioRed = juce::Colour(0xff6e0e0a);
+const juce::Colour tuStudioEbony = juce::Colour(0xff606c64);
+const juce::Colour tuStudioTransparentEbony = juce::Colour(0x88606c64);
 
 //==================================================================
 // Structure to update ValueTree properties on !message thread!
 // https://docs.juce.com/master/classCallbackMessage.html
+//==================================================================
 
 struct SetTreePropertyMessage : public juce::CallbackMessage
 {

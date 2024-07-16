@@ -10,7 +10,7 @@ Author:  Fares Schulz
 
 # include "XYPad.h"
 
-XYPad::XYPad(juce::AudioProcessorValueTreeState& pluginApvts) : apvts(pluginApvts), grid(pluginApvts) {
+XYPad::XYPad(juce::AudioProcessorValueTreeState& pluginApvts) : apvts(pluginApvts), grid(pluginApvts), sourceShadow(tuStudioTransparentLightLavender, 4, juce::Point<int>(0, 0)) {
     addParameterAttachment(*(apvts.getParameter(OSCParameters::POS_X_ID.getParamID())));
     addParameterAttachment(*(apvts.getParameter(OSCParameters::POS_Y_ID.getParamID())));
     addParameterAttachment(*(apvts.getParameter(OSCParameters::POS_Z_ID.getParamID())));
@@ -127,15 +127,14 @@ juce::Point<float> XYPad::convertPixelToPosition(int xPixel, int yPixel)
 }
 
 void XYPad::updateSourceWidthPx() {
-    this->sourceWidthPx = (int) (20 + this->zPosition);
+    this->sourceWidthPx = (int) (20.f + 10.f*this->zPosition);
 }
 
 // TODO paint Shadow in SoundSource class
 void XYPad::paintSourceShadow(juce::Graphics &g) {
-    g.setColour(juce::Colours::darkgrey);
-    float shadowWidth = sourceWidthPx*(1.1f + zPosition/20.f);
-    float shadowXShift = xPosition * (1.f + zPosition/10.f);
-    float shadowYShift = - yPosition * (1.f + zPosition/10.f);
+    float shadowWidth = sourceWidthPx*(1.1f + zPosition/2.f);
+    float shadowXShift = - 10.f*yPosition * (1.f + zPosition);
+    float shadowYShift = - 10.f*xPosition * (1.f + zPosition);
     shadowOrigin.addEllipse((convertPositionToPixel(xPosition, yPosition).getX() - shadowWidth/2) + shadowXShift,
                             (convertPositionToPixel(xPosition, yPosition).getY() - shadowWidth/2) + shadowYShift,
                             shadowWidth,

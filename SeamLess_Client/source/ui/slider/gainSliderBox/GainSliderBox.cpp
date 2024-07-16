@@ -23,7 +23,7 @@ GainSliderBox::GainSliderBox(juce::AudioProcessorValueTreeState &a) : apvts(a) {
 }
 
 void GainSliderBox::paint(juce::Graphics &g) {
-    g.setColour (seamlessBlue);
+    g.setColour (tuStudioPurple);
     g.fillRoundedRectangle(getLocalBounds().toFloat(), 15);   // draw an outline around the component
 }
 

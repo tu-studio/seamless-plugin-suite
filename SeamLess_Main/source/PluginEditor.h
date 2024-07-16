@@ -3,6 +3,7 @@
 #include "PluginProcessor.h"
 #include <OSCConnectionBox.h>
 #include <ClientConnectionStatusLabel.h>
+#include <FontLookAndFeel.h>
 
 //==============================================================================
 class AudioPluginAudioProcessorEditor  : public juce::AudioProcessorEditor
@@ -22,7 +23,7 @@ private:
     juce::AudioProcessorValueTreeState& apvts;
     ClientConnectionStatusLabel clientConnectionStatusLabel;
     OSCConnectionBox oscConnectionBox;
-
+    FontLookAndFeel fontLookAndFeel;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioPluginAudioProcessorEditor)
 };

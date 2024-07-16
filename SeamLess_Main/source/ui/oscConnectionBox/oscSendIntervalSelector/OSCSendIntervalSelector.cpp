@@ -12,16 +12,16 @@ Author:  Fares Schulz
 
 OSCSendIntervalSelector::OSCSendIntervalSelector(juce::AudioProcessorValueTreeState &a) : apvts(a){
     descLabel.setText("OSC Send Interval:", juce::dontSendNotification);
-    descLabel.setColour(juce::Label::textColourId, juce::Colours::black);
+    descLabel.setColour(juce::Label::textColourId, juce::Colours::white);
     descLabel.setJustificationType(juce::Justification::left);
     addAndMakeVisible(descLabel);
     
     oscSendIntervalText.setEditable(true);
     if ((int) apvts.state.getChildWithName("Settings").getProperty(PluginParameters::OSC_SEND_INTERVAL_ID) >= 0) {
-        oscSendIntervalText.setColour (juce::Label::backgroundColourId, seamlessBlue);
+        oscSendIntervalText.setColour (juce::Label::backgroundColourId, tuStudioPurple);
     }
     else {
-        oscSendIntervalText.setColour (juce::Label::backgroundColourId, juce::Colours::red);
+        oscSendIntervalText.setColour (juce::Label::backgroundColourId, tuStudioRed);
     }
         
     oscSendIntervalText.setText(apvts.state.getChildWithName("Settings").getProperty(PluginParameters::OSC_SEND_INTERVAL_ID), juce::dontSendNotification);
@@ -51,8 +51,8 @@ void OSCSendIntervalSelector::resized() {
 
 void OSCSendIntervalSelector::oscSendIntervalTextChanged() {
     int newOSCSendInterval = oscSendIntervalText.getText().getIntValue();
-    if (! (newOSCSendInterval >= 0)) oscSendIntervalText.setColour (juce::Label::backgroundColourId, juce::Colours::red);
-    else oscSendIntervalText.setColour (juce::Label::backgroundColourId, seamlessBlue);
+    if (! (newOSCSendInterval >= 0)) oscSendIntervalText.setColour (juce::Label::backgroundColourId, tuStudioRed);
+    else oscSendIntervalText.setColour (juce::Label::backgroundColourId, tuStudioPurple);
     
     apvts.state.getChildWithName("Settings").setProperty(PluginParameters::OSC_SEND_INTERVAL_ID, (juce::String) newOSCSendInterval , nullptr);
 }

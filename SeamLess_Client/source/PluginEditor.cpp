@@ -7,6 +7,8 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAud
 {
     juce::ignoreUnused (processorRef);
 
+    juce::LookAndFeel::setDefaultLookAndFeel (&fontLookAndFeel);
+
     // window size settings
     setSize (1000, 600);    
     setResizable(true, true);
@@ -43,12 +45,14 @@ AudioPluginAudioProcessorEditor::~AudioPluginAudioProcessorEditor()
     sphericalToggleButton.removeListener(& gainToggleButton);
 
     apvts.state.removeListener(this);
+
+    juce::LookAndFeel::setDefaultLookAndFeel(nullptr);
 }
 
 //==============================================================================
 void AudioPluginAudioProcessorEditor::paint (juce::Graphics& g)
 {
-    g.fillAll (seamlessLightGrey);
+    g.fillAll (tuStudioNight);
 }
 
 void AudioPluginAudioProcessorEditor::resized()

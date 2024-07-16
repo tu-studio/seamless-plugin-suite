@@ -12,14 +12,14 @@ Author:  Fares Schulz
 
 OSCReceivePortSelector::OSCReceivePortSelector(juce::AudioProcessorValueTreeState &a) : apvts(a){
     descLabel.setText("OSC Receive Port:", juce::dontSendNotification);
-    descLabel.setColour(juce::Label::textColourId, juce::Colours::black);
+    descLabel.setColour(juce::Label::textColourId, juce::Colours::white);
     descLabel.setJustificationType(juce::Justification::left);
     addAndMakeVisible(descLabel);
     
     oscReceivePortText.setEditable(true);
     int oscReceivePort = apvts.state.getChildWithName("Settings").getProperty(PluginParameters::OSC_RECEIVE_PORT_ID);
-    if (! (oscReceivePort >= 1 && oscReceivePort <= 65536)) oscReceivePortText.setColour (juce::Label::backgroundColourId, juce::Colours::red);
-    else oscReceivePortText.setColour (juce::Label::backgroundColourId, seamlessBlue);
+    if (! (oscReceivePort >= 1 && oscReceivePort <= 65536)) oscReceivePortText.setColour (juce::Label::backgroundColourId, tuStudioRed);
+    else oscReceivePortText.setColour (juce::Label::backgroundColourId, tuStudioPurple);
         
     oscReceivePortText.setText((juce::String) oscReceivePort, juce::dontSendNotification);
     oscReceivePortText.setTooltip("Port to receive OSC messages.");
@@ -44,8 +44,8 @@ void OSCReceivePortSelector::resized() {
 
 void OSCReceivePortSelector::oscReceivePortTextChanged() {
     int newOSCReceivePort = oscReceivePortText.getText().getIntValue();
-    if (! (newOSCReceivePort >= 1 && newOSCReceivePort <= 65536)) oscReceivePortText.setColour (juce::Label::backgroundColourId, juce::Colours::red);
-    else oscReceivePortText.setColour (juce::Label::backgroundColourId, seamlessBlue);
+    if (! (newOSCReceivePort >= 1 && newOSCReceivePort <= 65536)) oscReceivePortText.setColour (juce::Label::backgroundColourId, tuStudioRed);
+    else oscReceivePortText.setColour (juce::Label::backgroundColourId, tuStudioPurple);
     
     apvts.state.getChildWithName("Settings").setProperty(PluginParameters::OSC_RECEIVE_PORT_ID, (juce::String) newOSCReceivePort , nullptr);
 }

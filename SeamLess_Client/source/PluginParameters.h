@@ -29,7 +29,8 @@ inline juce::String toString(GridType gridType) {
 
 enum class VenueType {
     TU_Studio,
-    HuFo
+    HuFo,
+    H0104
 };
 
 inline juce::String toString(VenueType venueType) {
@@ -37,6 +38,7 @@ inline juce::String toString(VenueType venueType) {
     {
     case VenueType::TU_Studio: return "TU Studio";
     case VenueType::HuFo: return "HuFo";
+    case VenueType::H0104: return "H0104";
     default: return "";
     }
 }
@@ -77,7 +79,7 @@ public:
     
         // not automatable Parameters
         GRID_CHOICE_LABELS = {"Grid OFF", "Grid \nON \nxyz", (juce::String) juce::CharPointer_UTF8("Grid \nON \n r \xcf\x86 \xce\xb8\t")},
-        VENUE_CHOICE_LABELS = {"TU Studio", "HuFo"};
+        VENUE_CHOICE_LABELS = {"TU Studio", "HuFo", "H0104"};
     
     static juce::StringArray getPluginParameterList();
     static juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();

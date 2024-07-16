@@ -23,13 +23,13 @@ OSCConnectionBox::~OSCConnectionBox()
 }
 
 void OSCConnectionBox::paint(juce::Graphics& g) {
-    g.setColour(seamlessBlue);
+    g.setColour(tuStudioPurple);
     g.fillRoundedRectangle(0.f, 0.f, getWidth(), getHeight(), 30.f);
 
-    g.setColour(seamlessLightGrey);
+    g.setColour(tuStudioNight);
     g.fillRoundedRectangle(5.f, 5.f, getWidth()-10, getHeight()-10, 25.f);
 
-    g.setColour (seamlessBlue);
+    g.setColour (tuStudioPurple);
     g.setFont (14.0f);
 }
 

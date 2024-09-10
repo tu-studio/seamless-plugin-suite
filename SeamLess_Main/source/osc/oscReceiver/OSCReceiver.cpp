@@ -11,6 +11,10 @@ OSCReceiver::OSCReceiver(juce::AudioProcessorValueTreeState& pluginApvts) : apvt
     apvts.state.addListener(this);
 }
 
+OSCReceiver::~OSCReceiver() {
+    apvts.state.removeListener(this);
+}
+
 void OSCReceiver::connectToPort() {
     int oscReceivePort = (int) apvts.state.getChildWithName("Settings").getProperty(PluginParameters::OSC_RECEIVE_PORT_ID);
 

@@ -24,12 +24,14 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
     oscSender.connectToPort();
     oscReceiver.connectToPort();
     oscReceiver.addListener(& oscSender);
+    oscReceiver.addListener(this);
 }
 
 AudioPluginAudioProcessor::~AudioPluginAudioProcessor()
 {
     apvts.state.removeListener(this);
     sourceTree.removeListener(this);
+    oscReceiver.removeListener(this);
     oscReceiver.removeListener(& oscSender);
     // Remove the shared ValueTree for not automatalbe parameters
     PluginParameters::clearNotAutomatableValueTree();
@@ -229,6 +231,15 @@ void AudioPluginAudioProcessor::sourceParameterChanged(Source source, Parameter 
 void AudioPluginAudioProcessor::valueTreePropertyChanged(juce::ValueTree &treeWhosePropertyHasChanged, const juce::Identifier &property) {
     juce::ignoreUnused(treeWhosePropertyHasChanged);
     juce::ignoreUnused(property);
+}
+
+void AudioPluginAudioProcessor::oscMessageReceived (const juce::OSCMessage &message) {
+    std::cout << "OSC message received" << std::endl;
+    std::cout << "Address: " << message.getAddressPattern().toString() << std::endl;
+    std::cout << "Size: " << message.size() << std::endl;
+    for (int i = 0; i < message.size(); i++) {
+        std::cout << "Arg " << i << ": " << message[i].getFloat32() << std::endl;
+    }
 }
 
 OSCReceiver& AudioPluginAudioProcessor::getOSCReceiverRef() {

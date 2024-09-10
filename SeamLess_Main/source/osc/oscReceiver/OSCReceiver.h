@@ -17,6 +17,7 @@ class OSCReceiver : public juce::OSCReceiver, private juce::ValueTree::Listener 
 
 public:
     explicit OSCReceiver(juce::AudioProcessorValueTreeState& pluginApvts);
+    ~OSCReceiver() override;
     
     void connectToPort();
     void disconnectFromPort();

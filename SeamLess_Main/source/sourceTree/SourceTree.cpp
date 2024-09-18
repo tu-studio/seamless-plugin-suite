@@ -27,10 +27,12 @@ void SourceTree::newPluginConnection(PluginConnection *pluginConnection) {
     for (auto & source : sources) {
         if (pluginConnection == source.pluginConnection) return;
     }
+    // TODO check here somehow if the source already exists
     Source newSource;
     newSource.pluginConnection = pluginConnection;
     sources.push_back(newSource);
     
+    // TODO when sources without connections are added, this would be false
     setTreePropertyAsync(apvts.state.getChildWithName("Settings"), PluginParameters::NUM_CLIENTS_ID, (int) sources.size());
 
     #if JUCE_DEBUG
@@ -53,29 +55,7 @@ void SourceTree::deletedPluginConnection(PluginConnection *pluginConnection) {
 void SourceTree::parameterChanged(PluginConnection *pluginConnection, Parameter parameter, float value1, float value2, float value3) {
     for (auto & source : sources) {
         if (pluginConnection == source.pluginConnection) {
-            if (parameter == PARAM_SOURCE_IDX) {
-                source.sourceIdx = (int) value1;
-            } else if (parameter == PARAM_POS) {
-                if (value1 != 99.f) source.xPosition = value1;
-                if (value2 != 99.f) source.yPosition = value2;
-                if (value3 != 99.f) source.zPosition = value3;
-            } else if (parameter == PARAM_GAIN_1) {
-                source.gain1 = value1;
-                juce::ignoreUnused(value2);
-                juce::ignoreUnused(value3);
-            } else if (parameter == PARAM_GAIN_2) {
-                source.gain2 = value1;
-                juce::ignoreUnused(value2);
-                juce::ignoreUnused(value3);
-            } else if (parameter == PARAM_GAIN_3) {
-                source.gain3 = value1;
-                juce::ignoreUnused(value2);
-                juce::ignoreUnused(value3);
-            } else if (parameter == PARAM_GAIN_4) {
-                source.gain4 = value1;
-                juce::ignoreUnused(value2);
-                juce::ignoreUnused(value3);
-            }
+            updateSource(source, parameter, value1, value2, value3);
             
             listenerList.call([source, parameter] (Listener& l) {l.sourceParameterChanged(source, parameter);});
             return;
@@ -83,6 +63,53 @@ void SourceTree::parameterChanged(PluginConnection *pluginConnection, Parameter 
     }
     std::cout << "Error: Source not in SourceTree!" << std::endl;
 }
+
+void SourceTree::parameterChanged(int sourceIndex, Parameter parameter, float value1, float value2, float value3){
+    for (auto & source : sources) {
+        if (sourceIndex == source.sourceIdx) {
+            updateSource(source, parameter, value1, value2, value3);
+            // TODO: also pass on to client
+            listenerList.call([source, parameter] (Listener& l) {l.sourceParameterChanged(source, parameter);});
+            return;
+        }
+    }
+
+    // if the source did not exist update it
+    Source newSource;
+    newSource.sourceIdx = sourceIndex;
+    updateSource(newSource, parameter, value1, value2, value3);
+    newSource.pluginConnection = nullptr;
+    sources.push_back(newSource);
+
+    std::cout << "Error: Source not in SourceTree!" << std::endl;
+}
+
+void SourceTree::updateSource(Source &source, Parameter parameter, float value1, float value2, float value3){
+    if (parameter == PARAM_SOURCE_IDX) {
+        source.sourceIdx = (int) value1;
+    } else if (parameter == PARAM_POS) {
+        if (value1 != 99.f) source.xPosition = value1;
+        if (value2 != 99.f) source.yPosition = value2;
+        if (value3 != 99.f) source.zPosition = value3;
+    } else if (parameter == PARAM_GAIN_1) {
+        source.gain1 = value1;
+        juce::ignoreUnused(value2);
+        juce::ignoreUnused(value3);
+    } else if (parameter == PARAM_GAIN_2) {
+        source.gain2 = value1;
+        juce::ignoreUnused(value2);
+        juce::ignoreUnused(value3);
+    } else if (parameter == PARAM_GAIN_3) {
+        source.gain3 = value1;
+        juce::ignoreUnused(value2);
+        juce::ignoreUnused(value3);
+    } else if (parameter == PARAM_GAIN_4) {
+        source.gain4 = value1;
+        juce::ignoreUnused(value2);
+        juce::ignoreUnused(value3);
+    }
+}
+
 
 void SourceTree::deletedMainServer() {
     sources.clear();

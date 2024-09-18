@@ -38,6 +38,7 @@ public:
     void addListener(Listener *);
     void removeListener(Listener *);
     void updateNumClients();
+    void parameterChanged(int sourceIndex, Parameter parameter, float value1, float value2, float value3);
     
 private:
     void newPluginConnection(PluginConnection* pluginConnection) override;
@@ -45,6 +46,7 @@ private:
     void parameterChanged(PluginConnection* pluginConnection, Parameter parameter, float value1, float value2, float value3) override;
     void deletedMainServer() override;
     void setTreePropertyAsync(juce::ValueTree tree, const juce::Identifier& propertyName, const juce::var& newValue);
+    void updateSource(Source &source, Parameter parameter, float value1, float value2, float value3);
     
 private:
     juce::AudioProcessorValueTreeState& apvts;

@@ -70,6 +70,9 @@ void SourceTree::parameterChanged(int sourceIndex, Parameter parameter, float va
             updateSource(source, parameter, value1, value2, value3);
             // TODO: also pass on to client
             listenerList.call([source, parameter] (Listener& l) {l.sourceParameterChanged(source, parameter);});
+            if (source.pluginConnection != nullptr){
+                source.pluginConnection->parameterChanged(parameter, value1, value2, value3);
+            }
             return;
         }
     }

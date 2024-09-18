@@ -47,6 +47,7 @@ public:
     void connect();
     void updateState(juce::AudioProcessorValueTreeState& apvts, juce::StringArray parameterList, juce::StringArray settingsList);
     void parameterChanged(const juce::String &parameterID, float newValue);
+    void parameterChanged(Parameter parameter, float value1, float value2, float value3);
     
 private:
     void connectionMade() override;

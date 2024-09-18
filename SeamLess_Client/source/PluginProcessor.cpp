@@ -238,7 +238,12 @@ void AudioPluginAudioProcessor::timerCallback() {
 }
 
 void AudioPluginAudioProcessor::forwardMessage(PluginConnection *pluginConnectionThatCalled, const juce::MemoryBlock &memoryBlock) {
-    juce::ignoreUnused(pluginConnectionThatCalled, memoryBlock);
+    Message* message = (Message*) memoryBlock.getData();
+    Parameter parameter = message->parameter;
+    float value1 = message->value1;
+    float value2 = message->value2;
+    float value3 = message->value3;
+    std::cout << "received message: " << parameter << ", " <<  value1  << ", " <<  value2 << ", " <<  value3 << std::endl;
 }
 
 void AudioPluginAudioProcessor::connected(PluginConnection *pluginConnectionThatCalled) {

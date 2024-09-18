@@ -76,7 +76,14 @@ void PluginConnection::parameterChanged(const juce::String &parameterID, float n
 
     }
 }
-    
+
+void PluginConnection::parameterChanged(Parameter parameter, float value1, float value2, float value3){    
+    if (isConnected()){
+    Message message = {parameter, value1, value2, value3};
+    juce::MemoryBlock memoryBlock (&message, sizeof(Message));
+    sendMessage(memoryBlock);
+    }
+}
 void PluginConnection::connectionMade() {
     listenerList.call([this] (Listener& l) {l.connected(this);});
     #if JUCE_DEBUG

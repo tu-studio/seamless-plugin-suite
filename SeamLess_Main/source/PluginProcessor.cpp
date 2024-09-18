@@ -23,7 +23,7 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
     sourceTree.addListener(this);
     oscSender.connectToPort();
     oscReceiver.connectToPort();
-    oscReceiver.addListener(& oscSender);
+    // oscReceiver.addListener(& oscSender);
     oscReceiver.addListener(this);
 }
 
@@ -234,12 +234,48 @@ void AudioPluginAudioProcessor::valueTreePropertyChanged(juce::ValueTree &treeWh
 }
 
 void AudioPluginAudioProcessor::oscMessageReceived (const juce::OSCMessage &message) {
-    std::cout << "OSC message received" << std::endl;
-    std::cout << "Address: " << message.getAddressPattern().toString() << std::endl;
-    std::cout << "Size: " << message.size() << std::endl;
-    for (int i = 0; i < message.size(); i++) {
-        std::cout << "Arg " << i << ": " << message[i].getFloat32() << std::endl;
+    // TODO enable supporting different paths
+    int sourceIndex;
+    Parameter parameter;
+    float value1 = 99.f;
+    float value2 = 99.f; 
+    float value3 = 99.f;
+    if (message.getAddressPattern().matches("/source/pos/xyz") && message.size() >= 4){
+        parameter = Parameter::PARAM_POS;
+        sourceIndex = message[0].getInt32();
+        value1 = message[1].getFloat32();
+        value2 = message[2].getFloat32();
+        value3 = message[3].getFloat32();
+    } else if (message.getAddressPattern().matches("/source/send") && message.size() >= 3){
+        sourceIndex = message[0].getInt32();
+        int rendererIndex = message[1].getInt32();
+
+        // TODO parse this more elegantly please
+        switch (rendererIndex)
+        {
+        case 0:
+            parameter = Parameter::PARAM_GAIN_1;
+            break;
+        case 1:
+            parameter = Parameter::PARAM_GAIN_2;
+            break;
+        case 2:
+            parameter = Parameter::PARAM_GAIN_3;
+            break;
+        case 3:
+            parameter = Parameter::PARAM_GAIN_4;
+            break;
+        default:
+            return;
+        }
+        value1 = message[2].getFloat32();      
+    } else {
+        std::cout << "unsupported OSC message received" << std::endl;
+        std::cout << "Address: " << message.getAddressPattern().toString() << std::endl;
+        std::cout << "Size: " << message.size() << std::endl;
+        return;
     }
+    sourceTree.parameterChanged(sourceIndex, parameter, value1, value2, value3);
 }
 
 OSCReceiver& AudioPluginAudioProcessor::getOSCReceiverRef() {

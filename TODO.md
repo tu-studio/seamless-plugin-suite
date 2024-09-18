@@ -8,12 +8,14 @@
 - [x] Main Connection osc send when the main starts second
 - [ ] getPropertyAsValue -> getProperty
 - [x] void Component::internalRepaintUnchecked (Rectangle<int> area, bool isEntireComponent)
-    // if component methods are being called from threads other than the message
-    // thread, you'll need to use a MessageManagerLock object to make sure it's thread-safe.
-    JUCE_ASSERT_MESSAGE_MANAGER_IS_LOCKED
-    fix this
+      // if component methods are being called from threads other than the message
+      // thread, you'll need to use a MessageManagerLock object to make sure it's thread-safe.
+      JUCE_ASSERT_MESSAGE_MANAGER_IS_LOCKED
+      fix this
 - [ ] think about allowed ports for OSC
 - [x] receive OSC Message blink
 - [ ] better resizing
 - [ ] Attributes for slider
 - [ ] incorporate Value::listeners when only listening to single variables
+- [ ] Get OSC receiver running
+- [ ] Send current state whenever connecting to an osc-kreuz

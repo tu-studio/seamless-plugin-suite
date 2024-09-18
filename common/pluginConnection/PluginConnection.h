@@ -25,9 +25,9 @@ enum Parameter {
 
 struct Message {
     Parameter parameter;
-    float value1; // used also for source IDX – unique identifier for client is the plugin connection
-    float value2 = 0.f; // only used for PARAM_POS
-    float value3 = 0.f; // only used for PARAM_POS
+    float value1 = 99.f; // used also for source IDX – unique identifier for client is the plugin connection
+    float value2 = 99.f; // only used for PARAM_POS
+    float value3 = 99.f; // only used for PARAM_POS
 };
 
 class PluginConnection : public juce::InterprocessConnection

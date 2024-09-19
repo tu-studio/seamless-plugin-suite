@@ -68,22 +68,25 @@ void SourceTree::parameterChanged(int sourceIndex, Parameter parameter, float va
     for (auto & source : sources) {
         if (sourceIndex == source.sourceIdx) {
             updateSource(source, parameter, value1, value2, value3);
-            // TODO: also pass on to client
-            listenerList.call([source, parameter] (Listener& l) {l.sourceParameterChanged(source, parameter);});
+
+            // notify clients of changed parametr
             if (source.pluginConnection != nullptr){
                 source.pluginConnection->parameterChanged(parameter, value1, value2, value3);
+            } else {
+                listenerList.call([source, parameter] (Listener& l) {l.sourceParameterChanged(source, parameter);});
             }
             return;
         }
     }
 
-    // if the source did not exist update it
+    // if the source did not exist create it, and send out the OSC message
     Source newSource;
     newSource.sourceIdx = sourceIndex;
     updateSource(newSource, parameter, value1, value2, value3);
     newSource.pluginConnection = nullptr;
     sources.push_back(newSource);
-
+    
+    listenerList.call([newSource, parameter] (Listener& l) {l.sourceParameterChanged(newSource, parameter);});
     std::cout << "Error: Source not in SourceTree!" << std::endl;
 }
 

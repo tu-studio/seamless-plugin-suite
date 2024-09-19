@@ -46,8 +46,8 @@ public:
     ~PluginConnection() override;
     void connect();
     void updateState(juce::AudioProcessorValueTreeState& apvts, juce::StringArray parameterList, juce::StringArray settingsList);
-    void parameterChanged(const juce::String &parameterID, float newValue);
-    void parameterChanged(Parameter parameter, float value1, float value2, float value3);
+    void parameterChanged(const juce::String &parameterID, float newValue); // This should be called when a parameter on the front end is changed, so for communications client->main
+    void parameterChanged(Parameter parameter, float value1, float value2, float value3); // This is called when a parameter in the main plugin is changed, so for communications main->client
     
 private:
     void connectionMade() override;

@@ -13,7 +13,7 @@
 #include <PluginParameters.h>
 #include <SourceTree.h>
 
-class OSCSender : public juce::OSCSender, private juce::ValueTree::Listener, public juce::OSCReceiver::Listener<juce::OSCReceiver::RealtimeCallback>, private juce::HighResolutionTimer {
+class OSCSender : public juce::OSCSender, private juce::ValueTree::Listener, public juce::OSCReceiver::Listener<juce::OSCReceiver::MessageLoopCallback>, private juce::HighResolutionTimer {
 
 public:
     explicit OSCSender(juce::AudioProcessorValueTreeState& pluginApvts);

@@ -54,15 +54,16 @@ public:
     static void clearNotAutomatableValueTree();
     static juce::StringArray getSettingsList();
     static juce::ValueTree getNotAutomatableValueTree();
-    
+
+    inline static juce::NormalisableRange<float> GAIN_RANGE {0.f, 1.f, 0.01f};
+    inline static juce::NormalisableRange<float> POS_RANGE {-1.f, 1.f, 0.01f};    
 private:
     
     inline static juce::StringArray parameterList;
     inline static juce::StringArray settingsList;
     inline static juce::ValueTree notAutomatableParameterValueTree;
     
-    inline static juce::NormalisableRange<float> GAIN_RANGE {0.f, 1.f, 0.01f};
-    inline static juce::NormalisableRange<float> POS_RANGE {-1.f, 1.f, 0.01f};
+
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(OSCParameters)
 };

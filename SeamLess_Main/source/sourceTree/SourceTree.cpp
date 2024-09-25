@@ -27,7 +27,7 @@ void SourceTree::newPluginConnection(PluginConnection *pluginConnection) {
     for (auto & source : sources) {
         if (pluginConnection == source.pluginConnection) return;
     }
-    // TODO check here somehow if the source already exists
+
     Source newSource;
     newSource.pluginConnection = pluginConnection;
     sources.push_back(newSource);
@@ -53,6 +53,35 @@ void SourceTree::deletedPluginConnection(PluginConnection *pluginConnection) {
 }
 
 void SourceTree::parameterChanged(PluginConnection *pluginConnection, Parameter parameter, int int_value, float value1, float value2, float value3) {
+
+    // handle parameter changing to a source index of an already existing source
+    if (parameter == PARAM_SOURCE_IDX && int_value > 0){
+        for (auto & source: sources){
+            // TODO ensure that every source index exists only once
+
+            // only change to sources that don't have a pluginConnection and have the same sourceIdx
+            if (!(source.pluginConnection == nullptr && source.sourceIdx == int_value)){
+                continue;
+            }
+
+            // if a compatible source was found, find the old source for this plugin
+            for (auto & current_source : sources){
+                if (current_source.pluginConnection == pluginConnection){
+                    current_source.pluginConnection = nullptr;
+                    // TODO do something with old source? maybe delete if nothing changed
+                    break;
+                }
+            }
+
+            // set the new pluginConnection
+            source.pluginConnection = pluginConnection;
+            // dump the current state of the source to the plugin
+            dumpSourceToClientPlugin(source);
+
+            return;
+        }
+    }
+    
     for (auto & source : sources) {
         if (pluginConnection == source.pluginConnection) {
             updateSource(source, parameter, int_value, value1, value2, value3);
@@ -127,6 +156,18 @@ void SourceTree::updateSource(Source &source, Parameter parameter, int int_value
     default:
         break;
     }
+}
+
+void SourceTree::dumpSourceToClientPlugin(Source & source){
+    if (source.pluginConnection == nullptr)
+        return;
+    
+    source.pluginConnection->parameterChanged(PARAM_POS, 0, source.xPosition, source.yPosition, source.zPosition);
+    for (int i = 0; i < source.nGains; i++)
+    {
+        source.pluginConnection->parameterChanged(PARAM_GAIN, i, source.gain[i], 0, 0);
+    }
+    
 }
 
 

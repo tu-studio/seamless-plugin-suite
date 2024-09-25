@@ -57,6 +57,12 @@ private:
     void setTreePropertyAsync(juce::ValueTree tree, const juce::Identifier& propertyName, const juce::var& newValue);
     void updateSource(Source &source, Parameter parameter, int int_value, float value1, float value2, float value3);
     
+    /// @brief Sends the current state of a source to its pluginConnection
+    /// @param source 
+    void dumpSourceToClientPlugin(Source &source);
+
+
+    
 private:
     juce::AudioProcessorValueTreeState& apvts;
     MainServer& mainServer;

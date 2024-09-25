@@ -229,6 +229,13 @@ void AudioPluginAudioProcessor::sourceParameterChanged(Source source, Parameter 
 }
 
 void AudioPluginAudioProcessor::valueTreePropertyChanged(juce::ValueTree &treeWhosePropertyHasChanged, const juce::Identifier &property) {
+
+    if (property.toString() == PluginParameters::OSC_SEND_ADRESS_ID || property.toString() == PluginParameters::OSC_SEND_PORT_ID){
+        // when receiver address or port changes, reconnect and dump sources
+        oscSender.disconnect();
+        oscSender.connectToPort();
+        sourceTree.dumpSourcesToReceiver();
+    }
     juce::ignoreUnused(treeWhosePropertyHasChanged);
     juce::ignoreUnused(property);
 }

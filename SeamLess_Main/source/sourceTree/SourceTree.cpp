@@ -87,7 +87,22 @@ void SourceTree::parameterChanged(int sourceIndex, Parameter parameter, int int_
     sources.push_back(newSource);
     
     listenerList.call([newSource, parameter, int_value] (Listener& l) {l.sourceParameterChanged(newSource, parameter, int_value);});
-    std::cout << "Error: Source not in SourceTree!" << std::endl;
+}
+
+void SourceTree::dumpSourcesToReceiver(){
+    #if JUCE_DEBUG
+        std::cout << "Dumping Sources via OSC" << std::endl;
+    #endif
+    for (auto & source: sources){
+        if (source.sourceIdx <= 0) continue;
+        listenerList.call([source] (Listener& l) {l.sourceParameterChanged(source, PARAM_POS, 0);});
+        for (int i = 0; i < source.nGains; i++){
+            listenerList.call([source, i] (Listener& l) {l.sourceParameterChanged(source, PARAM_GAIN, i);});
+
+            source.pluginConnection->parameterChanged(PARAM_GAIN, i, source.gain[i], 0, 0);
+        }
+
+    }
 }
 
 void SourceTree::updateSource(Source &source, Parameter parameter, int int_value, float value1, float value2, float value3){

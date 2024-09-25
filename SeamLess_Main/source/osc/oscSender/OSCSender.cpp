@@ -99,14 +99,15 @@ void OSCSender::sendMessage(juce::OSCMessage& message) {
 }
 
 void OSCSender::valueTreePropertyChanged(juce::ValueTree& treeWhosePropertyHasChanged, const juce::Identifier& property) {
-    if (property.toString() == PluginParameters::OSC_SEND_ADRESS_ID || property.toString() == PluginParameters::OSC_SEND_PORT_ID) {
-        #if JUCE_DEBUG
-            std::cout << "OSC send adress: " << (juce::String) treeWhosePropertyHasChanged.getProperty(PluginParameters::OSC_SEND_ADRESS_ID) << ":" << (int) treeWhosePropertyHasChanged.getProperty(PluginParameters::OSC_SEND_PORT_ID) << std::endl;
-        #endif
-        disconnectFromPort();
-        connectToPort();
-    }
-    else if (property.toString() == PluginParameters::OSC_SEND_INTERVAL_ID) {
+    // if (property.toString() == PluginParameters::OSC_SEND_ADRESS_ID || property.toString() == PluginParameters::OSC_SEND_PORT_ID) {
+    //     #if JUCE_DEBUG
+    //         std::cout << "OSC send adress: " << (juce::String) treeWhosePropertyHasChanged.getProperty(PluginParameters::OSC_SEND_ADRESS_ID) << ":" << (int) treeWhosePropertyHasChanged.getProperty(PluginParameters::OSC_SEND_PORT_ID) << std::endl;
+    //     #endif
+    //     disconnectFromPort();
+    //     connectToPort();
+    // }
+    // else 
+    if (property.toString() == PluginParameters::OSC_SEND_INTERVAL_ID) {
         if ((int) treeWhosePropertyHasChanged.getProperty(property) > 0) {
             stopTimer();
             startTimer((int) treeWhosePropertyHasChanged.getProperty(property));

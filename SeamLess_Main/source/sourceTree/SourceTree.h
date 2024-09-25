@@ -45,6 +45,9 @@ public:
     /// @param value2 second value used for the update
     /// @param value3 third value used for the update
     void parameterChanged(int sourceIndex, Parameter parameter, int int_value, float value1, float value2, float value3);
+
+    /// @brief Sends the current state of all sources to the current osc receiver
+    void dumpSourcesToReceiver();
     
 private:
     void newPluginConnection(PluginConnection* pluginConnection) override;

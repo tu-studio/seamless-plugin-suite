@@ -36,6 +36,14 @@ public:
     void addListener(Listener *);
     void removeListener(Listener *);
     void updateNumClients();
+    
+    /// @brief handles parameters that were changed in the main plugin, for example by a received OSC message 
+    /// @param sourceIndex source index of the updated source
+    /// @param parameter parameter that was changed
+    /// @param int_value renderer_idx if parameter=PARAM_GAIN or coordinate_idx if parameter=PARAM_POS_SINGLE
+    /// @param value1 first value used for the update
+    /// @param value2 second value used for the update
+    /// @param value3 third value used for the update
     void parameterChanged(int sourceIndex, Parameter parameter, int int_value, float value1, float value2, float value3);
     
 private:

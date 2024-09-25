@@ -51,7 +51,7 @@ public:
     OSCReceiver& getOSCReceiverRef();
 
 private:
-    void sourceParameterChanged(Source source, Parameter parameter) override;
+    void sourceParameterChanged(Source source, Parameter parameter, int index) override;
     void valueTreePropertyChanged(juce::ValueTree& treeWhosePropertyHasChanged, const juce::Identifier& property) override;
     void oscMessageReceived (const juce::OSCMessage &message) override;
 

@@ -224,8 +224,8 @@ juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
     return new AudioPluginAudioProcessor();
 }
 
-void AudioPluginAudioProcessor::sourceParameterChanged(Source source, Parameter parameter) {
-    oscSender.sourceParameterChanged(source, parameter);
+void AudioPluginAudioProcessor::sourceParameterChanged(Source source, Parameter parameter, int index) {
+    oscSender.sourceParameterChanged(source, parameter, index);
 }
 
 void AudioPluginAudioProcessor::valueTreePropertyChanged(juce::ValueTree &treeWhosePropertyHasChanged, const juce::Identifier &property) {
@@ -237,9 +237,12 @@ void AudioPluginAudioProcessor::oscMessageReceived (const juce::OSCMessage &mess
     // TODO enable supporting different paths
     int sourceIndex;
     Parameter parameter;
-    float value1 = 99.f;
-    float value2 = 99.f; 
-    float value3 = 99.f;
+    int int_value = 0;
+    float value1 = 0.f;
+    float value2 = 0.f; 
+    float value3 = 0.f;
+
+    // TODO also match /source/pos/aed
     if (message.getAddressPattern().matches("/source/pos/xyz") && message.size() >= 4){
         parameter = Parameter::PARAM_POS;
         sourceIndex = message[0].getInt32();
@@ -248,26 +251,8 @@ void AudioPluginAudioProcessor::oscMessageReceived (const juce::OSCMessage &mess
         value3 = message[3].getFloat32();
     } else if (message.getAddressPattern().matches("/source/send") && message.size() >= 3){
         sourceIndex = message[0].getInt32();
-        int rendererIndex = message[1].getInt32();
-
-        // TODO parse this more elegantly please
-        switch (rendererIndex)
-        {
-        case 0:
-            parameter = Parameter::PARAM_GAIN_1;
-            break;
-        case 1:
-            parameter = Parameter::PARAM_GAIN_2;
-            break;
-        case 2:
-            parameter = Parameter::PARAM_GAIN_3;
-            break;
-        case 3:
-            parameter = Parameter::PARAM_GAIN_4;
-            break;
-        default:
-            return;
-        }
+        int_value = message[1].getInt32(); // store render index
+        parameter = Parameter::PARAM_GAIN;
         value1 = message[2].getFloat32();      
     } else {
         std::cout << "unsupported OSC message received" << std::endl;
@@ -275,7 +260,7 @@ void AudioPluginAudioProcessor::oscMessageReceived (const juce::OSCMessage &mess
         std::cout << "Size: " << message.size() << std::endl;
         return;
     }
-    sourceTree.parameterChanged(sourceIndex, parameter, value1, value2, value3);
+    sourceTree.parameterChanged(sourceIndex, parameter, int_value, value1, value2, value3);
 }
 
 OSCReceiver& AudioPluginAudioProcessor::getOSCReceiverRef() {

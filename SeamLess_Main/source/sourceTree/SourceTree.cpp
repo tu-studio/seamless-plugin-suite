@@ -52,28 +52,28 @@ void SourceTree::deletedPluginConnection(PluginConnection *pluginConnection) {
     #endif
 }
 
-void SourceTree::parameterChanged(PluginConnection *pluginConnection, Parameter parameter, float value1, float value2, float value3) {
+void SourceTree::parameterChanged(PluginConnection *pluginConnection, Parameter parameter, int int_value, float value1, float value2, float value3) {
     for (auto & source : sources) {
         if (pluginConnection == source.pluginConnection) {
-            updateSource(source, parameter, value1, value2, value3);
+            updateSource(source, parameter, int_value, value1, value2, value3);
             
-            listenerList.call([source, parameter] (Listener& l) {l.sourceParameterChanged(source, parameter);});
+            listenerList.call([source, parameter, int_value] (Listener& l) {l.sourceParameterChanged(source, parameter, int_value);});
             return;
         }
     }
     std::cout << "Error: Source not in SourceTree!" << std::endl;
 }
 
-void SourceTree::parameterChanged(int sourceIndex, Parameter parameter, float value1, float value2, float value3){
+void SourceTree::parameterChanged(int sourceIndex, Parameter parameter, int int_value, float value1, float value2, float value3){
     for (auto & source : sources) {
         if (sourceIndex == source.sourceIdx) {
-            updateSource(source, parameter, value1, value2, value3);
+            updateSource(source, parameter, int_value, value1, value2, value3);
 
             // notify clients of changed parametr
             if (source.pluginConnection != nullptr){
-                source.pluginConnection->parameterChanged(parameter, value1, value2, value3);
+                source.pluginConnection->parameterChanged(parameter, int_value, value1, value2, value3);
             } else {
-                listenerList.call([source, parameter] (Listener& l) {l.sourceParameterChanged(source, parameter);});
+                listenerList.call([source, parameter, int_value] (Listener& l) {l.sourceParameterChanged(source, parameter, int_value);});
             }
             return;
         }
@@ -82,37 +82,35 @@ void SourceTree::parameterChanged(int sourceIndex, Parameter parameter, float va
     // if the source did not exist create it, and send out the OSC message
     Source newSource;
     newSource.sourceIdx = sourceIndex;
-    updateSource(newSource, parameter, value1, value2, value3);
+    updateSource(newSource, parameter, int_value, value1, value2, value3);
     newSource.pluginConnection = nullptr;
     sources.push_back(newSource);
     
-    listenerList.call([newSource, parameter] (Listener& l) {l.sourceParameterChanged(newSource, parameter);});
+    listenerList.call([newSource, parameter, int_value] (Listener& l) {l.sourceParameterChanged(newSource, parameter, int_value);});
     std::cout << "Error: Source not in SourceTree!" << std::endl;
 }
 
-void SourceTree::updateSource(Source &source, Parameter parameter, float value1, float value2, float value3){
-    if (parameter == PARAM_SOURCE_IDX) {
-        source.sourceIdx = (int) value1;
-    } else if (parameter == PARAM_POS) {
-        if (value1 != 99.f) source.xPosition = value1;
-        if (value2 != 99.f) source.yPosition = value2;
-        if (value3 != 99.f) source.zPosition = value3;
-    } else if (parameter == PARAM_GAIN_1) {
-        source.gain1 = value1;
-        juce::ignoreUnused(value2);
-        juce::ignoreUnused(value3);
-    } else if (parameter == PARAM_GAIN_2) {
-        source.gain2 = value1;
-        juce::ignoreUnused(value2);
-        juce::ignoreUnused(value3);
-    } else if (parameter == PARAM_GAIN_3) {
-        source.gain3 = value1;
-        juce::ignoreUnused(value2);
-        juce::ignoreUnused(value3);
-    } else if (parameter == PARAM_GAIN_4) {
-        source.gain4 = value1;
-        juce::ignoreUnused(value2);
-        juce::ignoreUnused(value3);
+void SourceTree::updateSource(Source &source, Parameter parameter, int int_value, float value1, float value2, float value3){
+    switch (parameter){
+    case PARAM_SOURCE_IDX:
+        source.sourceIdx = int_value;
+        break;
+
+    case PARAM_POS:
+        source.xPosition = value1;
+        source.yPosition = value2;
+        source.zPosition = value3;
+        break;
+
+    case PARAM_POS_SINGLE:
+        if (int_value == PARAM_POS_SINGLE_X) source.xPosition = value1; 
+        else if (int_value == PARAM_POS_SINGLE_Y) source.yPosition = value1; 
+        else if (int_value == PARAM_POS_SINGLE_Z) source.zPosition = value1; 
+    case PARAM_GAIN:
+        if (int_value < source.nGains && int_value >=0)
+            source.gain[int_value] = value1;
+    default:
+        break;
     }
 }
 

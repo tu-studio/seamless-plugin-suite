@@ -21,7 +21,7 @@ public:
     
     void connectToPort();
     void disconnectFromPort();
-    void sourceParameterChanged(Source& source, Parameter parameter);
+    void sourceParameterChanged(Source& source, Parameter parameter, int index);
     
 private:
     void sendMessage(juce::OSCMessage& message);

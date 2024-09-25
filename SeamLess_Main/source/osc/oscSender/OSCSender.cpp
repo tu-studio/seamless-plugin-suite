@@ -45,27 +45,25 @@ void OSCSender::disconnectFromPort() {
     apvts.state.getChildWithName("Settings").setProperty(PluginParameters::OSC_SEND_STATUS_ID, 0, nullptr);
 }
 
-void OSCSender::sourceParameterChanged(Source& source, Parameter parameter) {
+void OSCSender::sourceParameterChanged(Source& source, Parameter parameter, int index) {
     if (source.sourceIdx > 0) {
         if (parameter == PARAM_SOURCE_IDX) {
             juce::OSCMessage oscMessagePosition("/source/pos/xyz", source.sourceIdx, source.xPosition, source.yPosition, source.zPosition);
-            juce::OSCMessage oscMessageGain1("/send/gain",source.sourceIdx, 0, source.gain1);
-            juce::OSCMessage oscMessageGain2("/send/gain",source.sourceIdx, 1, source.gain2);
-            juce::OSCMessage oscMessageGain3("/send/gain",source.sourceIdx, 2, source.gain3);
-            juce::OSCMessage oscMessageGain4("/send/gain",source.sourceIdx, 3, source.gain4);
             if ((int) apvts.state.getChildWithName("Settings").getProperty(PluginParameters::OSC_SEND_INTERVAL_ID) > 0) {
                 oscMessageStack.push(oscMessagePosition);
-                oscMessageStack.push(oscMessageGain1);
-                oscMessageStack.push(oscMessageGain2);
-                oscMessageStack.push(oscMessageGain3);
-                oscMessageStack.push(oscMessageGain4);
+                for (int i = 0; i < source.nGains; i++)
+                {
+                    juce::OSCMessage oscMessageGain("/send/gain",source.sourceIdx, i, source.gain[i]);
+                    oscMessageStack.push(oscMessageGain);
+                }
             }
             else {
                 sendMessage(oscMessagePosition);
-                sendMessage(oscMessageGain1);
-                sendMessage(oscMessageGain2);
-                sendMessage(oscMessageGain3);
-                sendMessage(oscMessageGain4);
+                for (int i = 0; i < source.nGains; i++)
+                {
+                    juce::OSCMessage oscMessageGain("/send/gain",source.sourceIdx, i, source.gain[i]);
+                    sendMessage(oscMessageGain);
+                }
             }
             return;
         }
@@ -73,14 +71,15 @@ void OSCSender::sourceParameterChanged(Source& source, Parameter parameter) {
             juce::OSCMessage oscMessage("/");
             if (parameter == PARAM_POS) {
                 oscMessage = juce::OSCMessage("/source/pos/xyz", source.sourceIdx, source.xPosition, source.yPosition, source.zPosition);
-            } else if (parameter == PARAM_GAIN_1) {
-                oscMessage = juce::OSCMessage("/send/gain",source.sourceIdx, 0, source.gain1);
-            } else if (parameter == PARAM_GAIN_2) {
-                oscMessage = juce::OSCMessage("/send/gain",source.sourceIdx, 1, source.gain2);
-            } else if (parameter == PARAM_GAIN_3) {
-                oscMessage = juce::OSCMessage("/send/gain",source.sourceIdx, 2, source.gain3);
-            } else if (parameter == PARAM_GAIN_4) {
-                oscMessage = juce::OSCMessage("/send/gain",source.sourceIdx, 3, source.gain4);
+            } else if (parameter == PARAM_GAIN && index < source.nGains && index >= 0) {
+                oscMessage = juce::OSCMessage("/send/gain",source.sourceIdx, index, source.gain[index]);
+            } else if (parameter == PARAM_POS_SINGLE){
+                // TODO send full position anyways?
+                if (index == PARAM_POS_SINGLE_X) oscMessage = juce::OSCMessage("/source/pos/x", source.sourceIdx, source.xPosition);
+                else if (index == PARAM_POS_SINGLE_Y) oscMessage = juce::OSCMessage("/source/pos/y", source.sourceIdx, source.yPosition);
+                else if (index == PARAM_POS_SINGLE_Z) oscMessage = juce::OSCMessage("/source/pos/z", source.sourceIdx, source.zPosition);  
+            } else {
+                std::cout << "Invalid OSC Message Type: " << parameter << std::endl;
             }
             if ((int) apvts.state.getChildWithName("Settings").getProperty(PluginParameters::OSC_SEND_INTERVAL_ID) > 0) {
                 oscMessageStack.push(oscMessage);

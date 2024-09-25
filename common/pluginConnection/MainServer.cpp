@@ -43,10 +43,11 @@ PluginConnection* MainServer::createConnectionObject() {
 void MainServer::forwardMessage(PluginConnection* pluginConnection, const juce::MemoryBlock& memoryBlock) {
     Message* message = (Message*) memoryBlock.getData();
     Parameter parameter = message->parameter;
+    int int_value = message->int_value;
     float value1 = message->value1;
     float value2 = message->value2;
     float value3 = message->value3;
-    listenerList.call([pluginConnection, parameter, value1, value2, value3] (Listener& l) {l.parameterChanged(pluginConnection, parameter, value1, value2, value3);});
+    listenerList.call([pluginConnection, parameter, int_value, value1, value2, value3] (Listener& l) {l.parameterChanged(pluginConnection, parameter, int_value, value1, value2, value3);});
 }
 
 void MainServer::disconnected(PluginConnection *pluginConnection) {

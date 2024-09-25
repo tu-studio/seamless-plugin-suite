@@ -18,10 +18,8 @@ struct Source {
     float xPosition;
     float yPosition;
     float zPosition;
-    float gain1;
-    float gain2;
-    float gain3;
-    float gain4;
+    float gain[4] = {0, 0, 0, 0};
+    int nGains = 4;
     PluginConnection* pluginConnection;
 };
 
@@ -33,20 +31,20 @@ public:
     
     class Listener {
     public:
-        virtual void sourceParameterChanged(Source source, Parameter parameter) = 0;
+        virtual void sourceParameterChanged(Source source, Parameter parameter, int index) = 0;
     };
     void addListener(Listener *);
     void removeListener(Listener *);
     void updateNumClients();
-    void parameterChanged(int sourceIndex, Parameter parameter, float value1, float value2, float value3);
+    void parameterChanged(int sourceIndex, Parameter parameter, int int_value, float value1, float value2, float value3);
     
 private:
     void newPluginConnection(PluginConnection* pluginConnection) override;
     void deletedPluginConnection(PluginConnection* pluginConnection) override;
-    void parameterChanged(PluginConnection* pluginConnection, Parameter parameter, float value1, float value2, float value3) override;
+    void parameterChanged(PluginConnection* pluginConnection, Parameter parameter, int int_value, float value1, float value2, float value3) override;
     void deletedMainServer() override;
     void setTreePropertyAsync(juce::ValueTree tree, const juce::Identifier& propertyName, const juce::var& newValue);
-    void updateSource(Source &source, Parameter parameter, float value1, float value2, float value3);
+    void updateSource(Source &source, Parameter parameter, int int_value, float value1, float value2, float value3);
     
 private:
     juce::AudioProcessorValueTreeState& apvts;

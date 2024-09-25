@@ -238,9 +238,11 @@ void AudioPluginAudioProcessor::timerCallback() {
 }
 
 void AudioPluginAudioProcessor::forwardMessage(PluginConnection *pluginConnectionThatCalled, const juce::MemoryBlock &memoryBlock) {
+    juce::ignoreUnused(pluginConnectionThatCalled);
     // listener to the pluginConnection from the main plugin
     Message* message = (Message*) memoryBlock.getData();
     Parameter parameter = message->parameter;
+    int int_value = message->int_value;
     float value1 = message->value1;
     float value2 = message->value2;
     float value3 = message->value3;
@@ -252,17 +254,43 @@ void AudioPluginAudioProcessor::forwardMessage(PluginConnection *pluginConnectio
         apvts.getParameter(OSCParameters::POS_Y_ID.getParamID())->setValueNotifyingHost(OSCParameters::POS_RANGE.convertTo0to1(value2));
         apvts.getParameter(OSCParameters::POS_Z_ID.getParamID())->setValueNotifyingHost(OSCParameters::POS_RANGE.convertTo0to1(value3));
         break;
-    case Parameter::PARAM_GAIN_1:
-        apvts.getParameter(OSCParameters::GAIN_1_ID.getParamID())->setValueNotifyingHost(OSCParameters::GAIN_RANGE.convertTo0to1(value1));
+    case Parameter::PARAM_POS_SINGLE:
+        switch (int_value)
+        {
+        // TODO do this without lots of cases
+        case PARAM_POS_SINGLE_X:
+            apvts.getParameter(OSCParameters::POS_X_ID.getParamID())->setValueNotifyingHost(OSCParameters::POS_RANGE.convertTo0to1(value1));
+            break;
+        case PARAM_POS_SINGLE_Y:
+            apvts.getParameter(OSCParameters::POS_Y_ID.getParamID())->setValueNotifyingHost(OSCParameters::POS_RANGE.convertTo0to1(value1));
+            break;
+        case PARAM_POS_SINGLE_Z:
+            apvts.getParameter(OSCParameters::POS_Z_ID.getParamID())->setValueNotifyingHost(OSCParameters::POS_RANGE.convertTo0to1(value1));
+            break;
+        default:
+            break;
+        }
         break;
-    case Parameter::PARAM_GAIN_2:
-        apvts.getParameter(OSCParameters::GAIN_2_ID.getParamID())->setValueNotifyingHost(OSCParameters::GAIN_RANGE.convertTo0to1(value1));
-        break;
-    case Parameter::PARAM_GAIN_3:
-        apvts.getParameter(OSCParameters::GAIN_3_ID.getParamID())->setValueNotifyingHost(OSCParameters::GAIN_RANGE.convertTo0to1(value1));
-        break;
-    case Parameter::PARAM_GAIN_4:
-        apvts.getParameter(OSCParameters::GAIN_4_ID.getParamID())->setValueNotifyingHost(OSCParameters::GAIN_RANGE.convertTo0to1(value1));
+    case Parameter::PARAM_GAIN:
+        switch (int_value)
+        {
+        // TODO do this without lots of cases
+
+        case 0:
+            apvts.getParameter(OSCParameters::GAIN_1_ID.getParamID())->setValueNotifyingHost(OSCParameters::GAIN_RANGE.convertTo0to1(value1));    
+            break;
+        case 1:
+            apvts.getParameter(OSCParameters::GAIN_2_ID.getParamID())->setValueNotifyingHost(OSCParameters::GAIN_RANGE.convertTo0to1(value1));    
+            break;
+        case 2:
+            apvts.getParameter(OSCParameters::GAIN_3_ID.getParamID())->setValueNotifyingHost(OSCParameters::GAIN_RANGE.convertTo0to1(value1));    
+            break;
+        case 3:
+            apvts.getParameter(OSCParameters::GAIN_4_ID.getParamID())->setValueNotifyingHost(OSCParameters::GAIN_RANGE.convertTo0to1(value1));    
+            break;
+        default:
+            break;
+        }
         break;
     case Parameter::PARAM_SOURCE_IDX:
         // we should never get here

@@ -44,30 +44,39 @@ void PluginConnection::parameterChanged(const juce::String &parameterID, float n
     if (isConnected())
     {
         Message message;
+        // TODO do this without lots of cases, map gains to their index somehow
         if (parameterID == OSCParameters::SOURCE_IDX_ID) {
             message.parameter = Parameter::PARAM_SOURCE_IDX;
-            message.value1 = (float) newValue;
+            message.int_value = (int) newValue;
         } else if (parameterID == OSCParameters::GAIN_1_ID.getParamID()) {
-            message.parameter = Parameter::PARAM_GAIN_1;
-            message.value1 = (float) newValue;
+            message.parameter = Parameter::PARAM_GAIN;
+            message.int_value = 0;
+            message.value1 = newValue;
         } else if (parameterID ==  OSCParameters::GAIN_2_ID.getParamID()) {
-            message.parameter = Parameter::PARAM_GAIN_2;
-            message.value1 = (float) newValue;
+            message.parameter = Parameter::PARAM_GAIN;
+            message.int_value = 1;
+            message.value1 = newValue;
         } else if (parameterID == OSCParameters::GAIN_3_ID.getParamID()) {
-            message.parameter = Parameter::PARAM_GAIN_3;
-            message.value1 = (float) newValue;
+            message.parameter = Parameter::PARAM_GAIN;
+            message.int_value = 2;
+            message.value1 = newValue;
         } else if (parameterID == OSCParameters::GAIN_4_ID.getParamID()) {
-            message.parameter = Parameter::PARAM_GAIN_4;
-            message.value1 = (float) newValue;
+            message.parameter = Parameter::PARAM_GAIN;
+            message.int_value = 3;
+            message.value1 = newValue;
         } else if (parameterID == OSCParameters::POS_X_ID.getParamID()) {
-            message.parameter = Parameter::PARAM_POS;
+            message.parameter = Parameter::PARAM_POS_SINGLE;
+            message.int_value = PARAM_POS_SINGLE_X;
             message.value1 = newValue;
         } else if (parameterID == OSCParameters::POS_Y_ID.getParamID()) {
-            message.parameter = Parameter::PARAM_POS;
-            message.value2 = newValue;
+            message.parameter = Parameter::PARAM_POS_SINGLE;
+            message.int_value = PARAM_POS_SINGLE_Y;
+            message.value1 = newValue;
         } else if (parameterID == OSCParameters::POS_Z_ID.getParamID()) {
-            message.parameter = Parameter::PARAM_POS;
-            message.value3 = newValue;
+            message.parameter = Parameter::PARAM_POS_SINGLE;
+            message.int_value = PARAM_POS_SINGLE_Z;
+
+            message.value1 = newValue;
         } else {
             return;
         }
@@ -77,9 +86,9 @@ void PluginConnection::parameterChanged(const juce::String &parameterID, float n
     }
 }
 
-void PluginConnection::parameterChanged(Parameter parameter, float value1, float value2, float value3){    
+void PluginConnection::parameterChanged(Parameter parameter,int int_value, float value1, float value2, float value3){    
     if (isConnected()){
-    Message message = {parameter, value1, value2, value3};
+    Message message = {parameter, int_value, value1, value2, value3};
     juce::MemoryBlock memoryBlock (&message, sizeof(Message));
     sendMessage(memoryBlock);
     }

@@ -13,7 +13,8 @@ Author:  Fares Schulz
 SphericalSliderBox::SphericalSliderBox(juce::AudioProcessorValueTreeState &a) : apvts(a) {
 
     radiusSlider.setDoubleClickReturnValue(0.f);
-    radiusSlider.slider.setRange(0.f, 14.14213562373095f, 0.01f);
+    // maximum value of radius is outer most corner of bounding box
+    radiusSlider.slider.setRange(0.f, sqrt(3*(cartesian_coordinate_limit*cartesian_coordinate_limit)), 0.001f);
     radiusSlider.slider.getValueObject().referTo(apvts.state.getChildWithName("Settings").getPropertyAsValue(PluginParameters::RADIUS_ID, nullptr));
     addAndMakeVisible(radiusSlider);
 
@@ -180,15 +181,15 @@ void SphericalSliderBox::updateCartesianCoordinates(float radius, float azimuth,
 }
 
 float SphericalSliderBox::limitMetricValue(float value) {
-    if (value > 10.f) {
-        return 10.f;
-    } else if (value < -10.f) {
-        return -10.f;
+    if (value > cartesian_coordinate_limit) {
+        return cartesian_coordinate_limit;
+    } else if (value < -cartesian_coordinate_limit) {
+        return -cartesian_coordinate_limit;
     } else {
         return value;
     }
 }
 
 float SphericalSliderBox::normalizeMetricValue(float value) {
-    return (value + 10.f) / 20.f;
+    return (value + cartesian_coordinate_limit) / (2.f*cartesian_coordinate_limit);
 }

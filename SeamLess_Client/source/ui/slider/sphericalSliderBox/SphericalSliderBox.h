@@ -43,7 +43,7 @@ private:
 
     bool activeDrag = false;
     bool cartesianUpdate = false;
-    
+    float cartesian_coordinate_limit = 1.f;
     juce::AudioProcessorValueTreeState& apvts;
     std::unique_ptr<juce::ParameterAttachment> xAttachment;
     std::unique_ptr<juce::ParameterAttachment> yAttachment;

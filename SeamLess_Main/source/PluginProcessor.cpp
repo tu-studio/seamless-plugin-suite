@@ -241,7 +241,6 @@ void AudioPluginAudioProcessor::valueTreePropertyChanged(juce::ValueTree &treeWh
 }
 
 void AudioPluginAudioProcessor::oscMessageReceived (const juce::OSCMessage &message) {
-    // TODO enable supporting different paths
     int sourceIndex;
     Parameter parameter;
     int int_value = 0;
@@ -256,11 +255,13 @@ void AudioPluginAudioProcessor::oscMessageReceived (const juce::OSCMessage &mess
         value1 = message[1].getFloat32();
         value2 = message[2].getFloat32();
         value3 = message[3].getFloat32();
+
     } else if (message.getAddressPattern().matches("/source/send") && message.size() >= 3){
         sourceIndex = message[0].getInt32();
         int_value = message[1].getInt32(); // store render index
         parameter = Parameter::PARAM_GAIN;
         value1 = message[2].getFloat32();      
+
     } else {
         std::cout << "unsupported OSC message received" << std::endl;
         std::cout << "Address: " << message.getAddressPattern().toString() << std::endl;

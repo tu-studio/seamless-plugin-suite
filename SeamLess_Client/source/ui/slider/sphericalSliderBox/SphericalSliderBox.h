@@ -27,11 +27,10 @@ public:
     
 private:
     void addParameterAttachment(juce::RangedAudioParameter& parameter);
-    void parameterValueChanged(juce::RangedAudioParameter& parameter, float newValue);
     void sliderValueChanged(juce::Slider* slider) override;
     void sliderDragStarted(juce::Slider* slider) override;
     void sliderDragEnded(juce::Slider* slider) override;
-    void updateSphericalCoordinates(float x, float y, float z);
+    void updateSphericalCoordinates();
     void updateCartesianCoordinates(float radius, float azimuth, float elevation);
     float limitMetricValue(float value);
     float normalizeMetricValue(float value);
@@ -41,6 +40,7 @@ private:
     CostumRotarySlider azimuthSlider {"azimuth"};
     CostumRotarySlider elevationSlider {"elevation"};
 
+    float m_x = 0.f, m_y = 0.f, m_z = 0.f;
     bool activeDrag = false;
     bool cartesianUpdate = false;
     float cartesian_coordinate_limit = 1.f;

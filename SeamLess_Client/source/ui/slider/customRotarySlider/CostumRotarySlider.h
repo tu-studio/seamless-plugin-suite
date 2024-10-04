@@ -16,6 +16,17 @@
 //            Rotary Slider
 //==============================================================================
 
+class InvertibleSlider : public juce::Slider
+{
+    // TODO does the default con/destructor need to be overwritten?
+public:
+	double proportionOfLengthToValue (double proportion) {   return m_is_inverted ? juce::Slider::proportionOfLengthToValue(1.0f-proportion) : juce::Slider::proportionOfLengthToValue(proportion) ;}
+	double valueToProportionOfLength (double value) {   return m_is_inverted ? 1.0f-(juce::Slider::valueToProportionOfLength(value)): juce::Slider::valueToProportionOfLength(value) ; }
+    void setInverted(bool is_inverted){ m_is_inverted = is_inverted;}
+private:
+    bool m_is_inverted = false;
+};
+
 class CostumRotarySlider : public juce::Component {
 public:
     CostumRotarySlider(juce::String sliderName);
@@ -24,7 +35,7 @@ public:
     void addSliderAttachment(juce::AudioProcessorValueTreeState& state, const juce::String& parameterID);
     void setDoubleClickReturnValue(double valueToSetOnDoubleClick);
 
-    juce::Slider slider;
+    InvertibleSlider slider;
 
 private:
     void paint(juce::Graphics& g) override;

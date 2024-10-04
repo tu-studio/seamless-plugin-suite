@@ -20,6 +20,7 @@ SphericalSliderBox::SphericalSliderBox(juce::AudioProcessorValueTreeState &a) : 
 
     azimuthSlider.setDoubleClickReturnValue(0.f);
     azimuthSlider.slider.setRange(-180.f, 180.f, 0.01f);
+    azimuthSlider.slider.setInverted(true);
     azimuthSlider.slider.getValueObject().referTo(apvts.state.getChildWithName("Settings").getPropertyAsValue(PluginParameters::AZIMUTH_ID, nullptr));
     addAndMakeVisible(azimuthSlider);
 

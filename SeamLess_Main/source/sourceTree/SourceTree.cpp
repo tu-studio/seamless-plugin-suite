@@ -24,7 +24,9 @@ void SourceTree::removeListener(Listener* listener) {
 }
 
 void SourceTree::newPluginConnection(PluginConnection *pluginConnection) {
+    int n_clients = 0;
     for (auto & source : sources) {
+        if (source.pluginConnection != nullptr) n_clients++;
         if (pluginConnection == source.pluginConnection) return;
     }
 
@@ -32,23 +34,24 @@ void SourceTree::newPluginConnection(PluginConnection *pluginConnection) {
     newSource.pluginConnection = pluginConnection;
     sources.push_back(newSource);
     
-    // TODO when sources without connections are added, this would be false
-    setTreePropertyAsync(apvts.state.getChildWithName("Settings"), PluginParameters::NUM_CLIENTS_ID, (int) sources.size());
+    setTreePropertyAsync(apvts.state.getChildWithName("Settings"), PluginParameters::NUM_CLIENTS_ID, n_clients + 1);
 
     #if JUCE_DEBUG
-        std::cout << "SourceTree has new source! N = " << sources.size() << std::endl;
+        std::cout << "SourceTree has new client! n_clients = " << n_clients + 1 << std::endl;
     #endif
 }
 
 void SourceTree::deletedPluginConnection(PluginConnection *pluginConnection) {
-    for (unsigned long i = 0; i < sources.size(); i++) {
-        if (pluginConnection == sources[i].pluginConnection) sources.erase(sources.begin() + (long) i);
+    int n_clients = 0;
+    for (auto & source : sources) {
+        if (pluginConnection == source.pluginConnection) source.pluginConnection = nullptr;
+        if (source.pluginConnection != nullptr) n_clients++;
     }
 
-    setTreePropertyAsync(apvts.state.getChildWithName("Settings"), PluginParameters::NUM_CLIENTS_ID, (int) sources.size());
+    setTreePropertyAsync(apvts.state.getChildWithName("Settings"), PluginParameters::NUM_CLIENTS_ID, n_clients);
 
     #if JUCE_DEBUG
-        std::cout << "SourceTree deleted source! N = " << sources.size() << std::endl;
+        std::cout << "SourceTree deleted client! n_clients = " << n_clients << std::endl;
     #endif
 }
 

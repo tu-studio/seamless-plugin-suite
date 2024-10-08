@@ -23,7 +23,7 @@
 - [x] Change structure of gains to allow addressing them by index, and not needing 4 different enum elements for them
 - [x] when changing the source_index of a plugin check if in the sources there is another source with the same index but without a pluginconnection, if there is take it over
 - [x] fix aed->xyz conv (when moving a source using mouse, radius is correctly between 0 and 1.73 (when it goes into a corner), but when directly changin aed, it is in the old range)
-- [ ] fix xyz->aed conversions:
+- [x] fix xyz->aed conversions:
       when moving in the xy-pad, x and y are updated seperately. This also triggers two seperate calls to `SphericalSliderBox::updateSphericalCoordinates()`, one with the new x and the old y, and one with the new y and old x. only the second update is used to actually update the values, so when just clicking anywhere on the xy-pad once, it often leads to discontinuities.
-      **Solution**: either bundle updates together, or only update single coordinates at a time
+      **Solution**: bundle updates together, or only update single coordinates at a time, or internally keep track of state
 - [ ] move cartesian-coordinate-limit from sphericalsliderbox to a global setting

@@ -20,6 +20,7 @@ SphericalSliderBox::SphericalSliderBox(juce::AudioProcessorValueTreeState &a) : 
 
     azimuthSlider.setDoubleClickReturnValue(0.f);
     azimuthSlider.slider.setRange(-180.f, 180.f, 0.01f);
+    azimuthSlider.slider.setInverted(true);
     azimuthSlider.slider.getValueObject().referTo(apvts.state.getChildWithName("Settings").getPropertyAsValue(PluginParameters::AZIMUTH_ID, nullptr));
     addAndMakeVisible(azimuthSlider);
 
@@ -70,8 +71,9 @@ void SphericalSliderBox::addParameterAttachment(juce::RangedAudioParameter& para
         xAttachment = std::make_unique<juce::ParameterAttachment>(
             parameter,
             // callback function on parameter change
-            [this, &parameter] (float newValue) {
-                parameterValueChanged(parameter, newValue);
+            [this] (float newValue) {
+                this->m_x = newValue;
+                this->updateSphericalCoordinates();
             },
             // undo manager
             nullptr);
@@ -80,8 +82,9 @@ void SphericalSliderBox::addParameterAttachment(juce::RangedAudioParameter& para
         yAttachment = std::make_unique<juce::ParameterAttachment>(
             parameter,
             // callback function on parameter change
-            [this, &parameter] (float newValue) {
-                parameterValueChanged(parameter, newValue);
+            [this] (float newValue) {
+                this->m_y = newValue;
+                this->updateSphericalCoordinates();
             },
             // undo manager
             nullptr);
@@ -90,8 +93,9 @@ void SphericalSliderBox::addParameterAttachment(juce::RangedAudioParameter& para
         zAttachment = std::make_unique<juce::ParameterAttachment>(
             parameter,
             // callback function on parameter change
-            [this, &parameter] (float newValue) {
-                parameterValueChanged(parameter, newValue);
+            [this] (float newValue) {
+                this->m_z = newValue;
+                this->updateSphericalCoordinates();
             },
             // undo manager
             nullptr);
@@ -99,34 +103,21 @@ void SphericalSliderBox::addParameterAttachment(juce::RangedAudioParameter& para
     }
 }
 
-void SphericalSliderBox::parameterValueChanged(juce::RangedAudioParameter& parameter, float newValue) {
+void SphericalSliderBox::updateSphericalCoordinates() {
     if (!activeDrag) {
-        float x = apvts.getParameterAsValue(OSCParameters::POS_X_ID.getParamID()).toString().getFloatValue();
-        float y = apvts.getParameterAsValue(OSCParameters::POS_Y_ID.getParamID()).toString().getFloatValue();
-        float z = apvts.getParameterAsValue(OSCParameters::POS_Z_ID.getParamID()).toString().getFloatValue();
+        float radius, azimuth, elevation;
 
-        if (parameter.getParameterID() == OSCParameters::POS_X_ID.getParamID()) {
-            x = newValue;
-        } else if (parameter.getParameterID() == OSCParameters::POS_Y_ID.getParamID()) {
-            y = newValue;
-        } else if (parameter.getParameterID() == OSCParameters::POS_Z_ID.getParamID()) {
-            z = newValue;
-        }
-        updateSphericalCoordinates(x, y, z);
+        radius = sqrtf(powf(m_x, 2) + powf(m_y, 2) + powf(m_z, 2));
+        azimuth = atan2f(m_y, m_x) * 180  / (float) M_PI;
+        if (radius != 0.f) elevation = asinf(m_z / radius) * 180 / (float) M_PI;
+        else elevation = 0.f;
+
+        // std::printf("update spherical from x=%f, y=%f, z=%f, new a=%f, e=%f, d=%f\n", m_x, m_y, m_z, azimuth, elevation, radius);
+
+        apvts.state.getChildWithName("Settings").setProperty(PluginParameters::RADIUS_ID, radius, nullptr);
+        apvts.state.getChildWithName("Settings").setProperty(PluginParameters::AZIMUTH_ID, azimuth, nullptr);
+        apvts.state.getChildWithName("Settings").setProperty(PluginParameters::ELEVATION_ID, elevation, nullptr);
     }
-}
-
-void SphericalSliderBox::updateSphericalCoordinates(float x, float y, float z) {
-    float radius, azimuth, elevation;
-
-    radius = sqrtf(powf(x, 2) + powf(y, 2) + powf(z, 2));
-    azimuth = atan2f(y, x) * 180  / (float) M_PI;
-    if (radius != 0.f) elevation = asinf(z / radius) * 180 / (float) M_PI;
-    else elevation = 0.f;
-
-    apvts.state.getChildWithName("Settings").setProperty(PluginParameters::RADIUS_ID, radius, nullptr);
-    apvts.state.getChildWithName("Settings").setProperty(PluginParameters::AZIMUTH_ID, azimuth, nullptr);
-    apvts.state.getChildWithName("Settings").setProperty(PluginParameters::ELEVATION_ID, elevation, nullptr);
 }
 
 void SphericalSliderBox::sliderValueChanged(juce::Slider* slider) {
@@ -156,27 +147,28 @@ void SphericalSliderBox::sliderDragEnded(juce::Slider* slider) {
 
 void SphericalSliderBox::updateCartesianCoordinates(float radius, float azimuth, float elevation) {
     float x = limitMetricValue(radius * cosf(azimuth * (float) M_PI / 180) * cosf(elevation * (float) M_PI / 180));
-    x = normalizeMetricValue(x);
+    m_x = normalizeMetricValue(x);
     float y = limitMetricValue(radius * sinf(azimuth * (float) M_PI / 180) * cosf(elevation * (float) M_PI / 180));
-    y = normalizeMetricValue(y);
+    m_y = normalizeMetricValue(y);
     float z = limitMetricValue(radius * sinf(elevation * (float) M_PI / 180));
-    z = normalizeMetricValue(z);
+    m_z = normalizeMetricValue(z);
     
+    // std::printf("update cartesian from a=%f, e=%f, d=%f, new x=%f, y=%f, z=%f\n", azimuth, elevation, radius, x, y, z);
     juce::AudioProcessorParameterWithID *xParam = apvts.getParameter(OSCParameters::POS_X_ID.getParamID());
     juce::AudioProcessorParameterWithID *yParam = apvts.getParameter(OSCParameters::POS_Y_ID.getParamID());
     juce::AudioProcessorParameterWithID *zParam = apvts.getParameter(OSCParameters::POS_Z_ID.getParamID());
 
 
     xParam->beginChangeGesture();
-    xParam->setValueNotifyingHost(x);
+    xParam->setValueNotifyingHost(m_x);
     xParam->endChangeGesture();
 
     yParam->beginChangeGesture();
-    yParam->setValueNotifyingHost(y);
+    yParam->setValueNotifyingHost(m_y);
     yParam->endChangeGesture();
 
     zParam->beginChangeGesture();
-    zParam->setValueNotifyingHost(z);
+    zParam->setValueNotifyingHost(m_z);
     zParam->endChangeGesture();
 }
 

@@ -222,10 +222,13 @@ juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 }
 
 void AudioPluginAudioProcessor::parameterChanged(const juce::String &parameterID, float newValue) {
+    // This callback is called when any of the automatable OSC params is changed
     pluginConnection.parameterChanged(parameterID, newValue);
+
 }
 
 void AudioPluginAudioProcessor::valueTreePropertyChanged(juce::ValueTree &treeWhosePropertyHasChanged, const juce::Identifier &property) {
+    // This callback is called when the source_index is changed
     pluginConnection.parameterChanged(property.toString(), treeWhosePropertyHasChanged.getProperty(property));
 }
 

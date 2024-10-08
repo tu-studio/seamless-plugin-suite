@@ -9,7 +9,7 @@ on:
       - develop
     # This is needed otherwise the github.ref is not set with ref/tags/v...
     tags:
-      - '*.*.*'
+      - "*.*.*"
 
 # When pushing new commits, cancel any running builds on that branch
 concurrency:
@@ -19,18 +19,17 @@ concurrency:
 env:
   PROJECT_NAME: seamless-plugin-suite
   PLUGINS: (SeamLess_Client SeamLess_Main)
-  PLUGIN_RELEASE_NAMES: ("SeamLess Client" "SeamLess Main") 
+  PLUGIN_RELEASE_NAMES: ("SeamLess Client" "SeamLess Main")
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Release
   # Use up to 4 cpus to build juceaide, etc
-  CMAKE_BUILD_PARALLEL_LEVEL: 4 
+  CMAKE_BUILD_PARALLEL_LEVEL: 4
   # Name of the build directory
   BUILD_DIR: build
   # Needed for mozilla sccache action
   SCCACHE_GHA_ENABLED: "true"
 
 jobs:
-
   build:
     name: ${{ matrix.name }}
     strategy:
@@ -47,7 +46,6 @@ jobs:
 
     runs-on: ${{ matrix.os }}
     steps:
-      
       #A simple printout of the matrix
       - name: printout
         shell: bash
@@ -81,14 +79,15 @@ jobs:
       # With this we checkout to our repo
       - name: get repo and submodules
         uses: actions/checkout@v4
-      # Here we get the submodules like juce
+        # Here we get the submodules like juce
         with:
-          submodules: true      
-      
+          submodules: true
+          fetch-depth: 0
+
       # We cache the build to speed up the build process
       - name: cache the build
         uses: mozilla-actions/sccache-action@v0.0.5
-      
+
       # Typical cmake configuration with default generator
       # With DCMAKE_OSX_ARCHITECTURES="arm64;x86_64" we can build universal binaries for apple computers
       - name: cmake configure
@@ -106,7 +105,7 @@ jobs:
       - name: cmake build
         shell: bash
         run: cmake --build build --config ${{ env.BUILD_TYPE }} --parallel ${{ env.CMAKE_BUILD_PARALLEL_LEVEL }}
-      
+
       # Test the project
       - name: ctest
         working-directory: ${{github.workspace}}/build
@@ -125,7 +124,7 @@ jobs:
         run: |
           echo "PACKAGE_DIR=artefacts/${{ env.PROJECT_NAME }}-${{ env.VERSION_NUMBER }}-${{ matrix.name }}" >> $GITHUB_ENV
           echo "PRODUCT_NAME=${{ env.PROJECT_NAME }}-${{ env.VERSION_NUMBER }}-${{ matrix.name }}" >> $GITHUB_ENV
-      
+
       # Moving the artefacts to a packaging directory
       - name: move artefacts
         shell: bash
@@ -172,7 +171,7 @@ jobs:
             codesign -dv --verbose=4 "${{ env.PACKAGE_DIR }}/${PLUGIN_RELEASE_NAMES[$index]}.component";
             codesign -dv --verbose=4 "${{ env.PACKAGE_DIR }}/${PLUGIN_RELEASE_NAMES[$index]}.app";
           done;
-      
+
       # Zip the artefact
       - name: zip artefacts
         working-directory: ${{github.workspace}}/artefacts
@@ -208,7 +207,7 @@ jobs:
           cd ..
           # And finally zip it again
           zip -vr ${{ env.PRODUCT_NAME }}.zip ${{ env.PRODUCT_NAME }}/ -x "*.DS_Store"
-          
+
       - name: upload artifact
         uses: actions/upload-artifact@v4
         with:
@@ -221,11 +220,11 @@ jobs:
     needs: build
 
     steps:
-    - name: Get Artifacts
-      uses: actions/download-artifact@v4
+      - name: Get Artifacts
+        uses: actions/download-artifact@v4
 
-    - name: Create Release
-      uses: softprops/action-gh-release@v2
-      with:
-        files: |
-          */*.zip
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            */*.zip

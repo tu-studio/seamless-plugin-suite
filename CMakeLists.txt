@@ -16,8 +16,6 @@ else()
 	set (FORMATS_TO_BUILD VST3 Standalone)
 endif()
 
-cmake_minimum_required(VERSION 3.15)
-
 set (PROJECT_NAME "seamless-plugin-suite")
 
 execute_process(COMMAND git describe --dirty
@@ -30,6 +28,7 @@ execute_process(COMMAND git describe --tags --abbrev=0
                 OUTPUT_VARIABLE PROJECT_VERSION_SHORT
                 OUTPUT_STRIP_TRAILING_WHITESPACE)
 
+message(STATUS "Project version: ${PROJECT_VERSION_SHORT}")
 message(STATUS "Project version: ${PROJECT_VERSION_FULL}")
 
 project(${PROJECT_NAME} VERSION ${PROJECT_VERSION_SHORT})

@@ -256,12 +256,27 @@ void AudioPluginAudioProcessor::oscMessageReceived (const juce::OSCMessage &mess
         value2 = message[2].getFloat32();
         value3 = message[3].getFloat32();
 
-    } else if (message.getAddressPattern().matches("/source/send") && message.size() >= 3){
+    } else if ((message.getAddressPattern().matches("/source/send") || message.getAddressPattern().matches("/send/gain") )&& message.size() >= 3){
         sourceIndex = message[0].getInt32();
         int_value = message[1].getInt32(); // store render index
         parameter = Parameter::PARAM_GAIN;
         value1 = message[2].getFloat32();      
-
+    // TODO clean this up
+    } else if (message.getAddressPattern().matches("/source/pos/x") && message.size() >= 2) {
+        parameter = Parameter::PARAM_POS_SINGLE;
+        int_value = PARAM_POS_SINGLE_X;
+        sourceIndex = message[0].getInt32();
+        value1 = message[1].getFloat32();
+    } else if (message.getAddressPattern().matches("/source/pos/y") && message.size() >= 2) {
+        parameter = Parameter::PARAM_POS_SINGLE;
+        int_value = PARAM_POS_SINGLE_Y;
+        sourceIndex = message[0].getInt32();
+        value1 = message[1].getFloat32();
+    } else if (message.getAddressPattern().matches("/source/pos/z") && message.size() >= 2) {
+        parameter = Parameter::PARAM_POS_SINGLE;
+        int_value = PARAM_POS_SINGLE_Z;
+        sourceIndex = message[0].getInt32();
+        value1 = message[1].getFloat32();
     } else {
         std::cout << "unsupported OSC message received" << std::endl;
         std::cout << "Address: " << message.getAddressPattern().toString() << std::endl;

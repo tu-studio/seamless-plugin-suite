@@ -71,7 +71,7 @@ jobs:
           elif [ "${{ matrix.name }}" == "Windows" ]; then
             echo "No dependencies needed for Windows"
           elif [ "${{ matrix.name }}" == "Linux" ]; then
-            sudo apt-get update && sudo apt install libasound2-dev libx11-dev libxcomposite-dev libxcursor-dev libxext-dev libxinerama-dev libxrandr-dev libxrender-dev ninja-build libfreetype-dev
+            sudo apt-get update && sudo apt install libasound2-dev libx11-dev libxcomposite-dev libxcursor-dev libxext-dev libxinerama-dev libxrandr-dev libxrender-dev ninja-build libfreetype-dev libfontconfig1-dev
           else
             echo "Unknown OS";
           fi;

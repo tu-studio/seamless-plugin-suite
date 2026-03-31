@@ -131,7 +131,8 @@ void SourceTree::dumpSourcesToReceiver(){
         for (int i = 0; i < source.nGains; i++){
             listenerList.call([source, i] (Listener& l) {l.sourceParameterChanged(source, PARAM_GAIN, i);});
 
-            source.pluginConnection->parameterChanged(PARAM_GAIN, i, source.gain[i], 0, 0);
+            // XXX why was this even here??
+            // source.pluginConnection->parameterChanged(PARAM_GAIN, i, source.gain[i], 0, 0);
         }
 
     }
@@ -153,9 +154,11 @@ void SourceTree::updateSource(Source &source, Parameter parameter, int int_value
         if (int_value == PARAM_POS_SINGLE_X) source.xPosition = value1; 
         else if (int_value == PARAM_POS_SINGLE_Y) source.yPosition = value1; 
         else if (int_value == PARAM_POS_SINGLE_Z) source.zPosition = value1; 
+        break;
     case PARAM_GAIN:
         if (int_value < source.nGains && int_value >=0)
             source.gain[int_value] = value1;
+        break;
     default:
         break;
     }

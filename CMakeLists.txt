@@ -81,11 +81,11 @@ include(FetchContent)
 # Externally provided libraries
 # Using zip files instead is faster
 FetchContent_Declare(googletest
-	URL https://github.com/google/googletest/archive/03597a01ee50ed33e9dfd640b249b4be3799d395.zip)
+	URL https://github.com/google/googletest/archive/refs/tags/v1.17.0.zip)
 
 FetchContent_Declare(benchmark
     GIT_REPOSITORY https://github.com/google/benchmark.git
-    GIT_TAG v1.8.0)
+    GIT_TAG v1.9.5)
 
 # This command ensures that each of the named dependencies are made available to the project by the time it returns. If the dependency has already been populated the command does nothing. Otherwise, the command populates the dependency and then calls add_subdirectory() on the result.
 FetchContent_MakeAvailable(googletest)
@@ -140,3 +140,5 @@ foreach(PLUGIN IN LISTS PLUGIN_LIST)
     gtest_discover_tests(Test_${PLUGIN})
     
 endforeach()
+
+# add_subdirectory ("modules/pluginval")

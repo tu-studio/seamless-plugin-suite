@@ -7,6 +7,7 @@
 #include <SourceTree.h>
 #include <OSCSender.h>
 #include <OSCReceiver.h>
+#include <RealtimeSanitizer.h>
 
 //==============================================================================
 class AudioPluginAudioProcessor  : public juce::AudioProcessor, private juce::ValueTree::Listener, private SourceTree::Listener, juce::OSCReceiver::Listener<juce::OSCReceiver::MessageLoopCallback>
@@ -22,7 +23,7 @@ public:
 
     bool isBusesLayoutSupported (const BusesLayout& layouts) const override;
 
-    void processBlock (juce::AudioBuffer<float>&, juce::MidiBuffer&) override;
+    void processBlock (juce::AudioBuffer<float>&, juce::MidiBuffer&) PLUGINS_NONBLOCKING_FUNCTION override;
     using AudioProcessor::processBlock;
 
     //==============================================================================

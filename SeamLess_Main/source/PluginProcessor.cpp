@@ -142,10 +142,28 @@ bool AudioPluginAudioProcessor::isBusesLayoutSupported (const BusesLayout& layou
   #endif
 }
 
+
 void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
-                                              juce::MidiBuffer& midiMessages)
+                                              juce::MidiBuffer& midiMessages) PLUGINS_NONBLOCKING_FUNCTION
 {
     juce::ignoreUnused (midiMessages);
+
+    // // get playback state
+    // auto playhead = getPlayHead(); 
+	// if (playhead!=nullptr) // playhead may not always exist
+	// {
+   
+	// 	juce::AudioPlayHead::PositionInfo info;
+	// 	if (playhead->getPosition(info)) // even if playhead exists, it may not return valid position info
+	// 	{
+	// 		if (info.isRecording) // note that even this probably can't be trusted to work consistently across plugin formats and hosts
+	// 		{
+	// 			amplitude = 0.0;
+	// 		}
+	// 	}
+    // int* x = (int*) malloc(sizeof(int));
+    // std::cout << x << std::endl;
+    // free(x);
 
     juce::ScopedNoDenormals noDenormals;
     auto totalNumInputChannels  = getTotalNumInputChannels();

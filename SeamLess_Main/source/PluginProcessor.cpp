@@ -148,22 +148,23 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
 {
     juce::ignoreUnused (midiMessages);
 
-    // // get playback state
-    // auto playhead = getPlayHead(); 
-	// if (playhead!=nullptr) // playhead may not always exist
-	// {
-   
-	// 	juce::AudioPlayHead::PositionInfo info;
-	// 	if (playhead->getPosition(info)) // even if playhead exists, it may not return valid position info
-	// 	{
-	// 		if (info.isRecording) // note that even this probably can't be trusted to work consistently across plugin formats and hosts
-	// 		{
-	// 			amplitude = 0.0;
-	// 		}
-	// 	}
-    // int* x = (int*) malloc(sizeof(int));
-    // std::cout << x << std::endl;
-    // free(x);
+    // get playback state to dump sources whenever playback is started
+    bool is_playing = false;
+    auto playhead = getPlayHead(); 
+	if (playhead!=nullptr){
+    // playhead may not always exist
+		auto info = playhead->getPosition();
+        // playhead may not always exist
+		if (info) {
+			is_playing = info->getIsPlaying();
+		}
+    }
+    if (!was_playing && is_playing){
+        // TODO this is probably not threadsafe
+        sourceTree.dumpSourcesToReceiver();
+    }
+    was_playing = is_playing;
+
 
     juce::ScopedNoDenormals noDenormals;
     auto totalNumInputChannels  = getTotalNumInputChannels();

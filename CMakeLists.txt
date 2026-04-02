@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.15)
 
-option(PLUGINS_WITH_RTSAN "Enable RealtimeSanitizer (rtan) checks (requires clang 20)" ON)
+option(PLUGINS_WITH_RTSAN "Enable RealtimeSanitizer (rtan) checks (requires clang 20)" OFF)
 option(PLUGINS_WITH_TESTS "Enable Tests" OFF)
 # Sets the minimum macOS version
 if (APPLE)

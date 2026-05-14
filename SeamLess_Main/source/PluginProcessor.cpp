@@ -142,10 +142,29 @@ bool AudioPluginAudioProcessor::isBusesLayoutSupported (const BusesLayout& layou
   #endif
 }
 
+
 void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
-                                              juce::MidiBuffer& midiMessages)
+                                              juce::MidiBuffer& midiMessages) PLUGINS_NONBLOCKING_FUNCTION
 {
     juce::ignoreUnused (midiMessages);
+
+    // get playback state to dump sources whenever playback is started
+    bool is_playing = false;
+    auto playhead = getPlayHead(); 
+	if (playhead!=nullptr){
+    // playhead may not always exist
+		auto info = playhead->getPosition();
+        // playhead may not always exist
+		if (info) {
+			is_playing = info->getIsPlaying();
+		}
+    }
+    if (!was_playing && is_playing){
+        // TODO this is probably not threadsafe
+        sourceTree.dumpSourcesToReceiver();
+    }
+    was_playing = is_playing;
+
 
     juce::ScopedNoDenormals noDenormals;
     auto totalNumInputChannels  = getTotalNumInputChannels();

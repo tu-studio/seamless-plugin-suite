@@ -144,7 +144,7 @@ bool AudioPluginAudioProcessor::isBusesLayoutSupported (const BusesLayout& layou
 }
 
 void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
-                                              juce::MidiBuffer& midiMessages)
+                                              juce::MidiBuffer& midiMessages) PLUGINS_NONBLOCKING_FUNCTION
 {
     juce::ignoreUnused (midiMessages);
 

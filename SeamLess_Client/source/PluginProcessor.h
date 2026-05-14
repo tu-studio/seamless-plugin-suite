@@ -4,6 +4,7 @@
 #include <SeamLess.h>
 #include <PluginConnection.h>
 #include <PluginParameters.h>
+#include <RealtimeSanitizer.h>
 
 //==============================================================================
 class AudioPluginAudioProcessor  : public juce::AudioProcessor, private juce::AudioProcessorValueTreeState::Listener, private juce::ValueTree::Listener, private PluginConnection::Listener, private juce::Timer
@@ -19,7 +20,7 @@ public:
 
     bool isBusesLayoutSupported (const BusesLayout& layouts) const override;
 
-    void processBlock (juce::AudioBuffer<float>&, juce::MidiBuffer&) override;
+    void processBlock (juce::AudioBuffer<float>&, juce::MidiBuffer&) PLUGINS_NONBLOCKING_FUNCTION override;
     using AudioProcessor::processBlock;
 
     //==============================================================================

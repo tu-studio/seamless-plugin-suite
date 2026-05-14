@@ -13,6 +13,7 @@ juce_add_plugin(${TARGET_NAME}
 		# COPY_PLUGIN_AFTER_BUILD TRUE/FALSE        # Should the plugin be installed to a default location after building?
 		PLUGIN_MANUFACTURER_CODE TUSt              # A four-character manufacturer id with at least one upper-case character
 		PLUGIN_CODE Slcl                            # A unique four-character plugin id with exactly one upper-case character
+        BUNDLE_ID com.tu_studio.seamless_client
 		# GarageBand 10.3 requires the first letter to be upper-case, and the remaining letters to be lower-case
 
 		if(APPLE)
@@ -90,3 +91,11 @@ target_link_libraries(${TARGET_NAME}
         juce::juce_recommended_config_flags
         juce::juce_recommended_lto_flags
         juce::juce_recommended_warning_flags)
+
+
+# # enable rtsan for plugins
+# if(PLUGINS_WITH_RTSAN)
+#     message("enabling rtsan for SeamLess_Client")
+#     include(../cmake/sanitizers.cmake)
+#     plugins_realtime_sanitizer(${TARGET_NAME})
+# endif()

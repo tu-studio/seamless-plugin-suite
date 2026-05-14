@@ -2,7 +2,7 @@
 
 <!-- TODO: link to seamless docs -->
 
-Suite of VST-Plugins and Standalone Applications to easily control the Seamless system using OSC-Messages.
+Suite of VST-Plugins and Standalone Applications to easily control the [Seamless system]([https://github](https://tu-studio.github.io/seamless-docs/)) using OSC-Messages.
 
 ## Usage
 
@@ -16,7 +16,8 @@ The Main plugins listen for external OSC-Messages on the port specified in the m
 | OSC-Path | data format | comment |
 | --- | --- | --- |
 | `/source/pos/xyz` | `ifff` source_index, x, y, z | x,y,z should be between -1 and 1, values outside this range will be clipped by the plugins |
-| `/source/send` | `iif` source_index, renderer_index, gain | renderer_index starts from 0, with 0 being ambisonics and 1 being wfs, gain should be between 0 and 1|
+| `/source/pos/<coordinate>`, where `coordinate` is one of `x`, `y` or `z` | `if` source_index, x or y or z | x,y,z should be between -1 and 1, values outside this range will be clipped by the plugins |
+| `/source/send` and `/send/gain` | `iif` source_index, renderer_index, gain | renderer_index starts from 0, with 0 being ambisonics and 1 being wfs, gain should be between 0 and 1|
 
 ## Development
 
@@ -26,4 +27,10 @@ update submodules with
 
 ```bash
 git submodule update --init --recursive
+
+# configure
+cmake -B build -DCMAKE_BUILD_TYPE=Release -G Ninja
+
+# build
+cmake --build ./build --config Debug --target all
 ```

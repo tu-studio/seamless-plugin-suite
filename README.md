@@ -1,12 +1,13 @@
 # Seamless Plugin Suite
 
-<!-- TODO: link to seamless docs -->
+Suite of VST-Plugins and Standalone Applications to easily control the [Seamless system](https://tu-studio.github.io/seamless-docs/) using OSC-Messages.
 
-Suite of VST-Plugins and Standalone Applications to easily control the [Seamless system]([https://github](https://tu-studio.github.io/seamless-docs/)) using OSC-Messages.
+## Installation
+Download the latest release for your platform from [here](https://github.com/tu-studio/seamless-plugin-suite/releases/latest), extract, then put `SeamLess Main.vst3` and `SeamLess Client.vst3` into your vst3 folder.
 
 ## Usage
 
-Put the Main Plugin on the Master Bus of your DAW, set ip and port to the receiver (usually an OSC-Kreuz instance). Then add Client Plugins to all tracks that should be spatialized.
+Put the Main Plugin on the Master Bus of your DAW, set ip and port to the receiver (usually an [OSC-Kreuz](https://tu-studio.github.io/osc-kreuz/) instance). Then add Client Plugins to all tracks that should be spatialized. On each client plugin set the `source_index` to the number of the channel you are outputting to (on the first channel set `source_index` to `1`)
 
 ![Seamless Plugins Signal Flow](./docs/graphics/seamless-plugin-suite_signal-flow.png)
 

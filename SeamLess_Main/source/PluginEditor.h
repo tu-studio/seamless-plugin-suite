@@ -4,6 +4,7 @@
 #include <OSCConnectionBox.h>
 #include <ClientConnectionStatusLabel.h>
 #include <FontLookAndFeel.h>
+#include <PluginHeader.h>
 
 //==============================================================================
 class AudioPluginAudioProcessorEditor  : public juce::AudioProcessorEditor
@@ -21,6 +22,7 @@ private:
     // access the processor object that created it.
     AudioPluginAudioProcessor& processorRef;
     juce::AudioProcessorValueTreeState& apvts;
+    PluginHeader header;
     ClientConnectionStatusLabel clientConnectionStatusLabel;
     OSCConnectionBox oscConnectionBox;
     FontLookAndFeel fontLookAndFeel;

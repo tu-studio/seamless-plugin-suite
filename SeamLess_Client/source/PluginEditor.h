@@ -11,6 +11,7 @@
 #include <CustomChoiceButton.h>
 #include <CustomToggleButton.h>
 #include <FontLookAndFeel.h>
+#include <PluginHeader.h>
 
 //==============================================================================
 class AudioPluginAudioProcessorEditor  : public juce::AudioProcessorEditor, public juce::ValueTree::Listener
@@ -29,6 +30,7 @@ private:
     // access the processor object that created it.
     AudioPluginAudioProcessor& processorRef;
     juce::AudioProcessorValueTreeState& apvts;
+    PluginHeader header;
     GainSliderBox gainSliderBox;
     SphericalSliderBox sphericalSliderBox;
     SourceIndexSelector sourceIndexSelector;

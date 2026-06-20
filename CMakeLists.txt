@@ -64,6 +64,10 @@ set (PLUGIN_LIST
 foreach (PLUGIN IN LISTS PLUGIN_LIST)
     add_subdirectory (${PLUGIN})
 
+    # Pass the full git-describe version into the C++ code (used by the shared header)
+    target_compile_definitions(${PLUGIN} PRIVATE
+        SEAMLESS_VERSION="${PROJECT_VERSION_FULL}")
+
     # enable rtsan for plugins
     if(PLUGINS_WITH_RTSAN)
         include(cmake/sanitizers.cmake)

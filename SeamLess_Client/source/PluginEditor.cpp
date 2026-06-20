@@ -3,16 +3,18 @@
 
 //==============================================================================
 AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAudioProcessor& p, juce::AudioProcessorValueTreeState& pluginApvts)
-    : AudioProcessorEditor (&p), processorRef (p), apvts(pluginApvts), gainSliderBox(pluginApvts), sphericalSliderBox(pluginApvts), sourceIndexSelector(pluginApvts), xyPad(pluginApvts), zPositionSlider(pluginApvts), gridChoiceButton(pluginApvts, PluginParameters::GRID_CHOICE_ID, PluginParameters::GRID_CHOICE_LABELS, "None"), venueChoiceButton(pluginApvts, PluginParameters::VENUE_CHOICE_ID, PluginParameters::VENUE_CHOICE_LABELS, "None"), gainToggleButton(pluginApvts, PluginParameters::GAIN_TOGGLE_ID, PluginParameters::GAIN_TOGGLE_LABEL, "None"), sphericalToggleButton(apvts, PluginParameters::SPHERICAL_TOGGLE_ID, PluginParameters::SPHERICAL_TOGGLE_LABEL, "None")
+    : AudioProcessorEditor (&p), processorRef (p), apvts(pluginApvts), header(p.getName()), gainSliderBox(pluginApvts), sphericalSliderBox(pluginApvts), sourceIndexSelector(pluginApvts), xyPad(pluginApvts), zPositionSlider(pluginApvts), gridChoiceButton(pluginApvts, PluginParameters::GRID_CHOICE_ID, PluginParameters::GRID_CHOICE_LABELS, "None"), venueChoiceButton(pluginApvts, PluginParameters::VENUE_CHOICE_ID, PluginParameters::VENUE_CHOICE_LABELS, "None"), gainToggleButton(pluginApvts, PluginParameters::GAIN_TOGGLE_ID, PluginParameters::GAIN_TOGGLE_LABEL, "None"), sphericalToggleButton(apvts, PluginParameters::SPHERICAL_TOGGLE_ID, PluginParameters::SPHERICAL_TOGGLE_LABEL, "None")
 {
     juce::ignoreUnused (processorRef);
 
     juce::LookAndFeel::setDefaultLookAndFeel (&fontLookAndFeel);
 
     // window size settings
-    setSize (1000, 600);    
+    setSize (1000, 640);
     setResizable(true, true);
-    setResizeLimits(800, 500, 1000, 600);
+    setResizeLimits(800, 540, 1000, 640);
+
+    addAndMakeVisible(header);
 
     if ((int) apvts.state.getChildWithName("Settings").getProperty(PluginParameters::GAIN_TOGGLE_ID) == 1) addAndMakeVisible(gainSliderBox);
     else addChildComponent(gainSliderBox);
@@ -61,6 +63,9 @@ void AudioPluginAudioProcessorEditor::resized()
     auto area = getLocalBounds();
     auto spacingBetween = getWidth()/80;
     area = area.reduced(spacingBetween);
+
+    header.setBounds(area.removeFromTop(40));
+    area.removeFromTop(spacingBetween);
 
     auto leftSide = area.removeFromLeft(area.getWidth()/10);
     leftSide.removeFromRight(spacingBetween);

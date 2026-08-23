@@ -35,14 +35,14 @@ jobs:
     strategy:
       fail-fast: false # show all errors for each platform (vs. cancel jobs on error)
       matrix:
-        os: [macos-latest, windows-latest, ubuntu-latest]
+        os: [macos-latest, windows-latest, ubuntu-22.04]
         include:
           - os: macOS-latest
             name: macOS
           - os: windows-latest
             name: Windows
           - name: Linux
-            os: ubuntu-latest
+            os: ubuntu-22.04
 
     runs-on: ${{ matrix.os }}
     steps:
